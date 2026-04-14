@@ -1,0 +1,1423 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>HARKANA — Estrategia de Redes 30 Días</title>
+<link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;0,600;1,400&family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+<style>
+:root {
+  --verde: #0e2310;
+  --verde-med: #1c3d1c;
+  --verde-claro: #2d5a27;
+  --kraft: #c09a5c;
+  --kraft-claro: #f0e6d0;
+  --crema: #faf6ef;
+  --carbon: #141414;
+  --rojo: #c0392b;
+  --amarillo: #d4890a;
+  --azul: #2563eb;
+  --gris: #666;
+  --blanco: #fff;
+}
+*, *::before, *::after { box-sizing: border-box; margin:0; padding:0; }
+body { font-family: 'Inter', sans-serif; background: var(--crema); color: var(--carbon); line-height: 1.6; -webkit-font-smoothing: antialiased; }
+
+header {
+  background: var(--verde);
+  padding: 56px 60px 48px;
+  color: white;
+}
+header h1 {
+  font-family: 'Cormorant Garamond', serif;
+  font-size: 3rem;
+  font-weight: 400;
+  letter-spacing: 4px;
+  margin-bottom: 8px;
+}
+header p { font-size: 0.85rem; letter-spacing: 2px; opacity: 0.6; text-transform: uppercase; }
+header .meta {
+  margin-top: 24px;
+  display: flex;
+  gap: 20px;
+  flex-wrap: wrap;
+}
+.meta-tag {
+  background: rgba(255,255,255,0.1);
+  border: 1px solid rgba(255,255,255,0.15);
+  color: rgba(255,255,255,0.7);
+  font-size: 0.72rem;
+  letter-spacing: 1.5px;
+  text-transform: uppercase;
+  padding: 6px 14px;
+  border-radius: 20px;
+}
+.meta-tag.active { background: var(--kraft); border-color: var(--kraft); color: var(--carbon); }
+
+nav {
+  background: var(--verde-med);
+  padding: 0 60px;
+  display: flex;
+  gap: 0;
+  overflow-x: auto;
+}
+nav a {
+  color: rgba(255,255,255,0.6);
+  text-decoration: none;
+  font-size: 0.72rem;
+  letter-spacing: 1.5px;
+  text-transform: uppercase;
+  padding: 16px 20px;
+  white-space: nowrap;
+  transition: color 0.2s, border-color 0.2s;
+  border-bottom: 2px solid transparent;
+}
+nav a:hover { color: var(--kraft); border-bottom-color: var(--kraft); }
+
+.container { max-width: 1100px; margin: 0 auto; padding: 0 40px; }
+section { padding: 64px 0; border-bottom: 1px solid #e8dfc8; }
+section:last-child { border-bottom: none; }
+
+h2 {
+  font-family: 'Cormorant Garamond', serif;
+  font-size: 2.2rem;
+  font-weight: 400;
+  color: var(--verde);
+  margin-bottom: 8px;
+}
+h2 em { font-style: italic; }
+.section-sub { font-size: 0.85rem; color: var(--gris); margin-bottom: 40px; }
+h3 { font-size: 1rem; font-weight: 600; color: var(--carbon); margin: 28px 0 12px; }
+
+/* STATUS CARDS */
+.status-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 20px; margin-bottom: 40px; }
+.status-card {
+  background: white;
+  border-radius: 10px;
+  padding: 28px;
+  box-shadow: 0 2px 12px rgba(0,0,0,0.06);
+  position: relative;
+  overflow: hidden;
+}
+.status-card::before {
+  content: '';
+  position: absolute;
+  top: 0; left: 0; right: 0;
+  height: 4px;
+}
+.status-card.ig::before { background: linear-gradient(90deg, #f09433, #e6683c, #dc2743, #cc2366, #bc1888); }
+.status-card.tt::before { background: linear-gradient(90deg, #000000, #ee1d52, #69C9D0); }
+.status-card.fb::before { background: #1877F2; }
+.platform-name {
+  font-size: 0.65rem;
+  font-weight: 700;
+  letter-spacing: 2px;
+  text-transform: uppercase;
+  color: var(--gris);
+  margin-bottom: 6px;
+}
+.platform-handle {
+  font-family: 'Cormorant Garamond', serif;
+  font-size: 1.5rem;
+  color: var(--carbon);
+  margin-bottom: 16px;
+}
+.status-rows { display: flex; flex-direction: column; gap: 8px; }
+.status-row {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  font-size: 0.8rem;
+}
+.status-label { color: var(--gris); }
+.status-val { font-weight: 600; color: var(--carbon); }
+.status-val.good { color: #16a34a; }
+.status-val.warn { color: var(--amarillo); }
+.status-val.bad { color: var(--rojo); }
+
+/* DIAGNÓSTICO */
+.diag-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 16px; }
+.diag-item {
+  background: white;
+  border-radius: 8px;
+  padding: 20px;
+  display: flex;
+  gap: 14px;
+  align-items: flex-start;
+  box-shadow: 0 1px 6px rgba(0,0,0,0.05);
+}
+.diag-icon { font-size: 1.4rem; flex-shrink: 0; }
+.diag-text h4 { font-size: 0.85rem; font-weight: 600; margin-bottom: 4px; }
+.diag-text p { font-size: 0.78rem; color: var(--gris); line-height: 1.5; }
+.diag-item.ok { border-left: 3px solid #16a34a; }
+.diag-item.warn { border-left: 3px solid var(--amarillo); }
+.diag-item.bad { border-left: 3px solid var(--rojo); }
+.diag-item.tip { border-left: 3px solid var(--azul); }
+
+/* URGENTE */
+.urgente-list { display: flex; flex-direction: column; gap: 12px; }
+.urgente-item {
+  background: white;
+  border-radius: 8px;
+  padding: 20px 24px;
+  display: flex;
+  align-items: flex-start;
+  gap: 16px;
+  box-shadow: 0 1px 6px rgba(0,0,0,0.05);
+}
+.urgente-num {
+  background: var(--rojo);
+  color: white;
+  font-size: 0.75rem;
+  font-weight: 700;
+  width: 28px;
+  height: 28px;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+}
+.urgente-body h4 { font-size: 0.9rem; font-weight: 600; margin-bottom: 4px; }
+.urgente-body p { font-size: 0.8rem; color: var(--gris); line-height: 1.5; }
+.urgente-body code {
+  display: inline-block;
+  background: #f1f5f9;
+  padding: 2px 8px;
+  border-radius: 4px;
+  font-family: monospace;
+  font-size: 0.8rem;
+  margin-top: 6px;
+  color: var(--verde-claro);
+}
+
+/* POSTS */
+.post-section { margin-bottom: 48px; }
+.platform-header {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  margin-bottom: 24px;
+  padding-bottom: 16px;
+  border-bottom: 2px solid var(--kraft-claro);
+}
+.platform-dot {
+  width: 12px;
+  height: 12px;
+  border-radius: 50%;
+}
+.dot-ig { background: linear-gradient(135deg, #f09433, #e6683c, #dc2743); }
+.dot-tt { background: #ee1d52; }
+.dot-fb { background: #1877F2; }
+.platform-header h3 { margin: 0; font-size: 1.1rem; }
+.platform-header span { font-size: 0.72rem; color: var(--gris); letter-spacing: 1px; text-transform: uppercase; }
+
+.post-cards { display: grid; grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)); gap: 20px; }
+.post-card {
+  background: white;
+  border-radius: 10px;
+  overflow: hidden;
+  box-shadow: 0 2px 12px rgba(0,0,0,0.07);
+}
+.post-card-header {
+  padding: 14px 18px;
+  background: var(--verde);
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+.post-card-header h4 { font-size: 0.8rem; font-weight: 600; color: white; letter-spacing: 0.5px; }
+.post-type {
+  font-size: 0.62rem;
+  font-weight: 600;
+  letter-spacing: 1.5px;
+  text-transform: uppercase;
+  padding: 3px 10px;
+  border-radius: 20px;
+  background: rgba(255,255,255,0.15);
+  color: white;
+}
+.post-type.reel { background: var(--kraft); color: var(--carbon); }
+.post-type.story { background: rgba(255,255,255,0.2); }
+.post-type.carousel { background: rgba(255,255,255,0.2); }
+.post-card-body { padding: 18px; }
+.post-visual {
+  background: var(--crema);
+  border-radius: 6px;
+  padding: 12px 14px;
+  margin-bottom: 14px;
+  font-size: 0.75rem;
+  color: var(--gris);
+  line-height: 1.5;
+}
+.post-visual strong { display: block; font-size: 0.7rem; letter-spacing: 1px; text-transform: uppercase; color: var(--verde-claro); margin-bottom: 4px; }
+.post-caption {
+  font-size: 0.82rem;
+  line-height: 1.75;
+  color: #333;
+  background: #fafafa;
+  border-left: 3px solid var(--kraft);
+  padding: 12px 14px;
+  border-radius: 0 6px 6px 0;
+  white-space: pre-wrap;
+  margin-bottom: 12px;
+}
+.post-hashtags { font-size: 0.74rem; color: var(--verde-claro); line-height: 1.9; }
+.post-meta {
+  display: flex;
+  justify-content: space-between;
+  margin-top: 12px;
+  padding-top: 12px;
+  border-top: 1px solid #eee;
+  font-size: 0.72rem;
+  color: var(--gris);
+}
+.post-meta span { font-weight: 600; color: var(--carbon); }
+
+/* CALENDARIO */
+.cal-grid {
+  display: grid;
+  grid-template-columns: 80px repeat(7, 1fr);
+  gap: 4px;
+}
+.cal-header {
+  background: var(--verde);
+  color: white;
+  font-size: 0.65rem;
+  font-weight: 600;
+  letter-spacing: 1.5px;
+  text-transform: uppercase;
+  text-align: center;
+  padding: 10px 4px;
+  border-radius: 4px;
+}
+.cal-week-label {
+  background: var(--kraft);
+  color: var(--carbon);
+  font-size: 0.62rem;
+  font-weight: 700;
+  letter-spacing: 1px;
+  text-transform: uppercase;
+  padding: 8px 4px;
+  text-align: center;
+  border-radius: 4px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+.cal-cell {
+  background: white;
+  border-radius: 4px;
+  padding: 8px 6px;
+  font-size: 0.68rem;
+  min-height: 70px;
+  box-shadow: 0 1px 4px rgba(0,0,0,0.05);
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+}
+.cal-cell.empty { background: #f5f0e8; box-shadow: none; }
+.cal-tag {
+  font-size: 0.6rem;
+  font-weight: 700;
+  letter-spacing: 1px;
+  text-transform: uppercase;
+  padding: 2px 6px;
+  border-radius: 10px;
+  display: inline-block;
+}
+.tag-ig { background: #fce4ec; color: #c2185b; }
+.tag-tt { background: #fce4ec; color: #ee1d52; }
+.tag-fb { background: #e3f2fd; color: #1565c0; }
+.tag-all { background: #e8f5e9; color: #2e7d32; }
+.cal-content { font-size: 0.66rem; color: var(--gris); line-height: 1.4; }
+
+/* CAMPAÑAS ESPECIALES */
+.campana-box {
+  background: white;
+  border-radius: 12px;
+  padding: 36px;
+  box-shadow: 0 4px 20px rgba(0,0,0,0.07);
+  margin-bottom: 24px;
+}
+.campana-box h3 { font-size: 1.1rem; font-weight: 700; margin-bottom: 4px; }
+.campana-box .campana-sub { font-size: 0.78rem; color: var(--gris); margin-bottom: 20px; }
+.campana-cols { display: grid; grid-template-columns: 1fr 1fr; gap: 20px; }
+.campana-col h4 { font-size: 0.72rem; font-weight: 700; letter-spacing: 1.5px; text-transform: uppercase; color: var(--verde-claro); margin-bottom: 10px; }
+.campana-list { list-style: none; display: flex; flex-direction: column; gap: 6px; }
+.campana-list li { font-size: 0.8rem; color: #444; padding-left: 12px; position: relative; }
+.campana-list li::before { content: '→'; position: absolute; left: 0; color: var(--kraft); }
+
+/* KPIs */
+.kpi-grid { display: grid; grid-template-columns: repeat(4, 1fr); gap: 16px; }
+.kpi-box {
+  background: white;
+  border-radius: 10px;
+  padding: 24px;
+  text-align: center;
+  box-shadow: 0 2px 10px rgba(0,0,0,0.06);
+  border-top: 3px solid var(--kraft);
+}
+.kpi-num {
+  font-family: 'Cormorant Garamond', serif;
+  font-size: 2.4rem;
+  font-weight: 400;
+  color: var(--verde);
+  line-height: 1;
+  margin-bottom: 6px;
+}
+.kpi-label { font-size: 0.72rem; color: var(--gris); letter-spacing: 1px; text-transform: uppercase; }
+
+/* TIPS BOX */
+.tip-box {
+  background: var(--verde);
+  color: white;
+  border-radius: 10px;
+  padding: 28px 32px;
+  margin-top: 28px;
+}
+.tip-box h4 { font-size: 0.85rem; font-weight: 700; letter-spacing: 1px; text-transform: uppercase; color: var(--kraft); margin-bottom: 12px; }
+.tip-box ul { list-style: none; display: flex; flex-direction: column; gap: 8px; }
+.tip-box ul li { font-size: 0.82rem; opacity: 0.8; padding-left: 14px; position: relative; }
+.tip-box ul li::before { content: '✦'; position: absolute; left: 0; color: var(--kraft); font-size: 0.6rem; top: 3px; }
+
+footer {
+  background: var(--carbon);
+  color: rgba(255,255,255,0.4);
+  text-align: center;
+  padding: 28px;
+  font-size: 0.75rem;
+  letter-spacing: 1px;
+}
+
+@media (max-width: 768px) {
+  header { padding: 40px 24px 32px; }
+  nav { padding: 0 16px; }
+  .container { padding: 0 20px; }
+  .status-grid { grid-template-columns: 1fr; }
+  .diag-grid { grid-template-columns: 1fr; }
+  .kpi-grid { grid-template-columns: repeat(2, 1fr); }
+  .campana-cols { grid-template-columns: 1fr; }
+  .cal-grid { grid-template-columns: 1fr; }
+}
+</style>
+</head>
+<body>
+
+<header>
+  <h1>HARKANA — Redes Sociales</h1>
+  <p>Diagnóstico · Estrategia · Plan 30 días</p>
+  <div class="meta">
+    <span class="meta-tag active">Abril 2026</span>
+    <span class="meta-tag">Instagram @harkanaar</span>
+    <span class="meta-tag">TikTok @harkana.yerbas</span>
+    <span class="meta-tag">Facebook @harkanaar</span>
+  </div>
+</header>
+
+<nav>
+  <a href="#diagnostico">Diagnóstico</a>
+  <a href="#urgente">Urgente</a>
+  <a href="#instagram">Instagram</a>
+  <a href="#tiktok">TikTok</a>
+  <a href="#facebook">Facebook</a>
+  <a href="#calendario">Calendario</a>
+  <a href="#campanas">Campañas</a>
+  <a href="#kpis">KPIs</a>
+</nav>
+
+<div class="container">
+
+<!-- ═══════════════════ ESTADO ACTUAL ═══════════════════ -->
+<section id="diagnostico">
+  <h2>Estado actual de <em>los perfiles</em></h2>
+  <p class="section-sub">Análisis basado en el contenido disponible, materiales de la marca y observación de la presencia digital</p>
+
+  <div class="status-grid">
+    <div class="status-card ig">
+      <div class="platform-name">Instagram</div>
+      <div class="platform-handle">@harkanaar</div>
+      <div class="status-rows">
+        <div class="status-row"><span class="status-label">Perfil</span><span class="status-val good">Público ✓</span></div>
+        <div class="status-row"><span class="status-label">Stories destacadas</span><span class="status-val warn">Sin organizar</span></div>
+        <div class="status-row"><span class="status-label">Bio con link</span><span class="status-val warn">Básica</span></div>
+        <div class="status-row"><span class="status-label">Frecuencia de posts</span><span class="status-val warn">Irregular</span></div>
+        <div class="status-row"><span class="status-label">Reels</span><span class="status-val warn">Pocos / sin editar</span></div>
+        <div class="status-row"><span class="status-label">Estética visual</span><span class="status-val warn">Sin línea uniforme</span></div>
+      </div>
+    </div>
+    <div class="status-card tt">
+      <div class="platform-name">TikTok</div>
+      <div class="platform-handle">@harkana.yerbas</div>
+      <div class="status-rows">
+        <div class="status-row"><span class="status-label">Perfil</span><span class="status-val warn">Incipiente</span></div>
+        <div class="status-row"><span class="status-label">Videos publicados</span><span class="status-val bad">Muy pocos</span></div>
+        <div class="status-row"><span class="status-label">Frecuencia</span><span class="status-val bad">Sin constancia</span></div>
+        <div class="status-row"><span class="status-label">Bio</span><span class="status-val warn">Sin completar bien</span></div>
+        <div class="status-row"><span class="status-label">Alcance orgánico</span><span class="status-val good">Potencial enorme</span></div>
+        <div class="status-row"><span class="status-label">Estrategia</span><span class="status-val bad">Sin definir</span></div>
+      </div>
+    </div>
+    <div class="status-card fb">
+      <div class="platform-name">Facebook</div>
+      <div class="platform-handle">@harkanaar</div>
+      <div class="status-rows">
+        <div class="status-row"><span class="status-label">Página</span><span class="status-val good">Activa ✓</span></div>
+        <div class="status-row"><span class="status-label">Descripción</span><span class="status-val warn">Incompleta</span></div>
+        <div class="status-row"><span class="status-label">Publicaciones</span><span class="status-val warn">Espejo de IG</span></div>
+        <div class="status-row"><span class="status-label">Marketplace</span><span class="status-val bad">Sin usar</span></div>
+        <div class="status-row"><span class="status-label">Grupos</span><span class="status-val bad">Sin aprovechar</span></div>
+        <div class="status-row"><span class="status-label">Ads</span><span class="status-val bad">Sin activar</span></div>
+      </div>
+    </div>
+  </div>
+
+  <h3>¿Qué está funcionando?</h3>
+  <div class="diag-grid">
+    <div class="diag-item ok">
+      <span class="diag-icon">✅</span>
+      <div class="diag-text">
+        <h4>El packaging es el activo más fuerte</h4>
+        <p>La bolsa kraft con ilustración botánica genera atención visual inmediata. Las fotos del producto se ven bien incluso sin producción profesional.</p>
+      </div>
+    </div>
+    <div class="diag-item ok">
+      <span class="diag-icon">✅</span>
+      <div class="diag-text">
+        <h4>El diferencial es claro y vendible</h4>
+        <p>"Orgánica, sin polvillo, sin TACC" son hooks que funcionan solos. Son claims únicos que la mayoría de yerbas no puede hacer.</p>
+      </div>
+    </div>
+    <div class="diag-item ok">
+      <span class="diag-icon">✅</span>
+      <div class="diag-text">
+        <h4>La historia de marca es auténtica</h4>
+        <p>Emprendimiento desde 2019, envasado a mano, crecimiento real. Esta narrativa conecta emocionalmente con el consumidor argentino.</p>
+      </div>
+    </div>
+    <div class="diag-item ok">
+      <span class="diag-icon">✅</span>
+      <div class="diag-text">
+        <h4>Ya tienen prueba social visible</h4>
+        <p>Fotos en góndolas de supermercados, en estaciones de servicio, en barbería. Social proof real que muy pocas marcas pequeñas muestran.</p>
+      </div>
+    </div>
+    <div class="diag-item warn">
+      <span class="diag-icon">⚠️</span>
+      <div class="diag-text">
+        <h4>Contenido inconsistente</h4>
+        <p>Mezcla de fotos de stock, capturas de WhatsApp, diseños sin estética unificada. No hay una "identidad visual de feed" que se reconozca de un vistazo.</p>
+      </div>
+    </div>
+    <div class="diag-item warn">
+      <span class="diag-icon">⚠️</span>
+      <div class="diag-text">
+        <h4>Frecuencia irregular</h4>
+        <p>Períodos sin actividad y luego ráfagas de posts. El algoritmo premia la consistencia. Sin ritmo fijo no se crece.</p>
+      </div>
+    </div>
+    <div class="diag-item bad">
+      <span class="diag-icon">🚨</span>
+      <div class="diag-text">
+        <h4>TikTok casi sin usar</h4>
+        <p>Es la plataforma con mayor alcance orgánico gratuito en 2026. Una marca de yerba con packaging artesanal tiene un potencial enorme ahí. Está siendo ignorado.</p>
+      </div>
+    </div>
+    <div class="diag-item bad">
+      <span class="diag-icon">🚨</span>
+      <div class="diag-text">
+        <h4>Sin call to action claro en ningún perfil</h4>
+        <p>Los perfiles no convierten. No hay link a la tienda bien visible, no hay "escribinos", no hay stories con sticker de link. El tráfico que entra no compra.</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ═══════════════════ URGENTE ═══════════════════ -->
+<section id="urgente">
+  <h2>Cambios <em>urgentes</em></h2>
+  <p class="section-sub">Hacé esto antes de empezar a postear. Son la base para que todo lo demás funcione.</p>
+
+  <div class="urgente-list">
+    <div class="urgente-item">
+      <div class="urgente-num">1</div>
+      <div class="urgente-body">
+        <h4>Reescribir la bio de Instagram con link directo</h4>
+        <p>La bio actual es genérica. Tiene que comunicar el diferencial en 3 líneas y tener un link funcional a la tienda o a un Linktree con todas las opciones.</p>
+        <code>🌿 Yerba 100% orgánica | Sin TACC | Sin polvillo
+📍 Alejandro Roca, Córdoba 🇦🇷
+📦 Envíos a todo el país
+👇 Pedidos online y mayoreo:</code>
+      </div>
+    </div>
+    <div class="urgente-item">
+      <div class="urgente-num">2</div>
+      <div class="urgente-body">
+        <h4>Crear Highlights organizados en Instagram</h4>
+        <p>Sin Highlights, cada Story desaparece a las 24hs. La información más importante (productos, precios, dónde comprar, historia) tiene que estar siempre visible.</p>
+        <code>Carpetas: 📦 Productos · 🌿 Quiénes somos · 📍 Dónde · ⭐ Reviews · 📲 Cómo pedir · 🏪 Revendedores</code>
+      </div>
+    </div>
+    <div class="urgente-item">
+      <div class="urgente-num">3</div>
+      <div class="urgente-body">
+        <h4>Activar botón de WhatsApp en Instagram y Facebook</h4>
+        <p>En Instagram Business: Editar perfil → Botón de acción → WhatsApp. En Facebook: configurar como canal de mensajes principal. Quien quiere comprar, tiene que poder hacerlo con 1 click.</p>
+      </div>
+    </div>
+    <div class="urgente-item">
+      <div class="urgente-num">4</div>
+      <div class="urgente-body">
+        <h4>Subir al menos 3 Reels esta semana</h4>
+        <p>El algoritmo de Instagram penaliza las cuentas que solo postean fotos. Los Reels tienen 3-5x más alcance. Tienen videos de WhatsApp sin publicar que pueden servir.</p>
+        <code>Tienen material ya filmado: HISTORIA.mp4 + 7 videos de WhatsApp de abril 2026</code>
+      </div>
+    </div>
+    <div class="urgente-item">
+      <div class="urgente-num">5</div>
+      <div class="urgente-body">
+        <h4>Crear el primer video de TikTok esta semana</h4>
+        <p>No tiene que ser perfecto. Un video de 30 segundos mostrando el proceso de envasado, con música trending, puede llegar a miles de personas sin pagar un peso. TikTok premia las cuentas nuevas con alcance inicial.</p>
+      </div>
+    </div>
+    <div class="urgente-item">
+      <div class="urgente-num">6</div>
+      <div class="urgente-body">
+        <h4>Definir paleta de colores y tipografía para posts</h4>
+        <p>Todos los posts diseñados tienen que usar los mismos colores: verde oscuro (#0e2310), kraft (#c09a5c), crema (#faf6ef). Una sola tipografía. El feed tiene que reconocerse de lejos.</p>
+        <code>Colores: Verde #0e2310 · Kraft #c09a5c · Crema #faf6ef | Tipografía: Cormorant Garamond + Inter</code>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ═══════════════════ INSTAGRAM ═══════════════════ -->
+<section id="instagram">
+  <h2><em>Campaña</em> Instagram — 30 días</h2>
+  <p class="section-sub">4-5 posts semanales · Stories diarias · Enfoque en Reels para crecimiento</p>
+
+  <div class="post-section">
+    <div class="platform-header">
+      <div class="platform-dot dot-ig"></div>
+      <h3>Semana 1 — "¿Sabés lo que tomás?"</h3>
+      <span>Educación + diferencial</span>
+    </div>
+    <div class="post-cards">
+
+      <div class="post-card">
+        <div class="post-card-header">
+          <h4>Post 1 — Lunes</h4>
+          <span class="post-type reel">Reel</span>
+        </div>
+        <div class="post-card-body">
+          <div class="post-visual">
+            <strong>Visual</strong>
+            Video 30 seg: mostrar yerba Harkana vs yerba común. Verter agua en las dos — mostrar la diferencia en el color del agua y el polvillo. Música trending sin letra. Texto en pantalla.
+          </div>
+          <div class="post-caption">¿Sabés lo que tiene tu yerba? 🤔
+
+La mayoría de las yerbas que tomas todos los días tienen:
+❌ Polvillo (esas partículas finas que obstruyen la bombilla)
+❌ Agroquímicos que no se ven ni se sienten
+❌ Gluten (sí, muchas tienen)
+
+Harkana no tiene nada de eso.
+
+100% orgánica. Sin polvillo. Sin TACC.
+Cultivada en Misiones, envasada a mano en Córdoba. 🌿
+
+¿Ya la probaste? Contanos abajo 👇</div>
+          <div class="post-hashtags">#YerbaOrgánica #Harkana #MateOrgánico #SinTACC #SinPolvillo #YerbaMate #MateArgentino #MateLife #OrganicFood #BuenaYerba</div>
+          <div class="post-meta">Horario sugerido: <span>Lunes 11am o 7pm</span></div>
+        </div>
+      </div>
+
+      <div class="post-card">
+        <div class="post-card-header">
+          <h4>Post 2 — Miércoles</h4>
+          <span class="post-type carousel">Carrusel</span>
+        </div>
+        <div class="post-card-body">
+          <div class="post-visual">
+            <strong>Visual</strong>
+            5 slides. Slide 1: fondo verde con texto grande blanco. Slide 2-5: íconos + texto sobre fondo crema. Slide 5 CTA.
+          </div>
+          <div class="post-caption">5 razones para cambiar tu yerba 🌿
+
+(deslizá →)
+
+1/ Sin polvillo = mate más limpio y suave
+2/ Sin agroquímicos = sabor más puro
+3/ Sin TACC = apta para celíacos
+4/ Cultivo orgánico = bien para vos y el planeta
+5/ Packaging artesanal = cada bolsa es única
+
+Harkana tiene todo eso. 🍃
+Envíos a todo Argentina desde Alejandro Roca, Córdoba.
+
+🔗 Link en bio para pedir.</div>
+          <div class="post-hashtags">#Harkana #YerbaOrgánica #MateOrgánico #CambiatuYerba #SinTACC #MateSaludable #Orgánico #YerbaMate #MisionesArgentina</div>
+          <div class="post-meta">Horario sugerido: <span>Miércoles 12pm</span></div>
+        </div>
+      </div>
+
+      <div class="post-card">
+        <div class="post-card-header">
+          <h4>Post 3 — Viernes</h4>
+          <span class="post-type reel">Reel</span>
+        </div>
+        <div class="post-card-body">
+          <div class="post-visual">
+            <strong>Visual</strong>
+            Video corto (15 seg) mostrando el proceso de envasado: manos trabajando, el papel kraft, el hilo. Estilo "detrás de escena". Sin palabras, solo música tranquila y texto en pantalla.
+          </div>
+          <div class="post-caption">Así se hace cada bolsa de Harkana. 🍃
+
+Sin máquinas. Sin conveyor belt. Sin intermediarios.
+
+Cada paquete que llega a tu casa se hizo así: a mano, con cuidado, con intención.
+
+Porque la yerba que tomás todos los días lo merece.
+
+@harkanaar 🌿</div>
+          <div class="post-hashtags">#Harkana #DetrásDeEscena #YerbaOrgánica #HechoAMano #Artesanal #MateOrgánico #EmprendimientoArgentino</div>
+          <div class="post-meta">Horario sugerido: <span>Viernes 7pm</span></div>
+        </div>
+      </div>
+
+    </div>
+  </div>
+
+  <div class="post-section">
+    <div class="platform-header">
+      <div class="platform-dot dot-ig"></div>
+      <h3>Semana 2 — "Historia de marca"</h3>
+      <span>Conexión emocional + autenticidad</span>
+    </div>
+    <div class="post-cards">
+
+      <div class="post-card">
+        <div class="post-card-header">
+          <h4>Post 4 — Lunes</h4>
+          <span class="post-type">Foto</span>
+        </div>
+        <div class="post-card-body">
+          <div class="post-visual">
+            <strong>Visual</strong>
+            Foto del producto actual (IMG_9965 o IMG_9940) sobre mesa de madera con buena luz. Mínimo, limpio, elegante.
+          </div>
+          <div class="post-caption">2019. Alejandro Roca, Córdoba.
+
+Una idea simple: que el mate sea lo que merece ser.
+
+Empezamos vendiendo en nuestra ciudad. Sin local, sin estructura, sin intermediarios. Solo la convicción de que una yerba orgánica, envasada con cuidado, podía llegar a las mesas de todo el país.
+
+Hoy llegamos a Córdoba, Buenos Aires y a todo Argentina por envío.
+
+El emprendimiento no tiene atajos. Pero cuando el producto es bueno de verdad, la gente lo siente.
+
+Gracias por bancar Harkana desde el principio. 🍃🇦🇷</div>
+          <div class="post-hashtags">#Harkana #EmprendimientoArgentino #YerbaOrgánica #DesdeElPrincipio #MateOrgánico #AlejandroRoca #Córdoba</div>
+          <div class="post-meta">Horario sugerido: <span>Lunes 10am</span></div>
+        </div>
+      </div>
+
+      <div class="post-card">
+        <div class="post-card-header">
+          <h4>Post 5 — Jueves</h4>
+          <span class="post-type carousel">Carrusel evolución</span>
+        </div>
+        <div class="post-card-body">
+          <div class="post-visual">
+            <strong>Visual</strong>
+            Carrusel con fotos históricas: bolsas sin marca (2019) → primeras etiquetas → envase kraft → diseño actual. Cada slide con año y descripción corta.
+          </div>
+          <div class="post-caption">De las primeras bolsas sin nombre... al packaging que ven hoy. 📦
+
+Cada etapa de Harkana fue una decisión de mejorar.
+
+2019 → Primeras bolsas, yerba buena, sin marca todavía
+2020 → Primera identidad: el círculo, el nombre, las espigas
+2022 → Papel kraft, más artesanal, más Harkana
+2024 → Ilustración botánica original. El diseño que nos representa.
+
+¿Cuál fue el packaging que más te gustó? Contanos 👇
+
+(deslizá para ver la evolución →)</div>
+          <div class="post-hashtags">#Harkana #EvoluciónDeMarca #YerbaOrgánica #BrandBuilding #EmprendimientoArgentino #Packaging #Artesanal</div>
+          <div class="post-meta">Horario sugerido: <span>Jueves 7pm</span></div>
+        </div>
+      </div>
+
+    </div>
+  </div>
+
+  <div class="post-section">
+    <div class="platform-header">
+      <div class="platform-dot dot-ig"></div>
+      <h3>Semana 3 — "Prueba social y revendedores"</h3>
+      <span>Credibilidad + B2B</span>
+    </div>
+    <div class="post-cards">
+
+      <div class="post-card">
+        <div class="post-card-header">
+          <h4>Post 6 — Martes</h4>
+          <span class="post-type">Foto</span>
+        </div>
+        <div class="post-card-body">
+          <div class="post-visual">
+            <strong>Visual</strong>
+            Foto en góndola de supermercado (IMG_9973) o en estación de servicio (IMG_0108). Con logo Harkana visible.
+          </div>
+          <div class="post-caption">Harkana sigue creciendo. 📍
+
+Nos encontrás en supermercados, estaciones de servicio y kioscos de Córdoba y Buenos Aires. Y si no estamos en tu ciudad todavía, podemos llegar igual por envío a todo el país. 📦
+
+¿Querés que lleguemos a tu negocio?
+👉 Escribinos al WhatsApp o dejanos un comentario con tu ciudad.
+
+Buscamos revendedores, kioscos, almacenes y distribuidores en todo Argentina. 🇦🇷</div>
+          <div class="post-hashtags">#Harkana #NuevoPuntoDeVenta #YerbaOrgánica #Revendedores #DistribuidoresArgentina #MateOrgánico</div>
+          <div class="post-meta">Horario sugerido: <span>Martes 12pm</span></div>
+        </div>
+      </div>
+
+      <div class="post-card">
+        <div class="post-card-header">
+          <h4>Post 7 — Viernes</h4>
+          <span class="post-type reel">Reel engagement</span>
+        </div>
+        <div class="post-card-body">
+          <div class="post-visual">
+            <strong>Visual</strong>
+            Video estilo "encuesta en cámara": grabar alguien tomando mate Harkana y preguntando directamente a cámara. O usar diseño animado con texto.
+          </div>
+          <div class="post-caption">PREGUNTA HONESTA 👇
+
+¿Cuántos mates tomás por día?
+
+A) 1-3 (matecito tranqui)
+B) 4-8 (consumidor moderado)
+C) 9+ (mate en la mano todo el día)
+D) Pierdo la cuenta
+
+Contanos en los comentarios 😄
+
+(y si todavía no probaste Harkana, ese es el momento ideal — link en bio 🌿)</div>
+          <div class="post-hashtags">#Mate #MateLife #MateArgentino #Harkana #YerbaMate #EncuestaMate #MateAmargo</div>
+          <div class="post-meta">Horario sugerido: <span>Viernes 6pm</span></div>
+        </div>
+      </div>
+
+    </div>
+  </div>
+
+  <div class="post-section">
+    <div class="platform-header">
+      <div class="platform-dot dot-ig"></div>
+      <h3>Semana 4 — "Celiaquía + cierre del mes"</h3>
+      <span>Nicho específico + llamada a la acción final</span>
+    </div>
+    <div class="post-cards">
+
+      <div class="post-card">
+        <div class="post-card-header">
+          <h4>Post 8 — Lunes</h4>
+          <span class="post-type carousel">Carrusel</span>
+        </div>
+        <div class="post-card-body">
+          <div class="post-visual">
+            <strong>Visual</strong>
+            Diseño limpio con fondo crema. Tipografía grande, íconos simples. Certificado Sin TACC visible en último slide.
+          </div>
+          <div class="post-caption">Para los que tienen celiaquía: el mate también puede ser seguro. 🌾
+
+La mayoría de las yerbas procesadas industrialmente pueden tener contaminación cruzada con TACC.
+
+Harkana es:
+✅ Sin TACC certificada
+✅ Sin contaminación cruzada
+✅ Producida en ambiente controlado
+✅ Apta para celíacos
+
+Porque el ritual del mate no debería tener excepciones.
+
+Compartí esto con alguien que lo necesita. 🍃</div>
+          <div class="post-hashtags">#SinTACC #Celiaquía #CeliacosArgentina #GlutenFree #YerbaOrgánica #Harkana #MateOrgánico #AlimentosSinTACC #CeliacosUnidos</div>
+          <div class="post-meta">Horario sugerido: <span>Lunes 11am</span></div>
+        </div>
+      </div>
+
+      <div class="post-card">
+        <div class="post-card-header">
+          <h4>Post 9 — Jueves</h4>
+          <span class="post-type reel">Reel cierre de mes</span>
+        </div>
+        <div class="post-card-body">
+          <div class="post-visual">
+            <strong>Visual</strong>
+            Video resumen del mes: collage de fotos y videos del mes, empaquetando pedidos, puntos de venta nuevos, etc. Con música emotiva y texto de cierre.
+          </div>
+          <div class="post-caption">Un mes más. Gracias. 🍃
+
+Cada bolsa que sale de acá lleva un poco de lo que hacemos con cuidado.
+
+Este mes llegamos a nuevos puntos de venta, despachamos pedidos a [X] provincias, y seguimos creciendo gracias a ustedes.
+
+Si te pasaste este mes tomando Harkana: gracias de verdad.
+Si todavía no la probaste: este es tu momento. 🌿
+
+📦 Link en bio — Envíos a todo Argentina.</div>
+          <div class="post-hashtags">#Harkana #YerbaOrgánica #EmprendimientoArgentino #GraciasClientes #MateOrgánico #Artesanal #MateArgentino</div>
+          <div class="post-meta">Horario sugerido: <span>Jueves 7pm</span></div>
+        </div>
+      </div>
+
+    </div>
+  </div>
+
+  <div class="tip-box">
+    <h4>💡 Tips Instagram para el mes</h4>
+    <ul>
+      <li>Respondé TODOS los comentarios en las primeras 2 horas — el algoritmo lo premia con más alcance</li>
+      <li>Usá entre 5 y 10 hashtags (no 30). Mixeá grandes (#MateArgentino) con medianos (#YerbaOrgánica) y específicos (#HarkanaNaturaleza)</li>
+      <li>Stories mínimo 1 por día: pueden ser simples (foto del día, poll, reshare de mención)</li>
+      <li>Respondé DMs rápido — Instagram te da una etiqueta de "respuesta rápida" que genera confianza</li>
+      <li>Guardá tus Reels con texto en pantalla — el 85% de las personas mira videos sin audio</li>
+    </ul>
+  </div>
+</section>
+
+<!-- ═══════════════════ TIKTOK ═══════════════════ -->
+<section id="tiktok">
+  <h2><em>Campaña</em> TikTok — 30 días</h2>
+  <p class="section-sub">Mínimo 3 videos por semana · Aprovechar el alcance orgánico inicial · Formato: entretenimiento + educación</p>
+
+  <div class="post-section">
+    <div class="platform-header">
+      <div class="platform-dot dot-tt"></div>
+      <h3>Estrategia general TikTok</h3>
+      <span>Crecimiento orgánico desde cero</span>
+    </div>
+    <div class="diag-grid" style="margin-bottom:28px;">
+      <div class="diag-item tip">
+        <span class="diag-icon">📱</span>
+        <div class="diag-text">
+          <h4>TikTok premia las cuentas nuevas</h4>
+          <p>Las primeras semanas de una cuenta nueva tienen un alcance inicial elevado. Es el momento ideal para publicar con frecuencia y probar qué funciona.</p>
+        </div>
+      </div>
+      <div class="diag-item tip">
+        <span class="diag-icon">🎵</span>
+        <div class="diag-text">
+          <h4>Usá sonidos trending</h4>
+          <p>Siempre grabá el audio original pero luego usá un sonido trending al editar. El algoritmo de TikTok prioriza los videos que usan audio popular.</p>
+        </div>
+      </div>
+      <div class="diag-item tip">
+        <span class="diag-icon">⏱️</span>
+        <div class="diag-text">
+          <h4>Duración ideal: 15-30 segundos</h4>
+          <p>Los primeros 3 segundos son críticos. Si no enganchás en ese tiempo, el video no se muestra. Empezá con una pregunta o algo visualmente llamativo.</p>
+        </div>
+      </div>
+      <div class="diag-item tip">
+        <span class="diag-icon">📝</span>
+        <div class="diag-text">
+          <h4>Texto en pantalla es obligatorio</h4>
+          <p>El 85% ve TikTok sin audio. Cada video tiene que tener subtítulos o texto. TikTok tiene subtítulos automáticos — activarlos siempre.</p>
+        </div>
+      </div>
+    </div>
+
+    <div class="post-cards">
+
+      <div class="post-card">
+        <div class="post-card-header" style="background: #ee1d52;">
+          <h4>Video 1 — Semana 1</h4>
+          <span class="post-type reel">Viral hook</span>
+        </div>
+        <div class="post-card-body">
+          <div class="post-visual">
+            <strong>Concepto</strong>
+            Empezar con la cámara encendida mostrando el proceso de envasado a mano. El gancho visual: decenas de bolsas sobre la mesa. Dura 20-25 seg.
+          </div>
+          <div class="post-caption">POV: estás mirando cómo se hace cada bolsa de Harkana 👀
+
+Sin máquinas. Sin fábrica. Solo manos, papel kraft y yerba orgánica.
+
+Texto en pantalla: "Así se envasa la yerba orgánica más artesanal de Argentina"
+
+[mostrar cada paso: yerba, papel, doblar, hilo, sellar]
+
+Texto final: "¿Ya la probaste? Link en bio 🌿"</div>
+          <div class="post-hashtags">#YerbaOrgánica #Harkana #POV #Artesanal #MateOrgánico #ArgentinaEmprendedor #HechoAMano #FoodTok</div>
+        </div>
+      </div>
+
+      <div class="post-card">
+        <div class="post-card-header" style="background: #ee1d52;">
+          <h4>Video 2 — Semana 1</h4>
+          <span class="post-type reel">Educativo</span>
+        </div>
+        <div class="post-card-body">
+          <div class="post-visual">
+            <strong>Concepto</strong>
+            Video tipo "¿sabías que?" con texto grande en pantalla. Puede ser solo texto animado sobre foto del producto. Muy fácil de hacer.
+          </div>
+          <div class="post-caption">¿Sabías que la mayoría de las yerbas tienen polvillo? 😳
+
+El polvillo son las partículas finas que:
+→ Obstruyen la bombilla
+→ Amargan el primer mate
+→ Son lo peor de la yerba industrializada
+
+Harkana no tiene. Es yerba entera, orgánica, seleccionada.
+
+Texto final: "¿Cuándo fue la última vez que tomaste un mate limpio de verdad?"</div>
+          <div class="post-hashtags">#MateArgentino #YerbaMate #Sabias #YerbaOrgánica #Harkana #TipsMateros #MateOrgánico</div>
+        </div>
+      </div>
+
+      <div class="post-card">
+        <div class="post-card-header" style="background: #ee1d52;">
+          <h4>Video 3 — Semana 2</h4>
+          <span class="post-type reel">Storytelling</span>
+        </div>
+        <div class="post-card-body">
+          <div class="post-visual">
+            <strong>Concepto</strong>
+            Video "cómo empezó todo" — formato texto en pantalla + fotos históricas. Como un "story time" visual. Muy popular en TikTok.
+          </div>
+          <div class="post-caption">Cómo empezó Harkana (la versión honesta) 🌿
+
+Texto pantalla slide a slide:
+1. "2019. Sin plata. Sin experiencia."
+2. "Solo la convicción de que la yerba podía ser mejor"
+3. "Primer mensaje de WhatsApp: 'Vendo yerba sin agrotóxicos'"
+4. "Primer cliente: un vecino"
+5. "Hoy llegamos a todo Argentina"
+6. "Y seguimos envasando a mano, uno por uno"
+
+Final: "¿Cuándo fue la primera vez que bancaste un emprendimiento argentino?"</div>
+          <div class="post-hashtags">#Emprendimiento #EmprendimientoArgentino #StoryTime #Harkana #YerbaOrgánica #DesdeElPrincipio #Startup</div>
+        </div>
+      </div>
+
+    </div>
+  </div>
+
+  <div class="tip-box">
+    <h4>💡 Tips TikTok para el mes</h4>
+    <ul>
+      <li>Publicá entre las 7-9am o 7-10pm — son los horarios de mayor audiencia en Argentina</li>
+      <li>Respondé comentarios con videos (la función "responder con video" de TikTok da alcance adicional)</li>
+      <li>Mirá qué sonidos son trending en Argentina usando la sección "Descubrir" — usá esos en tus videos</li>
+      <li>No borres videos con pocos likes — TikTok puede mostrarlos a más gente días después</li>
+      <li>Activá el "modo creador" en la cuenta para ver métricas detalladas</li>
+    </ul>
+  </div>
+</section>
+
+<!-- ═══════════════════ FACEBOOK ═══════════════════ -->
+<section id="facebook">
+  <h2><em>Estrategia</em> Facebook — 30 días</h2>
+  <p class="section-sub">Enfoque: revendedores B2B + grupos de mate y celiaquía + Marketplace</p>
+
+  <div class="diag-grid" style="margin-bottom:28px;">
+    <div class="diag-item tip">
+      <span class="diag-icon">🏪</span>
+      <div class="diag-text">
+        <h4>Facebook Marketplace es clave para venta local</h4>
+        <p>Publicá el producto en Marketplace de Alejandro Roca y Río Cuarto. Miles de personas buscan productos ahí. Es gratis y funciona para ventas locales.</p>
+      </div>
+    </div>
+    <div class="diag-item tip">
+      <span class="diag-icon">👥</span>
+      <div class="diag-text">
+        <h4>Grupos de mate y celiaquía</h4>
+        <p>En Facebook hay grupos con miles de miembros de "Celíacos Argentina", "Mate lovers", "Emprendedores Córdoba". Participar activamente (no solo publicitar) genera ventas reales.</p>
+      </div>
+    </div>
+    <div class="diag-item tip">
+      <span class="diag-icon">🔄</span>
+      <div class="diag-text">
+        <h4>Espejo de Instagram, no copia exacta</h4>
+        <p>Compartí el contenido de Instagram pero adaptalo: Facebook permite textos más largos y tolera mejor el formato "carta al cliente". Los videos tienen buen alcance orgánico.</p>
+      </div>
+    </div>
+    <div class="diag-item tip">
+      <span class="diag-icon">📢</span>
+      <div class="diag-text">
+        <h4>Ads con presupuesto mínimo</h4>
+        <p>Con $3.000-5.000 ARS por mes en Facebook Ads, podés segmentar por zona (Córdoba, Buenos Aires), intereses (mate, orgánico, celiaquía) y llegar a miles de personas nuevas.</p>
+      </div>
+    </div>
+  </div>
+
+  <div class="post-cards">
+    <div class="post-card">
+      <div class="post-card-header" style="background: #1877F2;">
+        <h4>Post Facebook — Para revendedores</h4>
+        <span class="post-type">Post largo</span>
+      </div>
+      <div class="post-card-body">
+        <div class="post-caption">¿Tenés un negocio y querés sumar un producto diferente a tu góndola? 📦
+
+Buscamos revendedores, kioscos, almacenes, estaciones de servicio y distribuidores en todo Argentina.
+
+Harkana es una yerba mate 100% orgánica, sin TACC, sin polvillo. Packaging artesanal en papel kraft que se destaca en cualquier góndola.
+
+✅ Stock permanente — nunca te quedás sin mercadería
+✅ Entregas rápidas — a todo el país
+✅ 4 presentaciones — 500g, 1kg, 3kg y 10kg (próximamente)
+✅ Precio mayorista real — trato directo con los dueños
+✅ Producto diferenciado — la gente lo busca específicamente
+
+Ya estamos en supermercados y estaciones de servicio de Córdoba y Buenos Aires.
+
+Si te interesa, escribinos por WhatsApp o dejá tu info en los comentarios y te contactamos. 🌿
+
+#Harkana #Mayorista #RevendedoresArgentina #YerbaOrgánica #Distribuidores</div>
+      </div>
+    </div>
+    <div class="post-card">
+      <div class="post-card-header" style="background: #1877F2;">
+        <h4>Marketplace — Listado de producto</h4>
+        <span class="post-type">Marketplace</span>
+      </div>
+      <div class="post-card-body">
+        <div class="post-visual">
+          <strong>Configuración en Marketplace</strong>
+          Crear listado en Alejandro Roca, Río Cuarto y área de Buenos Aires. Categoría: Alimentos y bebidas.
+        </div>
+        <div class="post-caption">TÍTULO: Yerba Orgánica HARKANA 500g — Sin TACC — Sin polvillo
+
+DESCRIPCIÓN:
+Harkana es yerba mate 100% orgánica, sin TACC y sin polvillo.
+Cultivada en Misiones sin agroquímicos.
+Envasada artesanalmente en Alejandro Roca, Córdoba.
+
+Presentaciones disponibles:
+• 500g — bolsa kraft artesanal
+• 1kg — bolsa estándar
+• 3kg — mejor precio/kg
+
+Envíos a todo el país. Trato directo con los dueños.
+Consultas por WhatsApp 👇</div>
+      </div>
+    </div>
+  </div>
+
+  <div class="tip-box">
+    <h4>💡 Grupos de Facebook para participar activamente</h4>
+    <ul>
+      <li>"Celíacos Argentina" — Publicar sobre el producto Sin TACC una vez por semana</li>
+      <li>"Mate lovers Argentina" — Participar en conversaciones, no solo publicitar</li>
+      <li>"Emprendedores Córdoba" — Compartir la historia del emprendimiento</li>
+      <li>"Compra y Venta Alejandro Roca" — Publicar para ventas locales</li>
+      <li>"Distribuidores y Revendedores Argentina" — Para conseguir revendedores mayoristas</li>
+    </ul>
+  </div>
+</section>
+
+<!-- ═══════════════════ CALENDARIO ═══════════════════ -->
+<section id="calendario">
+  <h2><em>Calendario</em> de publicaciones</h2>
+  <p class="section-sub">Plan semanal tipo para los 30 días — adaptable a imprevistos</p>
+
+  <div class="cal-grid">
+    <div></div>
+    <div class="cal-header">Lunes</div>
+    <div class="cal-header">Martes</div>
+    <div class="cal-header">Miércoles</div>
+    <div class="cal-header">Jueves</div>
+    <div class="cal-header">Viernes</div>
+    <div class="cal-header">Sábado</div>
+    <div class="cal-header">Domingo</div>
+
+    <!-- SEMANA 1 -->
+    <div class="cal-week-label">S1</div>
+    <div class="cal-cell">
+      <span class="cal-tag tag-ig">IG</span>
+      <span class="cal-tag tag-tt">TT</span>
+      <div class="cal-content">Reel: "¿Sabés lo que tomás?" | Video proceso envasado</div>
+    </div>
+    <div class="cal-cell">
+      <span class="cal-tag tag-ig">IG Story</span>
+      <div class="cal-content">Poll: ¿Cuántos mates por día?</div>
+    </div>
+    <div class="cal-cell">
+      <span class="cal-tag tag-all">IG+FB</span>
+      <div class="cal-content">Carrusel: 5 razones para cambiar tu yerba</div>
+    </div>
+    <div class="cal-cell">
+      <span class="cal-tag tag-tt">TT</span>
+      <span class="cal-tag tag-ig">IG Story</span>
+      <div class="cal-content">TT: "¿Sabías que la yerba tiene polvillo?" | Story: producto</div>
+    </div>
+    <div class="cal-cell">
+      <span class="cal-tag tag-ig">IG Reel</span>
+      <div class="cal-content">Detrás de escena: proceso de envasado a mano</div>
+    </div>
+    <div class="cal-cell">
+      <span class="cal-tag tag-ig">IG Story</span>
+      <div class="cal-content">Reshare de clientes / mención</div>
+    </div>
+    <div class="cal-cell empty"></div>
+
+    <!-- SEMANA 2 -->
+    <div class="cal-week-label">S2</div>
+    <div class="cal-cell">
+      <span class="cal-tag tag-ig">IG</span>
+      <span class="cal-tag tag-fb">FB</span>
+      <div class="cal-content">Foto + historia: "2019, Alejandro Roca, una idea"</div>
+    </div>
+    <div class="cal-cell">
+      <span class="cal-tag tag-ig">IG Story</span>
+      <div class="cal-content">Pregunta: ¿Con qué tomás el mate?</div>
+    </div>
+    <div class="cal-cell">
+      <span class="cal-tag tag-tt">TT</span>
+      <div class="cal-content">Story time: cómo empezó Harkana</div>
+    </div>
+    <div class="cal-cell">
+      <span class="cal-tag tag-ig">IG</span>
+      <div class="cal-content">Carrusel evolución de la marca</div>
+    </div>
+    <div class="cal-cell">
+      <span class="cal-tag tag-ig">IG Reel</span>
+      <span class="cal-tag tag-tt">TT</span>
+      <div class="cal-content">Encuesta de engagement: tipos de materos</div>
+    </div>
+    <div class="cal-cell">
+      <span class="cal-tag tag-fb">FB</span>
+      <div class="cal-content">Marketplace: actualizar listados</div>
+    </div>
+    <div class="cal-cell empty"></div>
+
+    <!-- SEMANA 3 -->
+    <div class="cal-week-label">S3</div>
+    <div class="cal-cell">
+      <span class="cal-tag tag-tt">TT</span>
+      <div class="cal-content">Video: "Así llega Harkana a tu puerta" — unboxing</div>
+    </div>
+    <div class="cal-cell">
+      <span class="cal-tag tag-ig">IG</span>
+      <span class="cal-tag tag-fb">FB</span>
+      <div class="cal-content">Foto en punto de venta + info revendedores</div>
+    </div>
+    <div class="cal-cell">
+      <span class="cal-tag tag-ig">IG Story</span>
+      <div class="cal-content">Serie: "Cómo preparar el mate perfecto" (5 slides)</div>
+    </div>
+    <div class="cal-cell">
+      <span class="cal-tag tag-ig">IG</span>
+      <div class="cal-content">Post de producto: línea completa 500g / 1kg / 3kg</div>
+    </div>
+    <div class="cal-cell">
+      <span class="cal-tag tag-ig">IG Reel</span>
+      <span class="cal-tag tag-tt">TT</span>
+      <div class="cal-content">Reel: "¿Mate amargo o dulce?" — engagement</div>
+    </div>
+    <div class="cal-cell">
+      <span class="cal-tag tag-ig">IG Story</span>
+      <div class="cal-content">Mostrar el packaging artesanal en detalle</div>
+    </div>
+    <div class="cal-cell empty"></div>
+
+    <!-- SEMANA 4 -->
+    <div class="cal-week-label">S4</div>
+    <div class="cal-cell">
+      <span class="cal-tag tag-ig">IG</span>
+      <span class="cal-tag tag-fb">FB</span>
+      <div class="cal-content">Carrusel Sin TACC / celiaquía</div>
+    </div>
+    <div class="cal-cell">
+      <span class="cal-tag tag-tt">TT</span>
+      <div class="cal-content">Video: comparativa yerba con/sin polvillo</div>
+    </div>
+    <div class="cal-cell">
+      <span class="cal-tag tag-ig">IG Story</span>
+      <div class="cal-content">Mostrar pedidos empaquetados listas para envío</div>
+    </div>
+    <div class="cal-cell">
+      <span class="cal-tag tag-ig">IG Reel</span>
+      <span class="cal-tag tag-tt">TT</span>
+      <div class="cal-content">Reel cierre del mes / agradecimiento</div>
+    </div>
+    <div class="cal-cell">
+      <span class="cal-tag tag-ig">IG</span>
+      <span class="cal-tag tag-fb">FB</span>
+      <div class="cal-content">Post anuncio: nuevo punto de venta / novedad del mes</div>
+    </div>
+    <div class="cal-cell">
+      <span class="cal-tag tag-ig">IG Story</span>
+      <div class="cal-content">Teaser del próximo mes</div>
+    </div>
+    <div class="cal-cell empty"></div>
+  </div>
+</section>
+
+<!-- ═══════════════════ CAMPAÑAS ESPECIALES ═══════════════════ -->
+<section id="campanas">
+  <h2>Campañas <em>especiales</em></h2>
+  <p class="section-sub">Ideas para activaciones concretas con objetivo de venta directo</p>
+
+  <div class="campana-box">
+    <h3>🎯 Campaña "Primer Mate Harkana"</h3>
+    <p class="campana-sub">Objetivo: captar nuevos compradores que nunca probaron la marca</p>
+    <div class="campana-cols">
+      <div class="campana-col">
+        <h4>Mecánica</h4>
+        <ul class="campana-list">
+          <li>Post en IG invitando a quienes nunca probaron Harkana</li>
+          <li>Ofrecer envío gratis en el primer pedido de 500g (mínimo)</li>
+          <li>El cliente escribe "PRIMERVEZ" por WhatsApp</li>
+          <li>Limitado a los primeros 20 pedidos del mes</li>
+          <li>Documentar las reacciones para contenido futuro</li>
+        </ul>
+      </div>
+      <div class="campana-col">
+        <h4>Copy del Post</h4>
+        <ul class="campana-list">
+          <li>"¿Nunca probaste Harkana? Hoy cambia eso."</li>
+          <li>"Envío gratis en tu primera bolsa de 500g"</li>
+          <li>"Solo los primeros 20 — primer llegado, primer servido"</li>
+          <li>"Escribinos 'PRIMERVEZ' por WhatsApp"</li>
+          <li>"Después nos contás qué pensás 🌿"</li>
+        </ul>
+      </div>
+    </div>
+  </div>
+
+  <div class="campana-box">
+    <h3>🏪 Campaña "Sumá Harkana a tu negocio"</h3>
+    <p class="campana-sub">Objetivo: conseguir 5 nuevos revendedores en el mes</p>
+    <div class="campana-cols">
+      <div class="campana-col">
+        <h4>Mecánica</h4>
+        <ul class="campana-list">
+          <li>Post en FB e IG dirigido a dueños de negocios</li>
+          <li>Formulario simple: nombre + local + ciudad + WhatsApp</li>
+          <li>Respuesta en menos de 24hs con catálogo y precios</li>
+          <li>Primer pedido mayorista con descuento de bienvenida</li>
+          <li>Foto del producto en el local para compartir en redes</li>
+        </ul>
+      </div>
+      <div class="campana-col">
+        <h4>Segmentación Ads (Facebook)</h4>
+        <ul class="campana-list">
+          <li>Zona: Córdoba, Buenos Aires, Rosario</li>
+          <li>Edad: 28-55 años</li>
+          <li>Intereses: emprendimiento, supermercado, quiosco</li>
+          <li>Presupuesto: $3.000-5.000 ARS / mes</li>
+          <li>Formato: imagen del producto + texto corto</li>
+        </ul>
+      </div>
+    </div>
+  </div>
+
+  <div class="campana-box">
+    <h3>🌾 Campaña "Celiaquía sin límites"</h3>
+    <p class="campana-sub">Objetivo: posicionarse como la yerba de referencia para celíacos</p>
+    <div class="campana-cols">
+      <div class="campana-col">
+        <h4>Acciones</h4>
+        <ul class="campana-list">
+          <li>Carrusel educativo sobre yerba y TACC</li>
+          <li>Participación en grupos de celíacos en Facebook</li>
+          <li>Story semanal con el sello Sin TACC</li>
+          <li>Hashtags específicos: #SinTACC #CeliacosArgentina</li>
+          <li>Buscar colaboración con cuentas de celiaquía en IG</li>
+        </ul>
+      </div>
+      <div class="campana-col">
+        <h4>Mensaje clave</h4>
+        <ul class="campana-list">
+          <li>"El mate también puede ser seguro para celíacos"</li>
+          <li>"Sin TACC certificada — no hay excepciones"</li>
+          <li>"Orgánica y sin gluten: todo en una yerba"</li>
+          <li>"Para quienes cuidan lo que comen también cuando matean"</li>
+        </ul>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ═══════════════════ KPIs ═══════════════════ -->
+<section id="kpis">
+  <h2>Objetivos y <em>métricas</em></h2>
+  <p class="section-sub">Qué medir al finalizar el mes para evaluar si la estrategia está funcionando</p>
+
+  <div class="kpi-grid">
+    <div class="kpi-box">
+      <div class="kpi-num">+200</div>
+      <div class="kpi-label">Nuevos seguidores IG</div>
+    </div>
+    <div class="kpi-box">
+      <div class="kpi-num">3%+</div>
+      <div class="kpi-label">Tasa de engagement IG</div>
+    </div>
+    <div class="kpi-box">
+      <div class="kpi-num">500+</div>
+      <div class="kpi-label">Seguidores TikTok</div>
+    </div>
+    <div class="kpi-box">
+      <div class="kpi-num">5+</div>
+      <div class="kpi-label">Nuevos revendedores</div>
+    </div>
+  </div>
+
+  <h3 style="margin-top:32px;">¿Cómo medir si está funcionando?</h3>
+  <div class="diag-grid">
+    <div class="diag-item ok">
+      <span class="diag-icon">📊</span>
+      <div class="diag-text">
+        <h4>Instagram Insights (gratis)</h4>
+        <p>Revisá cada semana: alcance, impresiones, visitas al perfil, clicks en el link de bio. Si el alcance sube, el algoritmo te está mostrando a más gente.</p>
+      </div>
+    </div>
+    <div class="diag-item ok">
+      <span class="diag-icon">📲</span>
+      <div class="diag-text">
+        <h4>WhatsApp como indicador real</h4>
+        <p>Preguntá siempre "¿cómo nos conociste?" a cada cliente. Si empezás a recibir más "por Instagram" o "por TikTok", la estrategia funciona.</p>
+      </div>
+    </div>
+    <div class="diag-item warn">
+      <span class="diag-icon">⚠️</span>
+      <div class="diag-text">
+        <h4>No te obsesiones con los likes</h4>
+        <p>Un post con 10 likes pero que generó 3 consultas de mayoristas vale más que uno con 200 likes y cero ventas. El objetivo es vender, no viralizar.</p>
+      </div>
+    </div>
+    <div class="diag-item tip">
+      <span class="diag-icon">📅</span>
+      <div class="diag-text">
+        <h4>Revisión semanal de 15 minutos</h4>
+        <p>Cada lunes: revisar métricas de la semana anterior, ver qué tuvo más alcance, repetir el formato que mejor funcionó. No necesita ser más complejo que eso.</p>
+      </div>
+    </div>
+  </div>
+
+  <div class="tip-box" style="margin-top:32px;">
+    <h4>🔑 La regla más importante del mes</h4>
+    <ul>
+      <li>Constancia > perfección. Un post "imperfecto" publicado hoy vale más que el post "perfecto" que nunca sale.</li>
+      <li>Reels y TikToks son prioridad. El alcance orgánico de fotos cayó. El video es el rey.</li>
+      <li>Contestá todo: comentarios, DMs, menciones. El algoritmo premia la interacción bidireccional.</li>
+      <li>Reutilizá el contenido: un Reel de Instagram puede ser el mismo video en TikTok. Adaptá el texto, no hagas doble trabajo.</li>
+      <li>El WhatsApp es tu canal de venta real. Las redes son el embudo. El cierre pasa por WhatsApp.</li>
+    </ul>
+  </div>
+</section>
+
+</div><!-- /container -->
+
+<footer>
+  HARKANA Yerba Orgánica · Estrategia de Redes 30 Días · Abril 2026 · Para uso interno
+</footer>
+</body>
+</html>
