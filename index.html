@@ -7,6 +7,7 @@
 <meta name="description" content="Harkana — Yerba mate orgánica Argentina. Cultivada en Misiones, embolsada artesanalmente en Córdoba. Sin TACC, sin polvillo, sin agroquímicos. Envíos a todo el país. Presentaciones 500g, 1kg y 3kg.">
 <meta name="keywords" content="yerba organica Argentina, yerba sin TACC, yerba mate organica Misiones, yerba organica Cordoba, yerba mate sin agroquimicos, yerba organica premium, harkana, yerba artesanal, yerba mate sin polvillo, comprar yerba organica">
 <title>HARKANA — Yerba Orgánica de verdad</title>
+<link rel="icon" href="favicon.ico">
 <link rel="icon" type="image/jpeg" href="CONTENIDO/LOGO oficial harkana.jpeg">
 <link rel="apple-touch-icon" href="CONTENIDO/LOGO oficial harkana.jpeg">
 <!-- ContentSquare -->
@@ -323,7 +324,12 @@ h2.section-title em { font-style:italic; color:var(--verde-claro); }
 .celiaco-check { display:flex; align-items:center; gap:14px; color:rgba(255,255,255,.85); font-size:.9rem; }
 .celiaco-check::before { content:'✓'; display:flex; align-items:center; justify-content:center; width:26px; height:26px; border-radius:50%; background:rgba(255,255,255,.15); color:var(--kraft); font-weight:700; font-size:.85rem; flex-shrink:0; }
 .celiacos-visual { position:relative; }
-.celiacos-visual img { width:100%; border-radius:8px; box-shadow:0 40px 80px rgba(0,0,0,.4); }
+.celiacos-visual-bg {
+  background:#141414; border-radius:12px;
+  display:flex; align-items:center; justify-content:center;
+  padding:48px 32px;
+}
+.celiacos-visual-bg img { width:100%; max-width:320px; border-radius:6px; box-shadow:0 30px 70px rgba(0,0,0,.6); }
 .celiacos-cert { position:absolute; bottom:24px; right:24px; background:#fff; border-radius:10px; padding:16px 20px; display:flex; align-items:center; gap:12px; box-shadow:0 8px 30px rgba(0,0,0,.2); }
 .celiacos-cert span { font-size:1.6rem; }
 .celiacos-cert div strong { display:block; font-size:.78rem; font-weight:700; color:var(--verde); }
@@ -788,7 +794,7 @@ footer { background:var(--carbon); padding:80px 0 40px; }
   <div class="container">
     <div class="historia-grid">
       <div class="historia-img-wrap reveal-left">
-        <img src="CONTENIDO/fotos_clasificar/IMG_0021.JPEG" alt="Proceso de envasado artesanal de Harkana Yerba Orgánica en Alejandro Roca, Córdoba" loading="lazy">
+        <img src="CONTENIDO/fotos_clasificar/IMG_0021.JPEG" alt="Proceso de envasado artesanal de Harkana Yerba Orgánica en Alejandro Roca, Córdoba" loading="lazy" style="object-position:50% 80%;">
         <div class="historia-img-overlay">
           <span>Envasado artesanal</span>
           <strong>Uno por uno, a mano.</strong>
@@ -837,7 +843,7 @@ footer { background:var(--carbon); padding:80px 0 40px; }
           <div class="tl-slide-info">
             <span class="tl-slide-year">2019</span>
             <p class="tl-slide-title">Los primeros pasos</p>
-            <p class="tl-slide-desc">Las primeras bolsas embolsadas a mano, sin etiqueta, sin packaging. Solo la convicción de que la yerba tenía que ser diferente. El origen de todo.</p>
+            <p class="tl-slide-desc">Las primeras presentaciones, embolsadas a mano, sin etiqueta, sin packaging. Solo la convicción de que la yerba tenía que ser diferente. El origen de todo.</p>
           </div>
         </div>
 
@@ -1195,7 +1201,9 @@ footer { background:var(--carbon); padding:80px 0 40px; }
         </a>
       </div>
       <div class="celiacos-visual reveal-right">
-        <img src="CONTENIDO/fotos_clasificar/IMG_9965.JPEG" alt="Harkana Yerba Orgánica 500g kraft — certificada sin TACC, apta para celíacos" loading="lazy">
+        <div class="celiacos-visual-bg">
+          <img src="CONTENIDO/fotos_clasificar/IMG_9965.JPEG" alt="Harkana Yerba Orgánica 500g kraft — certificada sin TACC, apta para celíacos" loading="lazy">
+        </div>
         <div class="celiacos-cert">
           <span>🌾</span>
           <div>
@@ -1760,41 +1768,38 @@ document.querySelectorAll('a[href^="#"]').forEach(a => {
 });
 
 // ── EXIT POPUP ──
-(function() {
+window.addEventListener('DOMContentLoaded', function() {
   if (localStorage.getItem('harkana_popup_closed') === '1') return;
-  let shown = false;
+  var shown = false;
+  var overlay = document.getElementById('exit-popup');
+  var closeBtn = document.getElementById('popup-close-btn');
+  var skipBtn = document.getElementById('popup-skip');
+  if (!overlay || !closeBtn || !skipBtn) return;
+
   function showPopup() {
     if (shown) return;
     shown = true;
-    document.getElementById('exit-popup').classList.add('open');
+    overlay.classList.add('open');
     if (typeof fbq !== 'undefined') fbq('track', 'Lead', {content_name: 'Exit Popup Mayorista'});
     if (typeof gtag !== 'undefined') gtag('event', 'exit_popup_show');
   }
   function closePopup() {
-    document.getElementById('exit-popup').classList.remove('open');
+    overlay.classList.remove('open');
     localStorage.setItem('harkana_popup_closed', '1');
   }
-  // Desktop: exit intent por mouse saliendo por arriba
-  document.addEventListener('mouseleave', function(e) {
-    if (e.clientY <= 10) showPopup();
+
+  // Trigger: 60 segundos en la página
+  setTimeout(showPopup, 60000);
+
+  // Cerrar con X
+  closeBtn.addEventListener('click', closePopup);
+  // Cerrar con "no me interesa"
+  skipBtn.addEventListener('click', closePopup);
+  // Cerrar tocando el fondo oscuro
+  overlay.addEventListener('click', function(e) {
+    if (e.target === overlay) closePopup();
   });
-  // Mobile: scroll hacia arriba rápido (señal de querer cerrar)
-  let lastScrollY = window.scrollY;
-  let scrollTimer;
-  window.addEventListener('scroll', function() {
-    clearTimeout(scrollTimer);
-    scrollTimer = setTimeout(function() {
-      const delta = lastScrollY - window.scrollY;
-      if (delta > 120 && window.scrollY < 400) showPopup();
-      lastScrollY = window.scrollY;
-    }, 150);
-  });
-  document.getElementById('exit-popup').addEventListener('click', function(e) {
-    if (e.target === this) closePopup();
-  });
-  document.getElementById('popup-close-btn').addEventListener('click', closePopup);
-  document.getElementById('popup-skip').addEventListener('click', closePopup);
-})();
+});
 
 // ── TOP BANNER ──
 (function() {
