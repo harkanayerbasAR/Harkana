@@ -1,0 +1,1265 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>HARKANA — Content Studio</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;0,600;1,300;1,400&family=Inter:wght@300;400;500;600&display=swap" rel="stylesheet">
+<style>
+:root {
+  --verde: #0e2310; --verde-med: #1c3d1c; --verde-claro: #2d5a27;
+  --kraft: #c09a5c; --crema: #faf6ef; --carbon: #141414;
+  --gris: #888; --gris-claro: #e8e2d8;
+  --font-serif: 'Cormorant Garamond', Georgia, serif;
+  --font-sans: 'Inter', system-ui, sans-serif;
+}
+* { box-sizing: border-box; margin: 0; padding: 0; }
+html, body { height: 100%; }
+body { font-family: var(--font-sans); background: #111; color: #e0d8c8; overflow: hidden; }
+
+/* HEADER */
+.app-header {
+  height: 52px; background: #0a0a0a; border-bottom: 1px solid #222;
+  display: flex; align-items: center; padding: 0 24px; gap: 20px; flex-shrink: 0;
+}
+.app-logo { font-family: var(--font-serif); font-size: 1.1rem; letter-spacing: 5px; color: #fff; font-weight: 400; }
+.app-logo span { color: var(--kraft); }
+.app-tag { font-size: .6rem; letter-spacing: 3px; text-transform: uppercase; color: #444; margin-left: 4px; }
+.header-config { margin-left: auto; display: flex; align-items: center; gap: 10px; }
+.cfg-key-input { background: #1a1a1a; border: 1px solid #333; border-radius: 6px; padding: 6px 12px; color: #888; font-size: .72rem; font-family: monospace; width: 220px; }
+.cfg-key-input:focus { outline: none; border-color: var(--kraft); color: #fff; }
+.btn-cfg-save { background: var(--verde); border: none; color: var(--kraft); padding: 6px 16px; border-radius: 6px; font-size: .65rem; font-weight: 600; letter-spacing: 1px; text-transform: uppercase; cursor: pointer; }
+.key-status { font-size: .62rem; letter-spacing: 1px; }
+.key-ok { color: #4caf50; }
+.key-no { color: #888; }
+
+/* LAYOUT */
+.app-body { display: grid; grid-template-columns: 220px 1fr 280px; height: calc(100vh - 52px); }
+
+/* ── PANEL GALERÍA ── */
+.panel-gallery {
+  background: #0d0d0d; border-right: 1px solid #222;
+  display: flex; flex-direction: column; overflow: hidden;
+}
+.panel-title {
+  padding: 14px 16px 10px; font-size: .58rem; letter-spacing: 3px;
+  text-transform: uppercase; color: #444; border-bottom: 1px solid #1a1a1a;
+  display: flex; align-items: center; justify-content: space-between;
+}
+.panel-title span { color: var(--kraft); }
+
+.upload-folder {
+  margin: 12px; border: 1.5px dashed #2a2a2a; border-radius: 8px;
+  padding: 16px; text-align: center; cursor: pointer; transition: all .2s;
+}
+.upload-folder:hover { border-color: var(--kraft); background: rgba(192,154,92,.05); }
+.upload-folder input { display: none; }
+.upload-folder p { font-size: .72rem; color: #555; margin-top: 6px; line-height: 1.5; }
+.upload-folder .icon { font-size: 1.6rem; }
+
+.gallery-grid {
+  flex: 1; overflow-y: auto; padding: 8px; display: grid;
+  grid-template-columns: 1fr 1fr; gap: 4px; align-content: start;
+}
+.gallery-grid::-webkit-scrollbar { width: 4px; }
+.gallery-grid::-webkit-scrollbar-track { background: #0d0d0d; }
+.gallery-grid::-webkit-scrollbar-thumb { background: #333; border-radius: 2px; }
+
+.gallery-item {
+  aspect-ratio: 1; border-radius: 6px; overflow: hidden; cursor: pointer;
+  position: relative; border: 2px solid transparent; transition: all .15s;
+}
+.gallery-item:hover { border-color: #555; }
+.gallery-item.selected { border-color: var(--kraft); }
+.gallery-item.selected::after {
+  content: attr(data-order); position: absolute; top: 4px; right: 4px;
+  width: 20px; height: 20px; border-radius: 50%; background: var(--kraft);
+  color: var(--carbon); font-size: .65rem; font-weight: 700;
+  display: flex; align-items: center; justify-content: center;
+}
+.gallery-item img { width: 100%; height: 100%; object-fit: cover; display: block; }
+
+.gallery-footer {
+  padding: 10px 12px; border-top: 1px solid #1a1a1a;
+  font-size: .65rem; color: #555; text-align: center;
+}
+.gallery-footer strong { color: var(--kraft); }
+
+/* ── PANEL CENTRAL ── */
+.panel-center {
+  display: flex; flex-direction: column; background: #111; overflow: hidden;
+}
+
+/* FORMAT TABS */
+.format-tabs { display: flex; border-bottom: 1px solid #1a1a1a; flex-shrink: 0; }
+.format-tab {
+  flex: 1; padding: 12px 8px; text-align: center; cursor: pointer;
+  font-size: .68rem; font-weight: 600; letter-spacing: 1.5px; text-transform: uppercase;
+  color: #444; border-bottom: 2px solid transparent; transition: all .2s;
+}
+.format-tab:hover { color: #888; }
+.format-tab.active { color: var(--kraft); border-bottom-color: var(--kraft); }
+.format-tab .tab-icon { font-size: 1rem; display: block; margin-bottom: 3px; }
+
+/* CANVAS AREA */
+.canvas-area {
+  flex: 1; display: flex; align-items: center; justify-content: center;
+  background: #0a0a0a; overflow: hidden; position: relative;
+}
+.canvas-wrap {
+  position: relative; box-shadow: 0 8px 40px rgba(0,0,0,.6);
+}
+#previewCanvas { display: block; border-radius: 4px; }
+
+.canvas-placeholder {
+  position: absolute; inset: 0; display: flex; flex-direction: column;
+  align-items: center; justify-content: center; gap: 12px; pointer-events: none;
+}
+.canvas-placeholder.hidden { display: none; }
+.canvas-placeholder .ph-icon { font-size: 3rem; opacity: .15; }
+.canvas-placeholder p { font-size: .78rem; color: #333; text-align: center; line-height: 1.6; }
+
+/* ACTION BAR */
+.action-bar {
+  padding: 12px 20px; border-top: 1px solid #1a1a1a;
+  display: flex; gap: 10px; align-items: center; flex-shrink: 0;
+  background: #0d0d0d;
+}
+.btn-ai {
+  flex: 1; background: linear-gradient(135deg, var(--verde), var(--verde-claro));
+  border: none; color: #fff; padding: 11px 20px; border-radius: 8px;
+  font-size: .75rem; font-weight: 700; letter-spacing: 1px; text-transform: uppercase;
+  cursor: pointer; transition: opacity .2s; display: flex; align-items: center;
+  justify-content: center; gap: 8px;
+}
+.btn-ai:hover:not(:disabled) { opacity: .85; }
+.btn-ai:disabled { opacity: .35; cursor: not-allowed; }
+.btn-export {
+  background: var(--kraft); border: none; color: var(--carbon);
+  padding: 11px 20px; border-radius: 8px; font-size: .75rem; font-weight: 700;
+  letter-spacing: 1px; text-transform: uppercase; cursor: pointer; transition: opacity .2s;
+  display: flex; align-items: center; gap: 8px;
+}
+.btn-export:hover:not(:disabled) { opacity: .85; }
+.btn-export:disabled { opacity: .35; cursor: not-allowed; }
+.btn-export-reel {
+  background: #222; border: 1px solid #444; color: #ccc;
+  padding: 11px 16px; border-radius: 8px; font-size: .72rem; font-weight: 600;
+  letter-spacing: 1px; text-transform: uppercase; cursor: pointer; transition: all .2s;
+}
+.btn-export-reel:hover:not(:disabled) { border-color: var(--kraft); color: var(--kraft); }
+.btn-export-reel:disabled { opacity: .35; cursor: not-allowed; }
+
+/* PROGRESS */
+.progress-overlay {
+  position: absolute; inset: 0; background: rgba(0,0,0,.85);
+  display: none; flex-direction: column; align-items: center; justify-content: center;
+  gap: 16px; border-radius: 4px;
+}
+.progress-overlay.visible { display: flex; }
+.progress-label { font-size: .82rem; color: #ccc; }
+.progress-bar-outer { width: 200px; height: 4px; background: #333; border-radius: 2px; }
+.progress-bar-inner { height: 100%; background: var(--kraft); border-radius: 2px; width: 0; transition: width .3s; }
+
+/* ── PANEL HERRAMIENTAS ── */
+.panel-tools {
+  background: #0d0d0d; border-left: 1px solid #222;
+  display: flex; flex-direction: column; overflow-y: auto;
+}
+.panel-tools::-webkit-scrollbar { width: 4px; }
+.panel-tools::-webkit-scrollbar-track { background: #0d0d0d; }
+.panel-tools::-webkit-scrollbar-thumb { background: #333; }
+
+.tools-section { padding: 16px; border-bottom: 1px solid #1a1a1a; }
+.tools-label { font-size: .58rem; letter-spacing: 3px; text-transform: uppercase; color: #444; margin-bottom: 12px; }
+
+/* LAYOUTS */
+.layouts-grid { display: grid; grid-template-columns: repeat(4, 1fr); gap: 6px; }
+.layout-btn {
+  aspect-ratio: 1; border: 1.5px solid #2a2a2a; border-radius: 6px;
+  background: #1a1a1a; cursor: pointer; transition: all .15s;
+  display: flex; align-items: center; justify-content: center; overflow: hidden;
+  position: relative;
+}
+.layout-btn:hover { border-color: #555; }
+.layout-btn.active { border-color: var(--kraft); }
+.layout-btn svg { width: 28px; height: 28px; }
+
+/* FILTERS */
+.filters-row { display: flex; gap: 6px; }
+.filter-btn {
+  flex: 1; padding: 8px 4px; border: 1.5px solid #2a2a2a; border-radius: 6px;
+  background: #1a1a1a; cursor: pointer; font-size: .6rem; font-weight: 600;
+  letter-spacing: 1px; text-transform: uppercase; color: #555; transition: all .15s;
+  text-align: center;
+}
+.filter-btn:hover { border-color: #555; color: #888; }
+.filter-btn.active { border-color: var(--kraft); color: var(--kraft); background: rgba(192,154,92,.08); }
+
+/* TEXT CONTROLS */
+.text-input {
+  width: 100%; background: #1a1a1a; border: 1.5px solid #2a2a2a; border-radius: 6px;
+  padding: 9px 12px; color: #ccc; font-size: .85rem; font-family: var(--font-serif);
+  margin-bottom: 8px; transition: border-color .2s;
+}
+.text-input:focus { outline: none; border-color: var(--kraft); }
+.text-input::placeholder { color: #444; font-style: italic; }
+
+.text-position-row { display: flex; gap: 6px; margin-bottom: 8px; }
+.pos-btn {
+  flex: 1; padding: 7px 4px; border: 1.5px solid #2a2a2a; border-radius: 6px;
+  background: #1a1a1a; cursor: pointer; font-size: .62rem; font-weight: 600;
+  text-transform: uppercase; color: #555; transition: all .15s; letter-spacing: 1px;
+}
+.pos-btn:hover { border-color: #555; color: #888; }
+.pos-btn.active { border-color: var(--kraft); color: var(--kraft); }
+
+/* LOGO TOGGLE */
+.logo-toggle { display: flex; align-items: center; justify-content: space-between; }
+.logo-toggle span { font-size: .72rem; color: #666; }
+.toggle-switch {
+  width: 36px; height: 20px; background: #2a2a2a; border-radius: 10px;
+  position: relative; cursor: pointer; transition: background .2s;
+}
+.toggle-switch.on { background: var(--verde-claro); }
+.toggle-knob {
+  position: absolute; width: 14px; height: 14px; background: #fff;
+  border-radius: 50%; top: 3px; left: 3px; transition: left .2s;
+}
+.toggle-switch.on .toggle-knob { left: 19px; }
+
+/* AI COPY */
+.copy-result {
+  background: #1a1a1a; border-radius: 8px; padding: 14px;
+  font-size: .82rem; color: #bbb; line-height: 1.75; white-space: pre-wrap;
+  font-family: var(--font-serif); font-style: italic; min-height: 80px;
+  max-height: 200px; overflow-y: auto; margin-bottom: 8px;
+}
+.copy-result.empty { color: #333; font-style: normal; font-family: var(--font-sans); font-size: .75rem; }
+.btn-use-copy {
+  width: 100%; background: none; border: 1.5px solid #2a2a2a; border-radius: 6px;
+  color: #555; padding: 8px; font-size: .68rem; font-weight: 600; letter-spacing: 1px;
+  text-transform: uppercase; cursor: pointer; transition: all .2s;
+}
+.btn-use-copy:hover { border-color: var(--kraft); color: var(--kraft); }
+
+/* REEL CONFIG */
+.reel-row { display: flex; gap: 6px; align-items: center; margin-bottom: 8px; }
+.reel-row label { font-size: .7rem; color: #666; flex-shrink: 0; }
+.reel-select {
+  flex: 1; background: #1a1a1a; border: 1.5px solid #2a2a2a; border-radius: 6px;
+  color: #ccc; padding: 6px 10px; font-size: .78rem;
+}
+.reel-select:focus { outline: none; border-color: var(--kraft); }
+
+/* BATCH */
+.batch-list { max-height: 150px; overflow-y: auto; }
+.batch-item {
+  display: flex; align-items: center; gap: 8px; padding: 6px 0;
+  border-bottom: 1px solid #1a1a1a; font-size: .72rem;
+}
+.batch-item .bi-thumb { width: 28px; height: 28px; border-radius: 4px; object-fit: cover; }
+.batch-item .bi-name { flex: 1; color: #888; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+.batch-item .bi-status { font-size: .6rem; }
+.bi-done { color: #4caf50; }
+.bi-pending { color: #555; }
+.bi-active { color: var(--kraft); }
+
+/* TOAST */
+.toast {
+  position: fixed; bottom: 24px; right: 24px; background: #1a1a1a;
+  border: 1px solid #333; color: #ccc; padding: 10px 20px; border-radius: 8px;
+  font-size: .78rem; opacity: 0; transition: opacity .3s; pointer-events: none;
+  z-index: 9999;
+}
+.toast.show { opacity: 1; }
+
+/* SCROLLBAR TOOLS */
+.panel-tools::-webkit-scrollbar { width: 3px; }
+
+@media (max-width: 1024px) {
+  .app-body { grid-template-columns: 180px 1fr 240px; }
+}
+</style>
+</head>
+<body>
+
+<div style="display:flex;flex-direction:column;height:100vh;">
+
+<!-- HEADER -->
+<div class="app-header">
+  <div class="app-logo">HARK<span>A</span>NA <span class="app-tag">Content Studio</span></div>
+  <div class="header-config">
+    <span class="key-status" id="keyStatus"><span class="key-no">⬤ Sin API Key</span></span>
+    <input type="password" class="cfg-key-input" id="cfgOpenai" placeholder="OpenAI API Key (sk-...)" oninput="checkKey()">
+    <button class="btn-cfg-save" onclick="saveKey()">Guardar</button>
+  </div>
+</div>
+
+<!-- BODY -->
+<div class="app-body">
+
+  <!-- ── GALERÍA ── -->
+  <div class="panel-gallery">
+    <div class="panel-title">Galería <span id="galleryCount">0 fotos</span></div>
+
+    <div class="upload-folder" onclick="document.getElementById('folderInput').click()">
+      <input type="file" id="folderInput" multiple accept="image/*" onchange="loadImages(this.files)">
+      <div class="icon">📂</div>
+      <p>Seleccioná tu<br>carpeta HARKANA</p>
+    </div>
+
+    <div class="gallery-grid" id="galleryGrid"></div>
+
+    <div class="gallery-footer">
+      Seleccionados: <strong id="selectedCount">0</strong> / 4
+    </div>
+  </div>
+
+  <!-- ── CENTRO ── -->
+  <div class="panel-center">
+
+    <div class="format-tabs">
+      <div class="format-tab active" onclick="setFormat('feed', this)">
+        <span class="tab-icon">📸</span>Feed 1:1
+      </div>
+      <div class="format-tab" onclick="setFormat('story', this)">
+        <span class="tab-icon">📱</span>Historia 9:16
+      </div>
+      <div class="format-tab" onclick="setFormat('reel', this)">
+        <span class="tab-icon">🎬</span>Reel video
+      </div>
+    </div>
+
+    <div class="canvas-area">
+      <div class="canvas-wrap" id="canvasWrap">
+        <canvas id="previewCanvas"></canvas>
+        <div class="canvas-placeholder" id="canvasPlaceholder">
+          <span class="ph-icon">🌿</span>
+          <p>Seleccioná fotos<br>de la galería para<br>empezar</p>
+        </div>
+        <div class="progress-overlay" id="progressOverlay">
+          <div class="progress-label" id="progressLabel">Generando...</div>
+          <div class="progress-bar-outer"><div class="progress-bar-inner" id="progressBar"></div></div>
+        </div>
+      </div>
+    </div>
+
+    <div class="action-bar">
+      <button class="btn-ai" id="btnAI" onclick="generateAI()" disabled>
+        🤖 Generar copy con IA
+      </button>
+      <button class="btn-export" id="btnExport" onclick="exportImage()" disabled>
+        ⬇ PNG
+      </button>
+      <button class="btn-export-reel" id="btnReel" onclick="exportReel()" disabled style="display:none;">
+        🎬 Exportar video
+      </button>
+    </div>
+
+  </div>
+
+  <!-- ── HERRAMIENTAS ── -->
+  <div class="panel-tools">
+
+    <!-- LAYOUTS -->
+    <div class="tools-section">
+      <div class="tools-label">Layout</div>
+      <div class="layouts-grid" id="layoutsGrid">
+        <!-- generated by JS -->
+      </div>
+    </div>
+
+    <!-- FILTROS -->
+    <div class="tools-section">
+      <div class="tools-label">Filtro</div>
+      <div class="filters-row">
+        <div class="filter-btn active" onclick="setFilter('natural', this)">Natural</div>
+        <div class="filter-btn" onclick="setFilter('warm', this)">Cálido</div>
+        <div class="filter-btn" onclick="setFilter('organic', this)">Orgánico</div>
+        <div class="filter-btn" onclick="setFilter('bw', this)">B&N</div>
+      </div>
+    </div>
+
+    <!-- TEXTO -->
+    <div class="tools-section">
+      <div class="tools-label">Texto superpuesto</div>
+      <input type="text" class="text-input" id="textLine1" placeholder="Línea principal..." oninput="redraw()" maxlength="50">
+      <input type="text" class="text-input" id="textLine2" placeholder="Línea secundaria / marca..." oninput="redraw()" maxlength="40">
+      <div class="text-position-row">
+        <div class="pos-btn active" onclick="setPosition('top', this)">Arriba</div>
+        <div class="pos-btn" onclick="setPosition('center', this)">Centro</div>
+        <div class="pos-btn" onclick="setPosition('bottom', this)">Abajo</div>
+      </div>
+      <div class="logo-toggle">
+        <span>Logo Harkana</span>
+        <div class="toggle-switch" id="logoToggle" onclick="toggleLogo()">
+          <div class="toggle-knob"></div>
+        </div>
+      </div>
+    </div>
+
+    <!-- REEL CONFIG (solo visible en reel) -->
+    <div class="tools-section" id="reelSection" style="display:none;">
+      <div class="tools-label">Configuración de reel</div>
+      <div class="reel-row">
+        <label>Duración:</label>
+        <select class="reel-select" id="reelDuration">
+          <option value="15">15 segundos</option>
+          <option value="30" selected>30 segundos</option>
+          <option value="60">60 segundos</option>
+        </select>
+      </div>
+      <div class="reel-row">
+        <label>Transición:</label>
+        <select class="reel-select" id="reelTransition">
+          <option value="fade">Fade negro</option>
+          <option value="cross">Crossfade</option>
+          <option value="cut">Corte directo</option>
+        </select>
+      </div>
+    </div>
+
+    <!-- IA COPY -->
+    <div class="tools-section">
+      <div class="tools-label">Copy generado por IA</div>
+      <div class="copy-result empty" id="copyResult">Seleccioná fotos y hacé clic en "Generar copy con IA"</div>
+      <button class="btn-use-copy" id="btnUseCopy" onclick="useCopy()" style="display:none;">
+        ↑ Usar como texto superpuesto
+      </button>
+    </div>
+
+  </div>
+
+</div>
+</div>
+
+<div class="toast" id="toast"></div>
+
+<script>
+// ══════════════════════════════════════════════════
+// ESTADO
+// ══════════════════════════════════════════════════
+const S = {
+  images: [],       // {id, name, file, src, el (HTMLImageElement)}
+  selected: [],     // ids seleccionados (max 4)
+  format: 'feed',   // feed | story | reel
+  layout: 0,
+  filter: 'natural',
+  textLine1: '',
+  textLine2: '',
+  textPos: 'bottom',
+  showLogo: false,
+  aiCopy: '',
+  reelDuration: 30,
+  reelTransition: 'fade',
+};
+
+// Dimensiones de exportación
+const DIMS = {
+  feed:  { w: 1080, h: 1080 },
+  story: { w: 1080, h: 1920 },
+  reel:  { w: 1080, h: 1920 },
+};
+
+// Filtros CSS canvas
+const FILTERS = {
+  natural: 'brightness(1.03) saturate(1.12) contrast(0.97)',
+  warm:    'brightness(1.06) saturate(1.3) sepia(0.14)',
+  organic: 'contrast(0.90) brightness(1.05) saturate(0.85) sepia(0.06)',
+  bw:      'grayscale(1) contrast(1.15) brightness(1.04)',
+};
+
+// Layouts por formato: [nombre, iconSVG, nImgs]
+const LAYOUTS = {
+  feed: [
+    { name: 'Lleno', n: 1, icon: '<rect x="2" y="2" width="24" height="24" rx="2" fill="#555"/>' },
+    { name: '2 lados', n: 2, icon: '<rect x="2" y="2" width="11" height="24" rx="1" fill="#555"/><rect x="15" y="2" width="11" height="24" rx="1" fill="#555"/>' },
+    { name: '2 filas', n: 2, icon: '<rect x="2" y="2" width="24" height="11" rx="1" fill="#555"/><rect x="2" y="15" width="24" height="11" rx="1" fill="#555"/>' },
+    { name: 'Grilla 4', n: 4, icon: '<rect x="2" y="2" width="11" height="11" rx="1" fill="#555"/><rect x="15" y="2" width="11" height="11" rx="1" fill="#555"/><rect x="2" y="15" width="11" height="11" rx="1" fill="#555"/><rect x="15" y="15" width="11" height="11" rx="1" fill="#555"/>' },
+  ],
+  story: [
+    { name: 'Lleno', n: 1, icon: '<rect x="6" y="2" width="16" height="24" rx="2" fill="#555"/>' },
+    { name: 'Blur BG', n: 1, icon: '<rect x="2" y="2" width="24" height="24" rx="2" fill="#333"/><rect x="5" y="7" width="18" height="14" rx="2" fill="#666"/>' },
+    { name: 'Panel', n: 1, icon: '<rect x="2" y="2" width="24" height="15" rx="2" fill="#555"/><rect x="2" y="19" width="24" height="7" rx="1" fill="#333"/>' },
+    { name: '2 apil.', n: 2, icon: '<rect x="2" y="2" width="24" height="11" rx="2" fill="#555"/><rect x="2" y="15" width="24" height="11" rx="2" fill="#444"/>' },
+  ],
+  reel: [
+    { name: 'Slide', n: -1, icon: '<rect x="2" y="2" width="24" height="24" rx="2" fill="#555"/><polygon points="14,10 14,18 20,14" fill="#0d0d0d"/>' },
+    { name: 'Zoom', n: -1, icon: '<rect x="2" y="2" width="24" height="24" rx="2" fill="#555"/><circle cx="14" cy="14" r="6" fill="none" stroke="#0d0d0d" stroke-width="2"/>' },
+    { name: 'Fade', n: -1, icon: '<rect x="2" y="2" width="24" height="24" rx="2" fill="#555"/><rect x="8" y="8" width="12" height="12" rx="1" fill="#888"/>' },
+    { name: 'Pan', n: -1, icon: '<rect x="2" y="2" width="24" height="24" rx="2" fill="#555"/><line x1="5" y1="14" x2="23" y2="14" stroke="#0d0d0d" stroke-width="2" marker-end="url(#a)"/>' },
+  ],
+};
+
+// Preview canvas
+const canvas = document.getElementById('previewCanvas');
+const ctx = canvas.getContext('2d');
+let PREVIEW_SIZE = 400;
+
+// ══════════════════════════════════════════════════
+// INIT
+// ══════════════════════════════════════════════════
+window.addEventListener('load', () => {
+  document.fonts.ready.then(() => {
+    initLayouts();
+    resizePreview();
+    const key = localStorage.getItem('hk_openai') || '';
+    document.getElementById('cfgOpenai').value = key;
+    updateKeyStatus(key);
+  });
+});
+
+window.addEventListener('resize', resizePreview);
+
+function resizePreview() {
+  const area = document.querySelector('.canvas-area');
+  const aw = area.clientWidth - 48;
+  const ah = area.clientHeight - 48;
+  const d = DIMS[S.format];
+  const aspect = d.w / d.h;
+  let pw, ph;
+  if (aw / ah > aspect) { ph = ah; pw = ph * aspect; }
+  else { pw = aw; ph = pw / aspect; }
+  PREVIEW_SIZE = Math.min(pw, ph);
+  canvas.style.width = (pw | 0) + 'px';
+  canvas.style.height = (ph | 0) + 'px';
+  canvas.width = d.w;
+  canvas.height = d.h;
+  redraw();
+}
+
+// ══════════════════════════════════════════════════
+// CONFIG
+// ══════════════════════════════════════════════════
+function saveKey() {
+  const k = document.getElementById('cfgOpenai').value.trim();
+  localStorage.setItem('hk_openai', k);
+  updateKeyStatus(k);
+  showToast('API Key guardada ✓');
+}
+function checkKey() {
+  const k = document.getElementById('cfgOpenai').value.trim();
+  updateKeyStatus(k);
+}
+function updateKeyStatus(k) {
+  const el = document.getElementById('keyStatus');
+  el.innerHTML = k.startsWith('sk-')
+    ? '<span class="key-ok">⬤ API Key activa</span>'
+    : '<span class="key-no">⬤ Sin API Key</span>';
+}
+function getKey() { return localStorage.getItem('hk_openai') || ''; }
+
+// ══════════════════════════════════════════════════
+// CARGA DE IMÁGENES
+// ══════════════════════════════════════════════════
+async function loadImages(files) {
+  const arr = Array.from(files).filter(f => f.type.startsWith('image/'));
+  if (!arr.length) return showToast('No se encontraron imágenes');
+
+  S.images = [];
+  S.selected = [];
+  document.getElementById('galleryGrid').innerHTML = '';
+  document.getElementById('selectedCount').textContent = '0';
+
+  for (const file of arr) {
+    const src = URL.createObjectURL(file);
+    const img = new Image();
+    await new Promise(r => { img.onload = r; img.src = src; });
+    const id = S.images.length;
+    S.images.push({ id, name: file.name, file, src, el: img });
+    addGalleryThumb(id, src);
+  }
+
+  document.getElementById('galleryCount').textContent = S.images.length + ' fotos';
+  showToast(`${S.images.length} fotos cargadas ✓`);
+}
+
+function addGalleryThumb(id, src) {
+  const grid = document.getElementById('galleryGrid');
+  const div = document.createElement('div');
+  div.className = 'gallery-item';
+  div.id = `gi-${id}`;
+  div.onclick = () => toggleSelect(id);
+  const img = document.createElement('img');
+  img.src = src; img.loading = 'lazy';
+  div.appendChild(img);
+  grid.appendChild(div);
+}
+
+function toggleSelect(id) {
+  const idx = S.selected.indexOf(id);
+  if (idx >= 0) {
+    S.selected.splice(idx, 1);
+  } else {
+    if (S.selected.length >= 4) {
+      showToast('Máximo 4 imágenes a la vez');
+      return;
+    }
+    S.selected.push(id);
+  }
+  updateSelectionUI();
+  redraw();
+}
+
+function updateSelectionUI() {
+  S.images.forEach(img => {
+    const el = document.getElementById(`gi-${img.id}`);
+    if (!el) return;
+    const selIdx = S.selected.indexOf(img.id);
+    el.classList.toggle('selected', selIdx >= 0);
+    el.dataset.order = selIdx >= 0 ? selIdx + 1 : '';
+  });
+  document.getElementById('selectedCount').textContent = S.selected.length;
+
+  const hasSelection = S.selected.length > 0;
+  document.getElementById('canvasPlaceholder').classList.toggle('hidden', hasSelection);
+  document.getElementById('btnExport').disabled = !hasSelection;
+  document.getElementById('btnAI').disabled = !hasSelection || !getKey().startsWith('sk-');
+  if (S.format === 'reel') {
+    document.getElementById('btnReel').disabled = S.selected.length < 2;
+  }
+}
+
+// ══════════════════════════════════════════════════
+// FORMATO / LAYOUT / FILTRO
+// ══════════════════════════════════════════════════
+function setFormat(fmt, tabEl) {
+  S.format = fmt;
+  S.layout = 0;
+  document.querySelectorAll('.format-tab').forEach(t => t.classList.remove('active'));
+  tabEl.classList.add('active');
+  document.getElementById('reelSection').style.display = fmt === 'reel' ? 'block' : 'none';
+  document.getElementById('btnReel').style.display = fmt === 'reel' ? 'flex' : 'none';
+  document.getElementById('btnExport').style.display = fmt !== 'reel' ? 'flex' : 'none';
+  if (fmt === 'reel') {
+    document.getElementById('btnReel').disabled = S.selected.length < 2;
+  }
+  initLayouts();
+  resizePreview();
+}
+
+function initLayouts() {
+  const grid = document.getElementById('layoutsGrid');
+  grid.innerHTML = '';
+  LAYOUTS[S.format].forEach((l, i) => {
+    const btn = document.createElement('div');
+    btn.className = 'layout-btn' + (i === S.layout ? ' active' : '');
+    btn.title = l.name;
+    btn.innerHTML = `<svg viewBox="0 0 28 28" xmlns="http://www.w3.org/2000/svg">${l.icon}</svg>`;
+    btn.onclick = () => setLayout(i, btn);
+    grid.appendChild(btn);
+  });
+}
+
+function setLayout(idx, btn) {
+  S.layout = idx;
+  document.querySelectorAll('.layout-btn').forEach(b => b.classList.remove('active'));
+  btn.classList.add('active');
+  redraw();
+}
+
+function setFilter(f, btn) {
+  S.filter = f;
+  document.querySelectorAll('.filter-btn').forEach(b => b.classList.remove('active'));
+  btn.classList.add('active');
+  redraw();
+}
+
+function setPosition(pos, btn) {
+  S.textPos = pos;
+  document.querySelectorAll('.pos-btn').forEach(b => b.classList.remove('active'));
+  btn.classList.add('active');
+  redraw();
+}
+
+function toggleLogo() {
+  S.showLogo = !S.showLogo;
+  const t = document.getElementById('logoToggle');
+  t.classList.toggle('on', S.showLogo);
+  redraw();
+}
+
+// ══════════════════════════════════════════════════
+// CANVAS RENDERING
+// ══════════════════════════════════════════════════
+function redraw() {
+  S.textLine1 = document.getElementById('textLine1').value;
+  S.textLine2 = document.getElementById('textLine2').value;
+  if (!S.selected.length) { ctx.clearRect(0, 0, canvas.width, canvas.height); return; }
+
+  const imgs = S.selected.map(id => S.images.find(x => x.id === id)?.el).filter(Boolean);
+  const d = DIMS[S.format];
+
+  if (S.format === 'reel') {
+    renderReelPreview(ctx, imgs, d);
+  } else if (S.format === 'feed') {
+    renderFeed(ctx, imgs, S.layout, d);
+  } else {
+    renderStory(ctx, imgs, S.layout, d);
+  }
+
+  if (S.textLine1 || S.textLine2) {
+    drawText(ctx, S.textLine1, S.textLine2, S.textPos, d.w, d.h);
+  }
+  if (S.showLogo) {
+    drawLogoText(ctx, d.w, d.h);
+  }
+}
+
+// ── Feed layouts ──
+function renderFeed(ctx, imgs, layout, d) {
+  ctx.clearRect(0, 0, d.w, d.h);
+  switch(layout) {
+    case 0:
+      applyFilter(); drawCover(ctx, imgs[0], 0, 0, d.w, d.h); resetFilter();
+      drawGradient(ctx, d.w, d.h, 'bottom');
+      break;
+    case 1:
+      applyFilter();
+      drawCover(ctx, imgs[0], 0, 0, d.w/2 - 2, d.h);
+      drawCover(ctx, imgs[1] || imgs[0], d.w/2 + 2, 0, d.w/2 - 2, d.h);
+      resetFilter();
+      ctx.fillStyle = '#0e2310'; ctx.fillRect(d.w/2 - 2, 0, 4, d.h);
+      drawGradient(ctx, d.w, d.h, 'bottom');
+      break;
+    case 2:
+      applyFilter();
+      drawCover(ctx, imgs[0], 0, 0, d.w, d.h/2 - 2);
+      drawCover(ctx, imgs[1] || imgs[0], 0, d.h/2 + 2, d.w, d.h/2 - 2);
+      resetFilter();
+      ctx.fillStyle = '#0e2310'; ctx.fillRect(0, d.h/2 - 2, d.w, 4);
+      drawGradient(ctx, d.w, d.h, 'bottom');
+      break;
+    case 3:
+      applyFilter();
+      const hw = d.w/2, hh = d.h/2;
+      for (let i = 0; i < 4; i++) {
+        const img = imgs[i % imgs.length];
+        drawCover(ctx, img, (i%2)*hw + (i%2?2:0), Math.floor(i/2)*hh + (i>1?2:0), hw-2, hh-2);
+      }
+      resetFilter();
+      ctx.fillStyle = '#0e2310';
+      ctx.fillRect(hw-2, 0, 4, d.h); ctx.fillRect(0, hh-2, d.w, 4);
+      drawGradient(ctx, d.w, d.h, 'bottom');
+      break;
+  }
+}
+
+// ── Story layouts ──
+function renderStory(ctx, imgs, layout, d) {
+  ctx.clearRect(0, 0, d.w, d.h);
+  switch(layout) {
+    case 0:
+      applyFilter(); drawCover(ctx, imgs[0], 0, 0, d.w, d.h); resetFilter();
+      drawGradient(ctx, d.w, d.h, 'bottom');
+      break;
+    case 1: {
+      const saved = ctx.filter;
+      ctx.filter = FILTERS[S.filter] + ' blur(24px) brightness(0.35)';
+      drawCover(ctx, imgs[0], 0, 0, d.w, d.h);
+      ctx.filter = 'none';
+      const imgAsp = imgs[0].naturalWidth / imgs[0].naturalHeight;
+      const iw = d.w * 0.88;
+      const ih = iw / imgAsp;
+      const ix = (d.w - iw) / 2;
+      const iy = (d.h - Math.min(ih, d.h * 0.7)) / 2;
+      ctx.drawImage(imgs[0], ix, iy, iw, Math.min(ih, d.h * 0.7));
+      drawGradient(ctx, d.w, d.h, 'bottom');
+      break;
+    }
+    case 2:
+      applyFilter(); drawCover(ctx, imgs[0], 0, 0, d.w, d.h * 0.65); resetFilter();
+      ctx.fillStyle = '#0e2310';
+      ctx.fillRect(0, d.h * 0.65, d.w, d.h * 0.35);
+      drawGradient(ctx, d.w, d.h * 0.65, 'bottom');
+      break;
+    case 3:
+      applyFilter();
+      drawCover(ctx, imgs[0], 0, 0, d.w, d.h/2 - 3);
+      drawCover(ctx, imgs[1] || imgs[0], 0, d.h/2 + 3, d.w, d.h/2 - 3);
+      resetFilter();
+      ctx.fillStyle = '#c09a5c'; ctx.fillRect(0, d.h/2 - 3, d.w, 6);
+      drawGradient(ctx, d.w, d.h, 'both');
+      break;
+  }
+}
+
+// ── Reel preview (just show first image) ──
+function renderReelPreview(ctx, imgs, d) {
+  ctx.clearRect(0, 0, d.w, d.h);
+  ctx.fillStyle = '#000';
+  ctx.fillRect(0, 0, d.w, d.h);
+  if (!imgs[0]) return;
+  applyFilter(); drawCover(ctx, imgs[0], 0, 0, d.w, d.h); resetFilter();
+  drawGradient(ctx, d.w, d.h, 'both');
+  // Show image count
+  ctx.fillStyle = 'rgba(0,0,0,.6)';
+  ctx.fillRect(d.w/2 - 120, d.h * 0.06 - 24, 240, 48);
+  ctx.font = `500 ${d.w * 0.028}px Inter, sans-serif`;
+  ctx.fillStyle = '#c09a5c';
+  ctx.textAlign = 'center';
+  ctx.fillText(`REEL · ${imgs.length} imágenes · ${document.getElementById('reelDuration').value}s`, d.w/2, d.h * 0.06 + 8);
+}
+
+// ── Helpers ──
+function applyFilter() { ctx.filter = FILTERS[S.filter] || 'none'; }
+function resetFilter() { ctx.filter = 'none'; }
+
+function drawCover(ctx, img, x, y, w, h) {
+  if (!img) return;
+  const ia = img.naturalWidth / img.naturalHeight;
+  const ca = w / h;
+  let sx, sy, sw, sh;
+  if (ia > ca) { sh = img.naturalHeight; sw = sh * ca; sx = (img.naturalWidth - sw)/2; sy = 0; }
+  else { sw = img.naturalWidth; sh = sw / ca; sx = 0; sy = (img.naturalHeight - sh)/2; }
+  ctx.drawImage(img, sx, sy, sw, sh, x, y, w, h);
+}
+
+function drawGradient(ctx, w, h, pos) {
+  let grad;
+  if (pos === 'bottom') {
+    grad = ctx.createLinearGradient(0, h * 0.45, 0, h);
+    grad.addColorStop(0, 'rgba(0,0,0,0)');
+    grad.addColorStop(1, 'rgba(0,0,0,0.72)');
+  } else if (pos === 'both') {
+    grad = ctx.createLinearGradient(0, 0, 0, h);
+    grad.addColorStop(0, 'rgba(0,0,0,0.45)');
+    grad.addColorStop(0.4, 'rgba(0,0,0,0)');
+    grad.addColorStop(0.6, 'rgba(0,0,0,0)');
+    grad.addColorStop(1, 'rgba(0,0,0,0.65)');
+  } else {
+    grad = ctx.createLinearGradient(0, 0, 0, h * 0.5);
+    grad.addColorStop(0, 'rgba(0,0,0,0.6)');
+    grad.addColorStop(1, 'rgba(0,0,0,0)');
+  }
+  ctx.fillStyle = grad;
+  ctx.fillRect(0, 0, w, h);
+}
+
+function drawText(ctx, line1, line2, pos, w, h) {
+  const yMap = { top: h * 0.1, center: h * 0.5, bottom: h * 0.84 };
+  const cy = yMap[pos] || h * 0.84;
+
+  ctx.textAlign = 'center';
+  ctx.textBaseline = 'middle';
+
+  if (line1) {
+    const sz = Math.round(w * 0.058);
+    ctx.font = `300 ${sz}px 'Cormorant Garamond', Georgia, serif`;
+    ctx.shadowColor = 'rgba(0,0,0,0.7)';
+    ctx.shadowBlur = 28;
+    ctx.fillStyle = 'rgba(255,255,255,0.96)';
+    wrapText(ctx, line1, w/2, cy, w * 0.85, sz * 1.3);
+    ctx.shadowBlur = 0;
+  }
+
+  if (line2) {
+    const sz2 = Math.round(w * 0.026);
+    ctx.font = `500 ${sz2}px 'Inter', system-ui, sans-serif`;
+    ctx.fillStyle = 'rgba(192,154,92,0.92)';
+    // Manual letter spacing
+    const letters = line2.toUpperCase().split('');
+    const spacing = sz2 * 0.18;
+    const totalW = ctx.measureText(line2.toUpperCase()).width + spacing * (letters.length - 1);
+    let lx = w/2 - totalW/2;
+    const ly = cy + w * 0.078;
+    letters.forEach(ch => {
+      ctx.fillText(ch, lx + ctx.measureText(ch).width/2, ly);
+      lx += ctx.measureText(ch).width + spacing;
+    });
+  }
+}
+
+function wrapText(ctx, text, x, y, maxW, lineH) {
+  const words = text.split(' ');
+  let line = '';
+  const lines = [];
+  for (const w of words) {
+    const test = line + (line ? ' ' : '') + w;
+    if (ctx.measureText(test).width > maxW && line) {
+      lines.push(line); line = w;
+    } else { line = test; }
+  }
+  if (line) lines.push(line);
+  const startY = y - (lines.length - 1) * lineH / 2;
+  lines.forEach((l, i) => ctx.fillText(l, x, startY + i * lineH));
+}
+
+function drawLogoText(ctx, w, h) {
+  const sz = Math.round(w * 0.022);
+  ctx.font = `400 ${sz}px 'Cormorant Garamond', Georgia, serif`;
+  ctx.fillStyle = 'rgba(192,154,92,0.75)';
+  ctx.textAlign = 'center';
+  ctx.textBaseline = 'bottom';
+  ctx.fillText('H A R K A N A', w/2, h - w * 0.03);
+}
+
+// ══════════════════════════════════════════════════
+// IA COPY GENERATION
+// ══════════════════════════════════════════════════
+async function generateAI() {
+  const key = getKey();
+  if (!key.startsWith('sk-')) return showToast('Configurá tu OpenAI API Key primero');
+  if (!S.selected.length) return showToast('Seleccioná al menos una imagen');
+
+  document.getElementById('btnAI').disabled = true;
+  document.getElementById('btnAI').textContent = '⏳ Generando...';
+
+  const imgObjs = S.selected.map(id => S.images.find(x => x.id === id)).filter(Boolean);
+  const b64s = await Promise.all(imgObjs.map(i => fileToBase64(i.file)));
+
+  const systemPrompt = `Sos experto en marketing emocional B2C para Harkana, yerba mate orgánica argentina premium.
+Tono: simple, cercano, argentino (vos/tomás), premium sin pretensión.
+Estructura: HOOK (emoción, max 8 palabras) + CUERPO (sensación/ritual, 1-2 frases) + CIERRE (marca/CTA suave).
+Formato de salida: Devolvé SOLO el copy, sin etiquetas ni explicaciones. Máximo 3 líneas.
+Ejemplos: "No es solo mate, es tu momento del día." / "Bajá un cambio." / "Hecho con tiempo."`;
+
+  const userContent = [
+    { type: 'text', text: `Generá un copy emocional B2C para ${imgObjs.length > 1 ? 'estas ' + imgObjs.length + ' imágenes combinadas' : 'esta imagen'} de Harkana. Formato: ${S.format === 'feed' ? 'post de Instagram' : S.format === 'story' ? 'historia de Instagram' : 'reel/video'}. Solo el copy, listo para usar.` },
+    ...b64s.map(b => ({ type: 'image_url', image_url: { url: `data:image/jpeg;base64,${b}`, detail: 'low' } }))
+  ];
+
+  try {
+    const res = await fetch('https://api.openai.com/v1/chat/completions', {
+      method: 'POST',
+      headers: { 'Authorization': `Bearer ${key}`, 'Content-Type': 'application/json' },
+      body: JSON.stringify({
+        model: 'gpt-4o',
+        messages: [
+          { role: 'system', content: systemPrompt },
+          { role: 'user', content: userContent }
+        ],
+        max_tokens: 200,
+      })
+    });
+    if (!res.ok) { const e = await res.json(); throw new Error(e.error?.message || 'Error API'); }
+    const data = await res.json();
+    S.aiCopy = data.choices[0].message.content.trim();
+    document.getElementById('copyResult').textContent = S.aiCopy;
+    document.getElementById('copyResult').classList.remove('empty');
+    document.getElementById('btnUseCopy').style.display = 'block';
+    showToast('Copy generado ✓');
+  } catch(e) {
+    showToast('Error: ' + e.message);
+  } finally {
+    document.getElementById('btnAI').disabled = false;
+    document.getElementById('btnAI').innerHTML = '🤖 Generar copy con IA';
+  }
+}
+
+function useCopy() {
+  if (!S.aiCopy) return;
+  const lines = S.aiCopy.split('\n').filter(Boolean);
+  document.getElementById('textLine1').value = lines[0] || '';
+  document.getElementById('textLine2').value = lines[1] || 'HARKANA';
+  redraw();
+  showToast('Copy aplicado al canvas ✓');
+}
+
+function fileToBase64(file) {
+  return new Promise((res, rej) => {
+    const r = new FileReader();
+    r.onload = e => res(e.target.result.split(',')[1]);
+    r.onerror = rej;
+    r.readAsDataURL(file);
+  });
+}
+
+// ══════════════════════════════════════════════════
+// EXPORTAR IMAGEN
+// ══════════════════════════════════════════════════
+function exportImage() {
+  if (!S.selected.length) return;
+  const d = DIMS[S.format];
+
+  // Render a full-res canvas
+  const exp = document.createElement('canvas');
+  exp.width = d.w; exp.height = d.h;
+  const ectx = exp.getContext('2d');
+
+  // Copy current frame by re-drawing at full res
+  const imgs = S.selected.map(id => S.images.find(x => x.id === id)?.el).filter(Boolean);
+
+  const prevCtx = ctx;
+  // Temporarily re-render on export canvas
+  const origCanvas = canvas;
+
+  // Draw on export canvas
+  drawOnCtx(ectx, imgs, d);
+
+  exp.toBlob(blob => {
+    const url = URL.createObjectURL(blob);
+    const a = document.createElement('a');
+    const fmt = S.format === 'feed' ? 'feed' : 'story';
+    a.download = `harkana-${fmt}-${Date.now()}.png`;
+    a.href = url; a.click();
+    setTimeout(() => URL.revokeObjectURL(url), 2000);
+    showToast('Imagen exportada ✓');
+  }, 'image/png');
+}
+
+function drawOnCtx(ectx, imgs, d) {
+  const origCtx = canvas.getContext('2d');
+  // Save state and swap
+  const origFilter = ectx.filter;
+
+  function applyF() { ectx.filter = FILTERS[S.filter] || 'none'; }
+  function resetF() { ectx.filter = 'none'; }
+  function cover(img, x, y, w, h) {
+    if (!img) return;
+    const ia = img.naturalWidth / img.naturalHeight;
+    const ca = w / h;
+    let sx, sy, sw, sh;
+    if (ia > ca) { sh = img.naturalHeight; sw = sh * ca; sx = (img.naturalWidth - sw)/2; sy = 0; }
+    else { sw = img.naturalWidth; sh = sw / ca; sx = 0; sy = (img.naturalHeight - sh)/2; }
+    ectx.drawImage(img, sx, sy, sw, sh, x, y, w, h);
+  }
+  function grad(pos) {
+    let g;
+    if (pos === 'bottom') {
+      g = ectx.createLinearGradient(0, d.h * 0.45, 0, d.h);
+      g.addColorStop(0, 'rgba(0,0,0,0)'); g.addColorStop(1, 'rgba(0,0,0,0.72)');
+    } else if (pos === 'both') {
+      g = ectx.createLinearGradient(0, 0, 0, d.h);
+      g.addColorStop(0,'rgba(0,0,0,0.45)'); g.addColorStop(0.4,'rgba(0,0,0,0)');
+      g.addColorStop(0.6,'rgba(0,0,0,0)'); g.addColorStop(1,'rgba(0,0,0,0.65)');
+    } else {
+      g = ectx.createLinearGradient(0, 0, 0, d.h * 0.5);
+      g.addColorStop(0,'rgba(0,0,0,0.6)'); g.addColorStop(1,'rgba(0,0,0,0)');
+    }
+    ectx.fillStyle = g; ectx.fillRect(0, 0, d.w, d.h);
+  }
+
+  ectx.clearRect(0, 0, d.w, d.h);
+
+  if (S.format === 'feed') {
+    switch(S.layout) {
+      case 0: applyF(); cover(imgs[0],0,0,d.w,d.h); resetF(); grad('bottom'); break;
+      case 1: applyF(); cover(imgs[0],0,0,d.w/2-2,d.h); cover(imgs[1]||imgs[0],d.w/2+2,0,d.w/2-2,d.h); resetF(); ectx.fillStyle='#0e2310'; ectx.fillRect(d.w/2-2,0,4,d.h); grad('bottom'); break;
+      case 2: applyF(); cover(imgs[0],0,0,d.w,d.h/2-2); cover(imgs[1]||imgs[0],0,d.h/2+2,d.w,d.h/2-2); resetF(); ectx.fillStyle='#0e2310'; ectx.fillRect(0,d.h/2-2,d.w,4); grad('bottom'); break;
+      case 3: applyF(); const hw=d.w/2,hh=d.h/2; for(let i=0;i<4;i++){cover(imgs[i%imgs.length],(i%2)*hw+(i%2?2:0),Math.floor(i/2)*hh+(i>1?2:0),hw-2,hh-2);} resetF(); ectx.fillStyle='#0e2310'; ectx.fillRect(hw-2,0,4,d.h); ectx.fillRect(0,hh-2,d.w,4); grad('bottom'); break;
+    }
+  } else {
+    switch(S.layout) {
+      case 0: applyF(); cover(imgs[0],0,0,d.w,d.h); resetF(); grad('bottom'); break;
+      case 1: ectx.filter=FILTERS[S.filter]+' blur(24px) brightness(0.35)'; cover(imgs[0],0,0,d.w,d.h); ectx.filter='none'; const ia=imgs[0].naturalWidth/imgs[0].naturalHeight; const iw=d.w*0.88; const ih=iw/ia; ectx.drawImage(imgs[0],(d.w-iw)/2,(d.h-Math.min(ih,d.h*0.7))/2,iw,Math.min(ih,d.h*0.7)); grad('bottom'); break;
+      case 2: applyF(); cover(imgs[0],0,0,d.w,d.h*0.65); resetF(); ectx.fillStyle='#0e2310'; ectx.fillRect(0,d.h*0.65,d.w,d.h*0.35); grad('bottom'); break;
+      case 3: applyF(); cover(imgs[0],0,0,d.w,d.h/2-3); cover(imgs[1]||imgs[0],0,d.h/2+3,d.w,d.h/2-3); resetF(); ectx.fillStyle='#c09a5c'; ectx.fillRect(0,d.h/2-3,d.w,6); grad('both'); break;
+    }
+  }
+
+  // Text
+  const t1 = document.getElementById('textLine1').value;
+  const t2 = document.getElementById('textLine2').value;
+  if (t1 || t2) {
+    const yMap = { top: d.h*0.1, center: d.h*0.5, bottom: d.h*0.84 };
+    const cy = yMap[S.textPos] || d.h*0.84;
+    ectx.textAlign = 'center'; ectx.textBaseline = 'middle';
+    if (t1) {
+      const sz = Math.round(d.w * 0.058);
+      ectx.font = `300 ${sz}px 'Cormorant Garamond', Georgia, serif`;
+      ectx.shadowColor='rgba(0,0,0,0.7)'; ectx.shadowBlur=28;
+      ectx.fillStyle='rgba(255,255,255,0.96)';
+      const words=t1.split(' '); let line=''; const lines=[];
+      for(const w of words){const test=line+(line?' ':'')+w; if(ectx.measureText(test).width>d.w*0.85&&line){lines.push(line);line=w;}else{line=test;}} if(line)lines.push(line);
+      const startY=cy-(lines.length-1)*sz*1.3/2; lines.forEach((l,i)=>ectx.fillText(l,d.w/2,startY+i*sz*1.3));
+      ectx.shadowBlur=0;
+    }
+    if (t2) {
+      const sz2=Math.round(d.w*0.026);
+      ectx.font=`500 ${sz2}px 'Inter', system-ui, sans-serif`;
+      ectx.fillStyle='rgba(192,154,92,0.92)';
+      const letters=t2.toUpperCase().split('');
+      const spacing=sz2*0.18;
+      const totalW=ectx.measureText(t2.toUpperCase()).width+spacing*(letters.length-1);
+      let lx=d.w/2-totalW/2; const ly=cy+d.w*0.078;
+      letters.forEach(ch=>{ectx.fillText(ch,lx+ectx.measureText(ch).width/2,ly);lx+=ectx.measureText(ch).width+spacing;});
+    }
+  }
+  if (S.showLogo) {
+    const sz=Math.round(d.w*0.022); ectx.font=`400 ${sz}px 'Cormorant Garamond', Georgia, serif`;
+    ectx.fillStyle='rgba(192,154,92,0.75)'; ectx.textAlign='center'; ectx.textBaseline='bottom';
+    ectx.fillText('H A R K A N A', d.w/2, d.h-d.w*0.03);
+  }
+}
+
+// ══════════════════════════════════════════════════
+// EXPORTAR REEL (WebM video)
+// ══════════════════════════════════════════════════
+async function exportReel() {
+  if (S.selected.length < 2) { showToast('Seleccioná al menos 2 imágenes para el reel'); return; }
+
+  const duration = parseInt(document.getElementById('reelDuration').value);
+  const transition = document.getElementById('reelTransition').value;
+  const imgs = S.selected.map(id => S.images.find(x => x.id === id)?.el).filter(Boolean);
+  const d = DIMS.reel;
+
+  document.getElementById('btnReel').disabled = true;
+  showProgressOverlay(true, 'Generando reel...');
+
+  const vidCanvas = document.createElement('canvas');
+  vidCanvas.width = d.w; vidCanvas.height = d.h;
+  const vctx = vidCanvas.getContext('2d');
+
+  const mimeType = MediaRecorder.isTypeSupported('video/webm;codecs=vp9')
+    ? 'video/webm;codecs=vp9' : 'video/webm';
+
+  const stream = vidCanvas.captureStream(30);
+  const recorder = new MediaRecorder(stream, { mimeType, videoBitsPerSecond: 8000000 });
+  const chunks = [];
+  recorder.ondataavailable = e => { if (e.data.size > 0) chunks.push(e.data); };
+
+  const fps = 30;
+  const totalFrames = duration * fps;
+  const framesPerImg = Math.floor(totalFrames / imgs.length);
+  const tranFrames = transition === 'cut' ? 0 : Math.floor(fps * 0.6);
+
+  const t1 = document.getElementById('textLine1').value;
+  const t2 = document.getElementById('textLine2').value;
+
+  recorder.start(100);
+
+  let frame = 0;
+  let imgIdx = 0;
+
+  await new Promise(resolve => {
+    function drawFrame() {
+      if (frame >= totalFrames) { recorder.stop(); resolve(); return; }
+
+      const localFrame = frame % framesPerImg;
+      const progress = localFrame / framesPerImg;
+      const img = imgs[imgIdx];
+      const nextImg = imgs[Math.min(imgIdx + 1, imgs.length - 1)];
+
+      vctx.clearRect(0, 0, d.w, d.h);
+
+      // Ken Burns: slow zoom
+      const zoom = 1 + progress * 0.04;
+      const ox = (d.w * zoom - d.w) / 2;
+      const oy = (d.h * zoom - d.h) / 2;
+
+      vctx.save();
+      vctx.filter = FILTERS[S.filter] || 'none';
+      vctx.translate(-ox, -oy);
+      vctx.scale(zoom, zoom);
+      drawCoverOnCtx(vctx, img, 0, 0, d.w, d.h);
+      vctx.restore();
+      vctx.filter = 'none';
+
+      drawGradientOnCtx(vctx, d.w, d.h, 'both');
+
+      // Transition overlay
+      if (transition === 'fade' || transition === 'cross') {
+        // Fade out near end of image
+        if (localFrame > framesPerImg - tranFrames) {
+          const alpha = (localFrame - (framesPerImg - tranFrames)) / tranFrames;
+          if (transition === 'cross' && nextImg) {
+            vctx.globalAlpha = alpha;
+            vctx.filter = FILTERS[S.filter] || 'none';
+            drawCoverOnCtx(vctx, nextImg, 0, 0, d.w, d.h);
+            vctx.filter = 'none';
+            vctx.globalAlpha = 1;
+          } else {
+            vctx.fillStyle = `rgba(0,0,0,${alpha})`;
+            vctx.fillRect(0, 0, d.w, d.h);
+          }
+        }
+        // Fade in at start
+        if (localFrame < tranFrames) {
+          const alpha = 1 - localFrame / tranFrames;
+          vctx.fillStyle = `rgba(0,0,0,${alpha})`;
+          vctx.fillRect(0, 0, d.w, d.h);
+        }
+      }
+
+      // Text (appears after first 0.8s of each image)
+      if (localFrame > fps * 0.8 && (t1 || t2)) {
+        const textAlpha = Math.min(1, (localFrame - fps * 0.8) / (fps * 0.4));
+        vctx.globalAlpha = textAlpha;
+        drawTextOnCtx(vctx, t1, t2, S.textPos, d.w, d.h);
+        vctx.globalAlpha = 1;
+      }
+
+      // Logo
+      if (S.showLogo) drawLogoOnCtx(vctx, d.w, d.h);
+
+      frame++;
+      if (frame % framesPerImg === 0 && imgIdx < imgs.length - 1) imgIdx++;
+
+      updateProgress(frame / totalFrames);
+      requestAnimationFrame(drawFrame);
+    }
+    drawFrame();
+  });
+
+  await new Promise(r => { recorder.onstop = r; });
+  await sleep(300);
+
+  const blob = new Blob(chunks, { type: 'video/webm' });
+  const url = URL.createObjectURL(blob);
+  const a = document.createElement('a');
+  a.download = `harkana-reel-${duration}s-${Date.now()}.webm`;
+  a.href = url; a.click();
+  setTimeout(() => URL.revokeObjectURL(url), 5000);
+
+  showProgressOverlay(false);
+  document.getElementById('btnReel').disabled = false;
+  showToast(`Reel de ${duration}s exportado ✓`);
+}
+
+function drawCoverOnCtx(c, img, x, y, w, h) {
+  if (!img) return;
+  const ia = img.naturalWidth / img.naturalHeight;
+  const ca = w / h;
+  let sx, sy, sw, sh;
+  if (ia > ca) { sh=img.naturalHeight; sw=sh*ca; sx=(img.naturalWidth-sw)/2; sy=0; }
+  else { sw=img.naturalWidth; sh=sw/ca; sx=0; sy=(img.naturalHeight-sh)/2; }
+  c.drawImage(img, sx, sy, sw, sh, x, y, w, h);
+}
+function drawGradientOnCtx(c, w, h, pos) {
+  const g = c.createLinearGradient(0,0,0,h);
+  g.addColorStop(0,'rgba(0,0,0,0.4)'); g.addColorStop(0.35,'rgba(0,0,0,0)');
+  g.addColorStop(0.65,'rgba(0,0,0,0)'); g.addColorStop(1,'rgba(0,0,0,0.7)');
+  c.fillStyle=g; c.fillRect(0,0,w,h);
+}
+function drawTextOnCtx(c, t1, t2, pos, w, h) {
+  const yMap={top:h*0.1,center:h*0.5,bottom:h*0.84};
+  const cy=yMap[pos]||h*0.84;
+  c.textAlign='center'; c.textBaseline='middle';
+  if(t1){const sz=Math.round(w*0.058); c.font=`300 ${sz}px 'Cormorant Garamond',Georgia,serif`; c.shadowColor='rgba(0,0,0,.7)'; c.shadowBlur=28; c.fillStyle='rgba(255,255,255,.96)'; c.fillText(t1,w/2,cy); c.shadowBlur=0;}
+  if(t2){const sz2=Math.round(w*0.026); c.font=`500 ${sz2}px Inter,sans-serif`; c.fillStyle='rgba(192,154,92,.92)'; c.fillText(t2.toUpperCase(),w/2,cy+w*0.078);}
+}
+function drawLogoOnCtx(c, w, h) {
+  const sz=Math.round(w*0.022); c.font=`400 ${sz}px 'Cormorant Garamond',Georgia,serif`;
+  c.fillStyle='rgba(192,154,92,0.75)'; c.textAlign='center'; c.textBaseline='bottom';
+  c.fillText('H A R K A N A',w/2,h-w*0.03);
+}
+
+// ══════════════════════════════════════════════════
+// PROGRESS OVERLAY
+// ══════════════════════════════════════════════════
+function showProgressOverlay(show, label='') {
+  const el = document.getElementById('progressOverlay');
+  el.classList.toggle('visible', show);
+  if (label) document.getElementById('progressLabel').textContent = label;
+  if (!show) document.getElementById('progressBar').style.width = '0%';
+}
+function updateProgress(pct) {
+  document.getElementById('progressBar').style.width = (pct * 100).toFixed(1) + '%';
+  document.getElementById('progressLabel').textContent = `Generando reel... ${(pct * 100).toFixed(0)}%`;
+}
+
+// ══════════════════════════════════════════════════
+// HELPERS
+// ══════════════════════════════════════════════════
+function showToast(msg) {
+  const t = document.getElementById('toast');
+  t.textContent = msg; t.classList.add('show');
+  setTimeout(() => t.classList.remove('show'), 3000);
+}
+function sleep(ms) { return new Promise(r => setTimeout(r, ms)); }
+</script>
+</body>
+</html>

@@ -1,0 +1,767 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>HARKANA — Calendario de Contenido</title>
+<style>
+:root {
+  --verde: #0e2310; --verde-med: #1c3d1c; --verde-claro: #2d5a27;
+  --kraft: #c09a5c; --crema: #faf6ef; --carbon: #141414;
+  --gris: #888; --gris-claro: #e8e2d8;
+  --f1: #0a0a0a; --f2: #1c3d1c; --f3: #c09a5c;
+  --font-serif: 'Cormorant Garamond', Georgia, serif;
+  --font-sans: 'Inter', system-ui, sans-serif;
+}
+@import url('https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;0,600;1,300;1,400&family=Inter:wght@300;400;500;600&display=swap');
+* { box-sizing: border-box; margin: 0; padding: 0; }
+body { font-family: var(--font-sans); background: var(--crema); color: var(--carbon); min-height: 100vh; }
+
+/* HEADER */
+.site-header {
+  background: var(--carbon); padding: 0; position: sticky; top: 0; z-index: 100;
+  border-bottom: 1px solid #222;
+}
+.site-header-inner {
+  max-width: 1400px; margin: 0 auto; padding: 18px 40px;
+  display: flex; align-items: center; justify-content: space-between;
+}
+.logo { font-family: var(--font-serif); color: #fff; font-size: 1.3rem; letter-spacing: 6px; font-weight: 400; }
+.logo span { color: var(--kraft); }
+.header-meta { font-size: .65rem; letter-spacing: 3px; text-transform: uppercase; color: #555; }
+
+/* HERO */
+.hero {
+  background: var(--carbon); padding: 80px 40px; text-align: center;
+  border-bottom: 1px solid #222;
+}
+.hero-eyebrow { font-size: .65rem; letter-spacing: 4px; text-transform: uppercase; color: var(--kraft); margin-bottom: 24px; }
+.hero-title { font-family: var(--font-serif); font-size: clamp(2.5rem, 5vw, 4.5rem); font-weight: 300; color: #fff; line-height: 1.1; margin-bottom: 20px; }
+.hero-title em { color: var(--kraft); font-style: italic; }
+.hero-sub { font-size: .85rem; color: #666; letter-spacing: 1px; max-width: 500px; margin: 0 auto 40px; line-height: 1.7; }
+.phase-legend { display: flex; gap: 24px; justify-content: center; flex-wrap: wrap; }
+.phase-pill {
+  display: flex; align-items: center; gap: 10px;
+  padding: 10px 20px; border-radius: 50px; font-size: .72rem; font-weight: 600;
+  letter-spacing: 2px; text-transform: uppercase;
+}
+.phase-pill .dot { width: 8px; height: 8px; border-radius: 50%; flex-shrink: 0; }
+.p1 { background: #1a1a1a; color: #fff; border: 1px solid #333; }
+.p1 .dot { background: #555; }
+.p2 { background: #0e2310; color: var(--kraft); border: 1px solid #2d5a27; }
+.p2 .dot { background: var(--verde-claro); }
+.p3 { background: #2a1f0a; color: var(--kraft); border: 1px solid #c09a5c; }
+.p3 .dot { background: var(--kraft); }
+
+/* CONTROLS */
+.controls {
+  background: #fff; border-bottom: 1px solid var(--gris-claro);
+  position: sticky; top: 57px; z-index: 90;
+}
+.controls-inner {
+  max-width: 1400px; margin: 0 auto; padding: 14px 40px;
+  display: flex; align-items: center; gap: 12px; flex-wrap: wrap;
+}
+.filter-label { font-size: .62rem; letter-spacing: 2px; text-transform: uppercase; color: var(--gris); margin-right: 4px; }
+.filter-btn {
+  padding: 6px 16px; border-radius: 50px; border: 1.5px solid var(--gris-claro);
+  background: none; font-size: .7rem; font-weight: 600; letter-spacing: 1px;
+  text-transform: uppercase; cursor: pointer; transition: all .2s; color: var(--gris);
+}
+.filter-btn:hover { border-color: var(--verde-claro); color: var(--verde); }
+.filter-btn.active { background: var(--verde); color: #fff; border-color: var(--verde); }
+.view-toggle { margin-left: auto; display: flex; gap: 6px; }
+.view-btn { width: 32px; height: 32px; border: 1.5px solid var(--gris-claro); border-radius: 6px; background: none; cursor: pointer; display: flex; align-items: center; justify-content: center; font-size: .8rem; transition: all .2s; }
+.view-btn.active { background: var(--verde); border-color: var(--verde); color: #fff; }
+
+/* CALENDAR GRID */
+.container { max-width: 1400px; margin: 0 auto; padding: 40px; }
+
+.weeks-header {
+  display: grid; grid-template-columns: repeat(7, 1fr); gap: 4px; margin-bottom: 4px;
+}
+.week-day-label {
+  text-align: center; font-size: .6rem; letter-spacing: 2px; text-transform: uppercase;
+  color: var(--gris); padding: 8px 4px;
+}
+.calendar-grid {
+  display: grid; grid-template-columns: repeat(7, 1fr); gap: 4px;
+}
+
+/* DAY CARD */
+.day-card {
+  background: #fff; border: 1.5px solid var(--gris-claro); border-radius: 10px;
+  padding: 14px 12px; cursor: pointer; transition: all .25s;
+  position: relative; overflow: hidden; min-height: 160px;
+  display: flex; flex-direction: column;
+}
+.day-card::before {
+  content: ''; position: absolute; top: 0; left: 0; right: 0; height: 3px;
+}
+.day-card.fase-1::before { background: #333; }
+.day-card.fase-2::before { background: var(--verde-claro); }
+.day-card.fase-3::before { background: var(--kraft); }
+.day-card:hover { transform: translateY(-2px); box-shadow: 0 8px 32px rgba(0,0,0,.08); border-color: var(--verde-claro); }
+.day-card.hidden { display: none; }
+
+.day-num {
+  font-size: .65rem; font-weight: 700; color: var(--gris); letter-spacing: 1px;
+  margin-bottom: 6px;
+}
+.day-phase-badge {
+  font-size: .55rem; letter-spacing: 2px; text-transform: uppercase; font-weight: 700;
+  padding: 2px 8px; border-radius: 20px; display: inline-block; margin-bottom: 8px;
+}
+.fase-1 .day-phase-badge { background: #1a1a1a; color: #888; }
+.fase-2 .day-phase-badge { background: #e8f4e8; color: var(--verde-claro); }
+.fase-3 .day-phase-badge { background: #fdf4e7; color: #a07030; }
+
+.day-platform {
+  display: flex; align-items: center; gap: 6px; margin-bottom: 10px;
+}
+.platform-icon {
+  font-size: .8rem;
+}
+.platform-name {
+  font-size: .62rem; letter-spacing: 1.5px; text-transform: uppercase; font-weight: 600;
+  color: var(--kraft);
+}
+.day-titulo {
+  font-family: var(--font-serif); font-size: .95rem; font-weight: 400;
+  color: var(--carbon); line-height: 1.3; margin-bottom: 6px; flex: 1;
+}
+.day-copy-preview {
+  font-size: .72rem; color: var(--gris); line-height: 1.5; font-style: italic;
+  border-left: 2px solid var(--gris-claro); padding-left: 8px;
+  display: -webkit-box; -webkit-line-clamp: 2; -webkit-box-orient: vertical; overflow: hidden;
+}
+.day-tipo {
+  font-size: .58rem; letter-spacing: 1.5px; text-transform: uppercase; color: var(--gris);
+  margin-top: 10px; padding-top: 10px; border-top: 1px solid var(--gris-claro);
+}
+
+/* WEEK DIVIDER */
+.week-divider {
+  grid-column: 1 / -1; background: var(--crema); border-radius: 8px;
+  padding: 12px 16px; display: flex; align-items: center; gap: 16px;
+  margin: 8px 0 4px;
+}
+.week-divider-num { font-size: .6rem; letter-spacing: 3px; text-transform: uppercase; color: var(--gris); }
+.week-divider-title { font-family: var(--font-serif); font-size: 1.05rem; color: var(--verde); font-weight: 400; }
+.week-divider-desc { font-size: .72rem; color: var(--gris); margin-left: auto; }
+
+/* MODAL */
+.modal-overlay {
+  position: fixed; inset: 0; background: rgba(0,0,0,.7); z-index: 1000;
+  display: none; align-items: center; justify-content: center; padding: 24px;
+  backdrop-filter: blur(4px);
+}
+.modal-overlay.open { display: flex; }
+.modal {
+  background: var(--crema); border-radius: 16px; max-width: 680px; width: 100%;
+  max-height: 90vh; overflow-y: auto; box-shadow: 0 32px 80px rgba(0,0,0,.3);
+}
+.modal-header {
+  padding: 32px 36px 24px; border-bottom: 1px solid var(--gris-claro);
+  display: flex; align-items: flex-start; justify-content: space-between; gap: 20px;
+}
+.modal-day-num { font-size: .6rem; letter-spacing: 3px; text-transform: uppercase; color: var(--gris); margin-bottom: 8px; }
+.modal-title { font-family: var(--font-serif); font-size: 1.8rem; font-weight: 400; color: var(--verde); line-height: 1.2; }
+.modal-close { background: none; border: none; font-size: 1.4rem; cursor: pointer; color: var(--gris); padding: 4px; line-height: 1; flex-shrink: 0; }
+.modal-body { padding: 28px 36px; }
+.modal-section { margin-bottom: 24px; }
+.modal-section-label { font-size: .6rem; letter-spacing: 3px; text-transform: uppercase; color: var(--kraft); font-weight: 700; margin-bottom: 10px; }
+.modal-section p { font-size: .9rem; line-height: 1.75; color: #333; }
+.copy-box {
+  background: var(--carbon); border-radius: 10px; padding: 20px 24px;
+  font-size: .9rem; line-height: 1.75; color: #e0d8c8; white-space: pre-wrap;
+  font-style: italic; position: relative; margin-bottom: 10px;
+}
+.copy-box::before { content: '"'; position: absolute; top: 12px; left: 16px; font-size: 2rem; color: var(--kraft); opacity: .4; font-family: var(--font-serif); line-height: 1; }
+.copy-box-text { padding-left: 20px; }
+.hashtag-box { display: flex; flex-wrap: wrap; gap: 6px; margin-top: 10px; }
+.hashtag { font-size: .68rem; color: var(--verde-claro); font-weight: 500; }
+.btn-copy-modal {
+  background: var(--verde); color: #fff; border: none;
+  padding: 9px 22px; border-radius: 50px; font-size: .7rem; font-weight: 600;
+  letter-spacing: 1px; text-transform: uppercase; cursor: pointer; transition: background .2s;
+}
+.btn-copy-modal:hover { background: var(--verde-claro); }
+.btn-copy-modal.copied { background: #2d7a27; }
+.visual-box {
+  background: #fff; border: 1.5px solid var(--gris-claro); border-radius: 10px;
+  padding: 18px 20px;
+}
+.visual-box p { font-size: .88rem; line-height: 1.7; color: #444; }
+.modal-meta { display: flex; gap: 12px; flex-wrap: wrap; margin-bottom: 20px; }
+.meta-tag {
+  font-size: .65rem; font-weight: 700; letter-spacing: 1.5px; text-transform: uppercase;
+  padding: 5px 14px; border-radius: 20px;
+}
+.meta-plataforma { background: #e8f4e8; color: var(--verde-claro); }
+.meta-tipo { background: #fdf4e7; color: #a07030; }
+.meta-fase { background: var(--carbon); color: var(--kraft); }
+
+/* LIST VIEW */
+.list-view { display: none; }
+.list-view.active { display: block; }
+.grid-view.inactive { display: none; }
+.list-item {
+  background: #fff; border: 1.5px solid var(--gris-claro); border-radius: 10px;
+  padding: 16px 24px; margin-bottom: 8px; cursor: pointer; transition: all .2s;
+  display: grid; grid-template-columns: 60px 100px 140px 1fr auto; gap: 20px; align-items: center;
+}
+.list-item:hover { border-color: var(--verde-claro); box-shadow: 0 4px 16px rgba(0,0,0,.06); }
+.list-item.hidden { display: none; }
+.list-day { font-size: .65rem; font-weight: 700; letter-spacing: 2px; text-transform: uppercase; color: var(--gris); }
+.list-platform { font-size: .68rem; font-weight: 600; letter-spacing: 1.5px; text-transform: uppercase; color: var(--kraft); }
+.list-title { font-family: var(--font-serif); font-size: 1rem; color: var(--verde); }
+.list-copy { font-size: .78rem; color: var(--gris); font-style: italic; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+.list-fase {
+  font-size: .6rem; font-weight: 700; letter-spacing: 1.5px; text-transform: uppercase;
+  padding: 4px 12px; border-radius: 20px; white-space: nowrap;
+}
+
+/* TOAST */
+.toast {
+  position: fixed; bottom: 32px; right: 32px; background: var(--carbon);
+  color: #fff; padding: 12px 24px; border-radius: 8px; font-size: .82rem;
+  opacity: 0; transition: opacity .3s; pointer-events: none; z-index: 9999;
+}
+.toast.show { opacity: 1; }
+
+@media (max-width: 900px) {
+  .calendar-grid { grid-template-columns: repeat(4, 1fr); }
+  .weeks-header { display: none; }
+  .container { padding: 24px 16px; }
+  .site-header-inner { padding: 14px 20px; }
+  .controls-inner { padding: 10px 16px; }
+  .hero { padding: 60px 20px; }
+  .list-item { grid-template-columns: 50px 1fr; gap: 10px; }
+  .list-item > *:nth-child(n+3) { display: none; }
+}
+@media (max-width: 600px) {
+  .calendar-grid { grid-template-columns: repeat(3, 1fr); }
+  .day-card { min-height: 120px; padding: 10px 8px; }
+  .day-copy-preview { display: none; }
+  .modal-header, .modal-body { padding: 20px; }
+}
+</style>
+</head>
+<body>
+
+<div class="site-header">
+  <div class="site-header-inner">
+    <div class="logo">HARK<span>A</span>NA</div>
+    <div class="header-meta">Calendario de Contenido · 30 días</div>
+  </div>
+</div>
+
+<div class="hero">
+  <p class="hero-eyebrow">Estrategia de lanzamiento · 2024</p>
+  <h1 class="hero-title">Construir intriga.<br><em>Despertar deseo.</em><br>Crear identidad.</h1>
+  <p class="hero-sub">30 días. 3 fases. Un solo objetivo: transformar un producto en un estilo de vida.</p>
+  <div class="phase-legend">
+    <div class="phase-pill p1"><span class="dot"></span>Fase 1 — Intriga (días 1–10)</div>
+    <div class="phase-pill p2"><span class="dot"></span>Fase 2 — Descubrimiento (días 11–21)</div>
+    <div class="phase-pill p3"><span class="dot"></span>Fase 3 — Revelación (días 22–30)</div>
+  </div>
+</div>
+
+<div class="controls">
+  <div class="controls-inner">
+    <span class="filter-label">Plataforma:</span>
+    <button class="filter-btn active" onclick="filterBy('all', this)">Todos</button>
+    <button class="filter-btn" onclick="filterBy('feed', this)">📸 Feed</button>
+    <button class="filter-btn" onclick="filterBy('reel', this)">🎬 Reel</button>
+    <button class="filter-btn" onclick="filterBy('story', this)">📱 Historia</button>
+    <button class="filter-btn" onclick="filterBy('fase-1', this)">Fase 1</button>
+    <button class="filter-btn" onclick="filterBy('fase-2', this)">Fase 2</button>
+    <button class="filter-btn" onclick="filterBy('fase-3', this)">Fase 3</button>
+    <div class="view-toggle">
+      <button class="view-btn active" id="gridBtn" onclick="setView('grid')" title="Vista grilla">⊞</button>
+      <button class="view-btn" id="listBtn" onclick="setView('list')" title="Vista lista">≡</button>
+    </div>
+  </div>
+</div>
+
+<div class="container">
+  <div class="weeks-header" id="weekHeader">
+    <div class="week-day-label">Lunes</div>
+    <div class="week-day-label">Martes</div>
+    <div class="week-day-label">Miércoles</div>
+    <div class="week-day-label">Jueves</div>
+    <div class="week-day-label">Viernes</div>
+    <div class="week-day-label">Sábado</div>
+    <div class="week-day-label">Domingo</div>
+  </div>
+  <div class="calendar-grid grid-view" id="calendarGrid"></div>
+  <div class="list-view" id="listView"></div>
+</div>
+
+<!-- MODAL -->
+<div class="modal-overlay" id="modalOverlay" onclick="closeModal(event)">
+  <div class="modal" id="modalContent"></div>
+</div>
+
+<div class="toast" id="toast"></div>
+
+<script>
+const DIAS = [
+  // ── SEMANA 1 ── FASE 1: INTRIGA ────────────────────────────────────────
+  {
+    dia: 1, semana: 1, fase: 1, plataforma: 'feed', tipo: 'Imagen minimalista',
+    titulo: 'El punto de partida',
+    descripcion: 'Un solo punto blanco sobre fondo completamente negro. Sin texto adicional. Sin marca. Solo silencio visual.',
+    copy: '.',
+    hashtags: '',
+    visual: 'Pantalla negra. Un punto blanco centrado. Nada más. Composición extremadamente minimalista. Formato cuadrado 1:1.',
+    nota: 'No uses filtros. No uses texto overlay. El punto es el mensaje.'
+  },
+  {
+    dia: 2, semana: 1, fase: 1, plataforma: 'story', tipo: 'Historia interactiva',
+    titulo: '¿Cuándo fue la última vez?',
+    descripcion: 'Pregunta emocional directa. Sin contexto, sin explicación. Solo la pregunta.',
+    copy: '¿Cuándo fue la última vez\nque te tomaste\nun momento real?',
+    hashtags: '',
+    visual: 'Fondo verde oscuro (#0e2310). Tipografía serif blanca, centrada. Texto grande. Sin logo. Sticker: encuesta "Hoy" / "No recuerdo".',
+    nota: 'Objetivo: engagement. Guardar respuestas para retargeting emocional.'
+  },
+  {
+    dia: 3, semana: 1, fase: 1, plataforma: 'reel', tipo: 'Reel ASMR / macro',
+    titulo: 'Vapor. Silencio. Presencia.',
+    descripcion: 'Reel de 10-15 segundos. Solo vapor sobre una taza. Cámara lenta. Sin música, solo sonido ambiente.',
+    copy: 'El mate no se apura.',
+    hashtags: '#ritual #silencio #momento',
+    visual: 'Macro de vapor saliendo de una taza de mate. Luz natural suave desde el costado. Fondo desenfocado, neutro. Sin producto visible.',
+    nota: 'Grabar en 4K o slow motion si es posible. No mostrar la taza completa — solo el vapor.'
+  },
+  {
+    dia: 4, semana: 1, fase: 1, plataforma: 'feed', tipo: 'Imagen lifestyle',
+    titulo: 'Luz de la mañana',
+    descripcion: 'La atmósfera de un primer mate. Luz entrando por una ventana. Sombras largas. Nada explícito.',
+    copy: 'Primero el mate.\nDespués, todo lo demás.',
+    hashtags: '#mañana #ritual #mate',
+    visual: 'Luz de mañana sobre una mesa de madera. Sombra de una taza. Quizás manos en el borde del cuadro. Sin producto visible. Paleta cálida y suave.',
+    nota: 'Fotografía de alta atmósfera. Puede ser tomada con iPhone en modo retrato si no hay cámara disponible.'
+  },
+  {
+    dia: 5, semana: 1, fase: 1, plataforma: 'story', tipo: 'Teaser con cuenta regresiva',
+    titulo: 'Algo viene.',
+    descripcion: 'Simple y directo. La promesa sin revelar nada.',
+    copy: 'Algo viene. 🌿\n\nEn 25 días, algo cambia.',
+    hashtags: '',
+    visual: 'Fondo negro. Texto blanco minimalista. Sticker: cuenta regresiva a 25 días.',
+    nota: 'Activar sticker de cuenta regresiva de Instagram con notificación para seguidores.'
+  },
+  {
+    dia: 6, semana: 1, fase: 1, plataforma: 'feed', tipo: 'Imagen abstracta',
+    titulo: 'Textura del tiempo',
+    descripcion: 'Foto abstracta de textura natural: madera vieja, piedra, tierra. Evoca lo artesanal sin mostrarlo.',
+    copy: 'Algunas cosas\nno se apuran.',
+    hashtags: '#artesanal #tiempo #natural',
+    visual: 'Macro de textura de madera o tierra húmeda. Luz rasante que destaque la textura. Monocromático o con paleta tierra. Sin texto en la imagen.',
+    nota: 'La textura visual debe evocar lo orgánico. No hay producto. Solo sensación.'
+  },
+  {
+    dia: 7, semana: 1, fase: 1, plataforma: 'story', tipo: 'Historia de encuesta',
+    titulo: 'Tu ritual de mate',
+    descripcion: 'Encuesta de enganche emocional. Crea comunidad sin vender nada.',
+    copy: 'Tu mate de la mañana:\n¿Con música o en silencio?',
+    hashtags: '',
+    visual: 'Fondo crema o blanco. Tipografía verde. Dos opciones visuales: 🎵 Con música / 🤫 En silencio.',
+    nota: 'Guardar respuestas — son señales de personalidad del buyer persona.'
+  },
+  // ── SEMANA 2 ── FASE 1 → PRIMERA PISTA ──────────────────────────────
+  {
+    dia: 8, semana: 2, fase: 1, plataforma: 'feed', tipo: 'Imagen macro',
+    titulo: 'La materia prima',
+    descripcion: 'Macro de yerba suelta en la mano. Sin embalaje, sin logo. Solo la yerba como elemento natural.',
+    copy: 'De la tierra.\nSin más vuelta.',
+    hashtags: '#organico #natural #yerbamate',
+    visual: 'Macro de yerba suelta sobre palma de mano. Fondo oscuro. Luz lateral que resalte textura. Profundidad de campo corta.',
+    nota: 'Esta es la primera pista visual del producto. Pero el producto no existe aún — solo la materia.'
+  },
+  {
+    dia: 9, semana: 2, fase: 1, plataforma: 'reel', tipo: 'Reel sensorial',
+    titulo: 'El sonido del cebado',
+    descripcion: 'ASMR de cebado de mate. Solo sonido, imagen minimalista. El mate fuera de cuadro o en silueta.',
+    copy: 'Ese sonido.\nYa sabés cuál.',
+    hashtags: '#asmr #mate #ritual',
+    visual: 'Imagen casi negra con silueta de mate. El foco está en el AUDIO: agua cayendo, burbujeo suave del cebado. Sin voz, sin música.',
+    nota: 'Si el audio es de calidad, este reel puede funcionar muy bien orgánicamente.'
+  },
+  {
+    dia: 10, semana: 2, fase: 1, plataforma: 'story', tipo: 'Historia de texto',
+    titulo: '"No es lo que tomás."',
+    descripcion: 'Primera frase del manifiesto. Lanzada sin contexto, sin explicación. Solo la frase.',
+    copy: 'No es lo que tomás.',
+    hashtags: '',
+    visual: 'Texto blanco sobre negro. Serif grande. Centrado. Respiración visual. Sin nada más.',
+    nota: 'Esta frase queda incompleta a propósito. La continuación llega en la Fase 3.'
+  },
+  {
+    dia: 11, semana: 2, fase: 2, plataforma: 'feed', tipo: 'Imagen de textura kraft',
+    titulo: 'Primera pista visual',
+    descripcion: 'Por primera vez aparece una textura que podría ser packaging. No se ve el logo. Solo el material.',
+    copy: 'Kraft.\nComo lo artesanal.',
+    hashtags: '#packaging #artesanal #kraft',
+    visual: 'Macro de papel kraft. Solo textura, sin forma de packaging reconocible. Luz cálida. Granulado natural.',
+    nota: 'FASE 2 comienza. Las pistas empiezan a tomar forma. Follower perspicaz puede comenzar a intuir de qué se trata.'
+  },
+  {
+    dia: 12, semana: 2, fase: 2, plataforma: 'reel', tipo: 'Reel de origen',
+    titulo: 'Misiones desde el aire',
+    descripcion: 'Imágenes de la selva misionera, plantaciones de yerba. Sin texto, sin logo. Solo la naturaleza del origen.',
+    copy: 'Nació acá.\n\n— Misiones, Argentina.',
+    hashtags: '#misiones #argentina #organico #yerbananativa',
+    visual: 'Tomas aéreas o ground level de yerbales. Verde intenso. Humedad. Tierra roja. Música ambiental suave de fondo.',
+    nota: 'Se puede usar material de archivo o stock si no se cuenta con tomas propias de Misiones.'
+  },
+  {
+    dia: 13, semana: 2, fase: 2, plataforma: 'story', tipo: 'Historia de dato',
+    titulo: 'El origen',
+    descripcion: 'Primer dato concreto: de dónde viene. Sin nombrar la marca todavía.',
+    copy: 'Cultivada en Misiones.\nEmbolsada en Córdoba.\n\nCon tiempo. Con cuidado.',
+    hashtags: '',
+    visual: 'Mapa minimalista de Argentina con dos puntos: Misiones y Córdoba. Fondo crema. Línea que los une.',
+    nota: 'El recorrido Misiones → Córdoba es parte de la identidad. Empezar a instalarlo.'
+  },
+  {
+    dia: 14, semana: 2, fase: 2, plataforma: 'feed', tipo: 'Imagen macro',
+    titulo: 'La yerba de cerca',
+    descripcion: 'Macro extremo de yerba. Solo la planta. Sin empaque, sin marca.',
+    copy: 'Sin agroquímicos.\nSin apuro.\nSin mentiras.',
+    hashtags: '#sinTACC #organico #puro #yerbaorganica',
+    visual: 'Macro de hojas de yerba mate secas. Textura rugosa. Luz natural. Verde oscuro con detalles dorados.',
+    nota: 'Primer mensaje de pureza. Empezar a instalar los atributos sin decir el nombre de la marca.'
+  },
+  // ── SEMANA 3 ── FASE 2: DESCUBRIMIENTO ──────────────────────────────
+  {
+    dia: 15, semana: 3, fase: 2, plataforma: 'reel', tipo: 'Reel artesanal',
+    titulo: 'El proceso: manos que embolan',
+    descripcion: 'Primeras imágenes del proceso de embolsado artesanal en Córdoba. Manos. Bolsas kraft. Yerba.',
+    copy: 'Cada bolsa,\nembolsada a mano.\n\nAsí nomás.',
+    hashtags: '#artesanal #proceso #cordoba #hechoenargentina',
+    visual: 'Video de manos embolsando yerba. Luz cálida y natural. Ritmo tranquilo. Música folk o acústica suave. Mostrar el kraft sin el logo completo.',
+    nota: 'Primer video del proceso. No mostrar el logo completo todavía. Dejar que la bolsa kraft se intuya.'
+  },
+  {
+    dia: 16, semana: 3, fase: 2, plataforma: 'story', tipo: 'Historia de valor',
+    titulo: 'Sin. Sin. Sin.',
+    descripcion: 'Comunicar los atributos de pureza de forma directa y poderosa.',
+    copy: 'Sin TACC.\nSin agroquímicos.\nSin polvillo.\n\nSolo yerba.',
+    hashtags: '',
+    visual: 'Texto en lista sobre fondo negro. Cada "Sin" aparece con transición suave. Tipografía limpia.',
+    nota: 'Este slide puede ser una secuencia de 3 stories individuales para más impacto.'
+  },
+  {
+    dia: 17, semana: 3, fase: 2, plataforma: 'feed', tipo: 'Imagen de producto parcial',
+    titulo: 'La bolsa (primer plano)',
+    descripcion: 'Por primera vez se ve la bolsa kraft. Pero solo una esquina, parcialmente. El logo fuera de cuadro.',
+    copy: 'Lo que hay adentro\nes tan importante\ncomo lo de afuera.',
+    hashtags: '#packaging #kraft #artesanal',
+    visual: 'Esquina de bolsa kraft sobre mesa de madera. Composición que deja el logo fuera del encuadre o desenfocado. Luz suave lateral.',
+    nota: 'Primer contacto real con el packaging. Guardar la revelación completa para más adelante.'
+  },
+  {
+    dia: 18, semana: 3, fase: 2, plataforma: 'story', tipo: 'Historia de encuesta',
+    titulo: '¿Lo estás intuyendo?',
+    descripcion: 'Encuesta para medir el nivel de intriga generado. Crear conversación.',
+    copy: '¿Sabés qué estamos\npreparando?\n\n¿Lo intuís?',
+    hashtags: '',
+    visual: 'Sticker de encuesta con opciones: "Ya lo sé 🌿" / "Aún no, pero quiero". Fondo verde oscuro.',
+    nota: 'Las respuestas confirman el nivel de engagement antes de la revelación.'
+  },
+  {
+    dia: 19, semana: 3, fase: 2, plataforma: 'reel', tipo: 'Reel de montaje',
+    titulo: 'De la semilla al mate',
+    descripcion: 'Montaje visual del viaje completo: campo → proceso → empaque. Sin narración, con música.',
+    copy: 'De Misiones a tu mate.\n\nEl camino importa.',
+    hashtags: '#origenes #organico #misiones #cordoba #artesanal',
+    visual: 'Montaje de 30 segundos: yerbales → manos → embolsado → bolsa kraft. Transiciones suaves. Música ambiental cálida. Texto superpuesto mínimo.',
+    nota: 'Este reel puede funcionar como contenido evergreen una vez publicado el lanzamiento.'
+  },
+  {
+    dia: 20, semana: 3, fase: 2, plataforma: 'feed', tipo: 'Imagen con inicial',
+    titulo: 'La H',
+    descripcion: 'Primera aparición del logotipo: solo la letra H, grande, sobre fondo oscuro. Sin contexto adicional.',
+    copy: 'H.',
+    hashtags: '#harkana',
+    visual: 'La letra H del logotipo de Harkana, grande, centrada, sobre fondo negro o verde oscuro. Alta resolución. Sin nada más.',
+    nota: 'Este post genera curiosidad máxima. Los seguidores que lo han seguido desde el día 1 empiezan a conectar los puntos.'
+  },
+  {
+    dia: 21, semana: 3, fase: 2, plataforma: 'story', tipo: 'Historia de manifiesto',
+    titulo: 'Hecho con tiempo.',
+    descripcion: 'Una frase del manifiesto de marca. Simple, poderosa.',
+    copy: 'Hecho con tiempo.\nPara tomarlo con tiempo.',
+    hashtags: '',
+    visual: 'Texto serif en dos líneas. Centrado. Fondo crema o blanco. Sin logos. Minimalismo máximo.',
+    nota: 'Esta frase sintetiza la filosofía de la marca. Puede usarse como recurring content.'
+  },
+  // ── SEMANA 4 ── FASE 3: REVELACIÓN ──────────────────────────────────
+  {
+    dia: 22, semana: 4, fase: 3, plataforma: 'feed', tipo: 'Foto de lanzamiento oficial',
+    titulo: 'HARKANA — Revelación',
+    descripcion: 'La primera fotografía oficial del producto completo. Producto en centro, packaging completo visible.',
+    copy: 'HARKANA.\nYerba orgánica de verdad.\n\nYa llegó.',
+    hashtags: '#harkana #yerbaorganica #lanzamiento #sinTACC #organico #artesanal',
+    visual: 'Producto completo sobre superficie de madera o piedra natural. Logo completo visible. Luz suave natural. Composición cuidada. Esta es la foto heroína.',
+    nota: 'Fotografía de máxima calidad. Esta imagen define la identidad visual de la marca en redes.'
+  },
+  {
+    dia: 23, semana: 4, fase: 3, plataforma: 'reel', tipo: 'Brand film',
+    titulo: '"No es lo que tomás. Es cómo vivís."',
+    descripcion: 'El reel de lanzamiento definitivo. Lifestyle completo: persona, mañana, mate, producto, naturaleza.',
+    copy: 'No es lo que tomás.\nEs cómo vivís.\n\nHARKANA.',
+    hashtags: '#harkana #yerbaorganica #estilodevida #ritual #organico',
+    visual: 'Reel de 30-45 seg. Persona en ambiente natural/hogareño. Toma el mate con calma. Luz perfecta. Producto aparece en el final. Texto: "No es lo que tomás. Es cómo vivís." Fade a logo.',
+    nota: 'Este es el reel más importante del lanzamiento. Vale la pena invertir en producción.'
+  },
+  {
+    dia: 24, semana: 4, fase: 3, plataforma: 'story', tipo: 'Historia de lanzamiento',
+    titulo: '¡Ya llegó!',
+    descripcion: 'CTA claro por primera vez. Swipe up o link en bio para comprar.',
+    copy: 'HARKANA ya llegó.\n\nYerba orgánica. Sin TACC.\nDesde Misiones.\n\n→ Link en bio para pedidos',
+    hashtags: '',
+    visual: 'Producto sobre fondo crema. Texto verde. Botón de link activo. Animación suave de entrada.',
+    nota: 'Activar tracking de clics al link en bio. Este es el primer momento de conversión.'
+  },
+  {
+    dia: 25, semana: 4, fase: 3, plataforma: 'feed', tipo: 'Lifestyle con producto',
+    titulo: 'El momento del día',
+    descripcion: 'Producto integrado en un momento de vida real. No publicitario — auténtico.',
+    copy: 'No es solo mate.\nEs tu momento del día.',
+    hashtags: '#harkana #ritual #mateorganico #sinTACC #momentos',
+    visual: 'Persona en entorno auténtico (ventana, jardín, escritorio) con el mate y la bolsa de Harkana visible pero no protagonista. Lifestyle genuino.',
+    nota: 'Si no tenés modelo, usá manos propias. La autenticidad vale más que la producción perfecta.'
+  },
+  {
+    dia: 26, semana: 4, fase: 3, plataforma: 'feed', tipo: 'Imagen de manifiesto',
+    titulo: 'Los atributos completos',
+    descripcion: 'Primera vez que se muestran todos los atributos de la marca juntos.',
+    copy: 'Orgánica. Certificada.\nSin TACC. Sin polvillo.\nSin agroquímicos.\n\nHARKANA.',
+    hashtags: '#harkana #organica #certificada #sinTACC #pura #argentina',
+    visual: 'Composición limpia: producto + lista de atributos en tipografía limpia. Fondo crema. Equilibrio de blancos y verdes.',
+    nota: 'Este post actúa como presentación formal de los atributos para quien llega nuevo.'
+  },
+  {
+    dia: 27, semana: 4, fase: 3, plataforma: 'story', tipo: 'Oferta de lanzamiento',
+    titulo: '30% OFF — Solo hoy',
+    descripcion: 'Primera oferta comercial directa. Después de 26 días de construcción, se habilita la conversión.',
+    copy: '30% OFF en tu primer pedido.\n\nPorque queremos que\nlo pruebes de verdad.\n\n⏳ Solo por hoy.',
+    hashtags: '',
+    visual: 'Fondo verde oscuro. Número "30%" grande en kraft. Cuenta regresiva de 24 horas. Botón de link activo.',
+    nota: 'Usar código LANZAMIENTO o similar. Trackear conversiones con Pixel de Meta y GA4.'
+  },
+  {
+    dia: 28, semana: 4, fase: 3, plataforma: 'reel', tipo: 'Testimonial auténtico',
+    titulo: 'Primeras reacciones',
+    descripcion: 'Video de primeras personas que probaron Harkana. Reacciones reales, sin guion.',
+    copy: '¿Qué pasa cuando alguien\nprueba Harkana por primera vez?\n\nEsto.',
+    hashtags: '#harkana #testimonial #organico #yerbamate',
+    visual: 'Video de persona probando el mate. Reacción genuina. Formato selfie está bien — la autenticidad importa más que la producción.',
+    nota: 'Si no tenés testimonials todavía, reemplazar con un reel del proceso o behind the scenes.'
+  },
+  {
+    dia: 29, semana: 4, fase: 3, plataforma: 'feed', tipo: 'Mayorista',
+    titulo: 'Para quienes revenden',
+    descripcion: 'Primer post orientado a revendedores/mayoristas. Después de 28 días de construcción de marca.',
+    copy: 'Si tenés un almacén,\nun dietético, un negocio...\n\nHarkana mayorista.\nConsultanos.',
+    hashtags: '#harkana #mayorista #revendedor #yerbaorganica #negocio',
+    visual: 'Varias unidades del producto. Composición de stock. Fondo neutro. Aspecto profesional pero cálido.',
+    nota: 'WhatsApp link directo. Trackear con data-action="whatsapp-mayorista".'
+  },
+  {
+    dia: 30, semana: 4, fase: 3, plataforma: 'story', tipo: 'CTA de cierre',
+    titulo: 'Cierre de ciclo',
+    descripcion: 'Cierre del mes de lanzamiento. Reflexión + CTA. Inicio del ciclo regular de contenido.',
+    copy: 'Empezó como un punto.\nTermina como un estilo de vida.\n\nGracias por estar.\n\n→ Pedidos en bio.',
+    hashtags: '',
+    visual: 'Collage de los mejores momentos del mes. Producto. Naturaleza. Proceso. Personas. Transición suave. Cierre con logo.',
+    nota: 'Este post cierra el arco narrativo del lanzamiento y abre la etapa de contenido regular.'
+  }
+];
+
+// ── RENDER ──
+function getPhaseLabel(f) {
+  if (f === 1) return { text: 'Fase 1 · Intriga', cls: 'fase-1' };
+  if (f === 2) return { text: 'Fase 2 · Descubrimiento', cls: 'fase-2' };
+  return { text: 'Fase 3 · Revelación', cls: 'fase-3' };
+}
+function getPlatformIcon(p) {
+  return { feed: '📸', reel: '🎬', story: '📱' }[p] || '📄';
+}
+function getPlatformName(p) {
+  return { feed: 'Instagram Feed', reel: 'Instagram Reel', story: 'Historia' }[p] || p;
+}
+
+let currentFilter = 'all';
+let currentView = 'grid';
+
+const semanas = [
+  { semana: 1, titulo: 'Silencio absoluto', desc: 'Días 1–7 · Sin producto. Sin marca. Solo sensaciones.' },
+  { semana: 2, titulo: 'Las primeras pistas', desc: 'Días 8–14 · El origen comienza a revelarse.' },
+  { semana: 3, titulo: 'El proceso toma forma', desc: 'Días 15–21 · Artesanal, orgánico, auténtico.' },
+  { semana: 4, titulo: 'La revelación', desc: 'Días 22–30 · HARKANA existe. Ya podés pedirla.' }
+];
+
+function buildCalendar() {
+  const grid = document.getElementById('calendarGrid');
+  const list = document.getElementById('listView');
+  grid.innerHTML = '';
+  list.innerHTML = '';
+
+  let semanaActual = 0;
+
+  DIAS.forEach((d, i) => {
+    if (d.semana !== semanaActual) {
+      semanaActual = d.semana;
+      const s = semanas[semanaActual - 1];
+      const div = document.createElement('div');
+      div.className = 'week-divider';
+      div.innerHTML = `<span class="week-divider-num">Semana ${s.semana}</span>
+        <span class="week-divider-title">${s.titulo}</span>
+        <span class="week-divider-desc">${s.desc}</span>`;
+      grid.appendChild(div);
+    }
+
+    const fase = getPhaseLabel(d.fase);
+
+    // Grid card
+    const card = document.createElement('div');
+    card.className = `day-card fase-${d.fase}`;
+    card.dataset.plataforma = d.plataforma;
+    card.dataset.fase = `fase-${d.fase}`;
+    card.onclick = () => openModal(i);
+    card.innerHTML = `
+      <div class="day-num">Día ${d.dia}</div>
+      <span class="day-phase-badge">${fase.text}</span>
+      <div class="day-platform">
+        <span class="platform-icon">${getPlatformIcon(d.plataforma)}</span>
+        <span class="platform-name">${getPlatformName(d.plataforma)}</span>
+      </div>
+      <div class="day-titulo">${d.titulo}</div>
+      <div class="day-copy-preview">${d.copy}</div>
+      <div class="day-tipo">${d.tipo}</div>`;
+    grid.appendChild(card);
+
+    // List item
+    const li = document.createElement('div');
+    li.className = `list-item fase-${d.fase}`;
+    li.dataset.plataforma = d.plataforma;
+    li.dataset.fase = `fase-${d.fase}`;
+    li.onclick = () => openModal(i);
+    const listFaseStyle = d.fase === 1 ? 'background:#1a1a1a;color:#888' : d.fase === 2 ? 'background:#e8f4e8;color:#2d5a27' : 'background:#fdf4e7;color:#a07030';
+    li.innerHTML = `
+      <div class="list-day">Día ${d.dia}</div>
+      <div class="list-platform">${getPlatformIcon(d.plataforma)} ${getPlatformName(d.plataforma)}</div>
+      <div class="list-title">${d.titulo}</div>
+      <div class="list-copy">${d.copy.replace(/\n/g, ' ')}</div>
+      <span class="list-fase" style="${listFaseStyle}">${fase.text}</span>`;
+    list.appendChild(li);
+  });
+}
+
+function openModal(idx) {
+  const d = DIAS[idx];
+  const fase = getPhaseLabel(d.fase);
+  const faseStyle = d.fase === 1 ? 'background:#1a1a1a;color:#888' : d.fase === 2 ? 'background:#e8f4e8;color:#2d5a27' : 'background:#fdf4e7;color:#a07030';
+  const copyEscaped = JSON.stringify(d.copy + (d.hashtags ? '\n\n' + d.hashtags : ''));
+
+  document.getElementById('modalContent').innerHTML = `
+    <div class="modal-header">
+      <div>
+        <div class="modal-day-num">Día ${d.dia} de 30</div>
+        <div class="modal-title">${d.titulo}</div>
+      </div>
+      <button class="modal-close" onclick="closeModal()">✕</button>
+    </div>
+    <div class="modal-body">
+      <div class="modal-meta">
+        <span class="meta-tag meta-plataforma">${getPlatformIcon(d.plataforma)} ${getPlatformName(d.plataforma)}</span>
+        <span class="meta-tag meta-tipo">${d.tipo}</span>
+        <span class="meta-tag meta-fase" style="${faseStyle}">${fase.text}</span>
+      </div>
+
+      <div class="modal-section">
+        <div class="modal-section-label">Descripción del contenido</div>
+        <p>${d.descripcion}</p>
+      </div>
+
+      <div class="modal-section">
+        <div class="modal-section-label">Copy sugerido</div>
+        <div class="copy-box"><div class="copy-box-text">${d.copy.replace(/\n/g, '<br>')}</div></div>
+        ${d.hashtags ? `<div class="hashtag-box">${d.hashtags.split(' ').map(h=>`<span class="hashtag">${h}</span>`).join('')}</div>` : ''}
+        <br><button class="btn-copy-modal" onclick="copyCopy(${copyEscaped}, this)">Copiar copy</button>
+      </div>
+
+      <div class="modal-section">
+        <div class="modal-section-label">Descripción visual</div>
+        <div class="visual-box"><p>${d.visual}</p></div>
+      </div>
+
+      ${d.nota ? `<div class="modal-section">
+        <div class="modal-section-label">Nota táctica</div>
+        <p style="font-size:.85rem;color:var(--gris);line-height:1.7;font-style:italic;">💡 ${d.nota}</p>
+      </div>` : ''}
+
+      <div style="display:flex;gap:10px;margin-top:8px;">
+        ${idx > 0 ? `<button class="btn-copy-modal" style="background:var(--gris);" onclick="openModal(${idx-1})">← Día anterior</button>` : ''}
+        ${idx < DIAS.length - 1 ? `<button class="btn-copy-modal" onclick="openModal(${idx+1})">Día siguiente →</button>` : ''}
+      </div>
+    </div>`;
+
+  document.getElementById('modalOverlay').classList.add('open');
+}
+
+function closeModal(e) {
+  if (!e || e.target === document.getElementById('modalOverlay')) {
+    document.getElementById('modalOverlay').classList.remove('open');
+  }
+}
+document.addEventListener('keydown', e => { if (e.key === 'Escape') closeModal(); });
+
+function filterBy(type, btn) {
+  document.querySelectorAll('.filter-btn').forEach(b => b.classList.remove('active'));
+  btn.classList.add('active');
+  currentFilter = type;
+  applyFilter();
+}
+
+function applyFilter() {
+  document.querySelectorAll('.day-card, .list-item').forEach(el => {
+    const matches = currentFilter === 'all'
+      || el.dataset.plataforma === currentFilter
+      || el.dataset.fase === currentFilter;
+    el.classList.toggle('hidden', !matches);
+  });
+}
+
+function setView(v) {
+  currentView = v;
+  document.getElementById('calendarGrid').classList.toggle('inactive', v === 'list');
+  document.getElementById('listView').classList.toggle('active', v === 'list');
+  document.getElementById('weekHeader').style.display = v === 'list' ? 'none' : '';
+  document.getElementById('gridBtn').classList.toggle('active', v === 'grid');
+  document.getElementById('listBtn').classList.toggle('active', v === 'list');
+}
+
+function copyCopy(text, btn) {
+  navigator.clipboard.writeText(text).then(() => {
+    btn.textContent = 'Copiado ✓'; btn.classList.add('copied');
+    setTimeout(() => { btn.textContent = 'Copiar copy'; btn.classList.remove('copied'); }, 2000);
+  });
+}
+
+function showToast(msg) {
+  const t = document.getElementById('toast');
+  t.textContent = msg; t.classList.add('show');
+  setTimeout(() => t.classList.remove('show'), 3000);
+}
+
+buildCalendar();
+</script>
+</body>
+</html>

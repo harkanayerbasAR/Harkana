@@ -1,0 +1,1061 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>HARKANA — Estrategia de Lanzamiento</title>
+<style>
+@import url('https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;0,600;1,300;1,400&family=Inter:wght@300;400;500;600&display=swap');
+:root {
+  --verde: #0e2310; --verde-med: #1c3d1c; --verde-claro: #2d5a27;
+  --kraft: #c09a5c; --kraft-claro: #f5ead3; --crema: #faf6ef;
+  --carbon: #141414; --gris: #888; --gris-claro: #e8e2d8;
+  --font-serif: 'Cormorant Garamond', Georgia, serif;
+  --font-sans: 'Inter', system-ui, sans-serif;
+}
+* { box-sizing: border-box; margin: 0; padding: 0; }
+html { scroll-behavior: smooth; }
+body { font-family: var(--font-sans); background: var(--crema); color: var(--carbon); }
+
+/* NAV */
+.top-nav {
+  position: fixed; top: 0; left: 0; right: 0; z-index: 100;
+  background: rgba(20, 20, 20, .95); backdrop-filter: blur(12px);
+  border-bottom: 1px solid #2a2a2a;
+}
+.top-nav-inner {
+  max-width: 1200px; margin: 0 auto; padding: 0 40px;
+  display: flex; align-items: center; height: 56px; gap: 32px;
+}
+.nav-logo { font-family: var(--font-serif); color: #fff; font-size: 1.1rem; letter-spacing: 5px; font-weight: 400; flex-shrink: 0; }
+.nav-logo span { color: var(--kraft); }
+.nav-links { display: flex; gap: 24px; overflow-x: auto; }
+.nav-links a {
+  font-size: .65rem; letter-spacing: 2px; text-transform: uppercase; color: #666;
+  text-decoration: none; white-space: nowrap; transition: color .2s; padding: 4px 0;
+}
+.nav-links a:hover { color: var(--kraft); }
+.nav-links a.active { color: var(--kraft); border-bottom: 1px solid var(--kraft); }
+
+/* COVER */
+.cover {
+  background: var(--carbon); min-height: 100vh;
+  display: flex; flex-direction: column; align-items: center; justify-content: center;
+  text-align: center; padding: 80px 40px; position: relative; overflow: hidden;
+}
+.cover::before {
+  content: ''; position: absolute; inset: 0;
+  background: radial-gradient(ellipse at 50% 60%, rgba(46,90,39,.15) 0%, transparent 70%);
+  pointer-events: none;
+}
+.cover-eyebrow {
+  font-size: .62rem; letter-spacing: 6px; text-transform: uppercase; color: #444;
+  margin-bottom: 40px;
+}
+.cover-title {
+  font-family: var(--font-serif); font-size: clamp(3rem, 8vw, 7rem);
+  font-weight: 300; color: #fff; line-height: 1.05; margin-bottom: 24px; position: relative;
+}
+.cover-title .kraft-word { color: var(--kraft); }
+.cover-title .italic { font-style: italic; }
+.cover-sub {
+  font-size: 1rem; color: #555; max-width: 520px; line-height: 1.8; margin-bottom: 60px;
+}
+.cover-concept {
+  font-family: var(--font-serif); font-size: clamp(1.3rem, 3vw, 2rem);
+  font-style: italic; color: var(--kraft); margin-bottom: 16px;
+}
+.cover-divider { width: 60px; height: 1px; background: #333; margin: 0 auto 60px; }
+.cover-stats { display: flex; gap: 60px; justify-content: center; flex-wrap: wrap; }
+.stat { text-align: center; }
+.stat-num { font-family: var(--font-serif); font-size: 2.8rem; font-weight: 300; color: #fff; line-height: 1; }
+.stat-label { font-size: .62rem; letter-spacing: 3px; text-transform: uppercase; color: #555; margin-top: 8px; }
+.cover-scroll { position: absolute; bottom: 40px; left: 50%; transform: translateX(-50%); font-size: .6rem; letter-spacing: 3px; text-transform: uppercase; color: #444; }
+
+/* SECTIONS */
+section { padding: 100px 40px; max-width: 1200px; margin: 0 auto; }
+.section-label { font-size: .6rem; letter-spacing: 4px; text-transform: uppercase; color: var(--kraft); margin-bottom: 20px; }
+.section-title { font-family: var(--font-serif); font-size: clamp(2rem, 4vw, 3.5rem); font-weight: 300; color: var(--verde); line-height: 1.15; margin-bottom: 20px; }
+.section-title em { font-style: italic; color: var(--kraft); }
+.section-intro { font-size: .95rem; color: var(--gris); line-height: 1.85; max-width: 620px; }
+.section-divider { width: 100%; height: 1px; background: var(--gris-claro); max-width: 1200px; margin: 0 auto; }
+
+/* PILLARS */
+#pilares { background: var(--carbon); max-width: 100%; padding: 100px 40px; }
+#pilares > * { max-width: 1200px; margin-left: auto; margin-right: auto; }
+#pilares .section-title { color: #fff; }
+.pillars-grid {
+  display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+  gap: 2px; margin-top: 60px;
+}
+.pillar {
+  background: #1a1a1a; padding: 40px 32px;
+  border-top: 2px solid transparent; transition: border-color .3s;
+}
+.pillar:hover { border-top-color: var(--kraft); }
+.pillar-icon { font-size: 2rem; margin-bottom: 20px; display: block; }
+.pillar-name { font-family: var(--font-serif); font-size: 1.4rem; color: #fff; font-weight: 400; margin-bottom: 12px; line-height: 1.2; }
+.pillar-desc { font-size: .82rem; color: #666; line-height: 1.7; }
+.pillar-sensacion { font-size: .72rem; color: var(--kraft); margin-top: 12px; font-style: italic; }
+
+/* WEB VS REDES */
+.two-col { display: grid; grid-template-columns: 1fr 1fr; gap: 3px; margin-top: 60px; }
+.col-card { padding: 48px 40px; }
+.col-web { background: var(--verde); }
+.col-redes { background: var(--kraft-claro); }
+.col-label { font-size: .6rem; letter-spacing: 3px; text-transform: uppercase; margin-bottom: 20px; font-weight: 700; }
+.col-web .col-label { color: rgba(255,255,255,.4); }
+.col-redes .col-label { color: var(--verde-claro); }
+.col-title { font-family: var(--font-serif); font-size: 2rem; font-weight: 300; margin-bottom: 24px; line-height: 1.2; }
+.col-web .col-title { color: #fff; }
+.col-redes .col-title { color: var(--verde); }
+.col-items { list-style: none; }
+.col-items li { font-size: .88rem; line-height: 1.7; padding: 10px 0; border-bottom: 1px solid rgba(255,255,255,.1); }
+.col-web .col-items li { color: rgba(255,255,255,.7); }
+.col-redes .col-items li { color: var(--verde-med); border-color: rgba(0,0,0,.1); }
+.col-items li::before { content: '→  '; opacity: .5; }
+
+/* CONCEPTO CREATIVO */
+.concept-hero {
+  background: var(--crema); border: 1px solid var(--gris-claro);
+  border-radius: 2px; padding: 80px; text-align: center; margin: 60px 0;
+  position: relative; overflow: hidden;
+}
+.concept-hero::before {
+  content: '"'; font-family: var(--font-serif); font-size: 20rem; color: var(--gris-claro);
+  position: absolute; top: -60px; left: 30px; line-height: 1; pointer-events: none;
+  z-index: 0;
+}
+.concept-quote {
+  font-family: var(--font-serif); font-size: clamp(1.8rem, 4vw, 3.5rem); font-weight: 300;
+  color: var(--verde); line-height: 1.2; position: relative; z-index: 1; margin-bottom: 20px;
+}
+.concept-quote strong { color: var(--kraft); font-weight: 400; }
+.concept-source { font-size: .7rem; letter-spacing: 3px; text-transform: uppercase; color: var(--gris); position: relative; z-index: 1; }
+
+/* VISUAL LINE */
+.visual-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 16px; margin-top: 60px; }
+.visual-item {
+  aspect-ratio: 1; border-radius: 8px; overflow: hidden; position: relative;
+  display: flex; flex-direction: column; align-items: center; justify-content: center;
+  text-align: center; padding: 32px 24px;
+}
+.vi-1 { background: var(--carbon); }
+.vi-2 { background: linear-gradient(135deg, #2d5a27, #0e2310); }
+.vi-3 { background: linear-gradient(135deg, #c09a5c, #e8d0a0); }
+.vi-4 { background: #1a1a1a; border: 1px solid #2a2a2a; }
+.vi-5 { background: var(--crema); border: 1px solid var(--gris-claro); }
+.vi-6 { background: linear-gradient(135deg, #0e2310, #1c3d1c); }
+.visual-item-icon { font-size: 2.5rem; margin-bottom: 16px; }
+.visual-item-title { font-family: var(--font-serif); font-size: 1.2rem; margin-bottom: 8px; font-weight: 400; }
+.vi-1 .visual-item-title, .vi-2 .visual-item-title, .vi-4 .visual-item-title, .vi-6 .visual-item-title { color: #fff; }
+.vi-3 .visual-item-title { color: var(--verde); }
+.vi-5 .visual-item-title { color: var(--verde); }
+.visual-item-desc { font-size: .75rem; line-height: 1.6; }
+.vi-1 .visual-item-desc, .vi-2 .visual-item-desc, .vi-4 .visual-item-desc, .vi-6 .visual-item-desc { color: rgba(255,255,255,.5); }
+.vi-3 .visual-item-desc { color: rgba(14,35,16,.6); }
+.vi-5 .visual-item-desc { color: var(--gris); }
+
+/* PHASE TIMELINE */
+.phases { margin-top: 60px; }
+.phase-block {
+  display: grid; grid-template-columns: 200px 1fr; gap: 0; margin-bottom: 2px;
+  border-radius: 2px; overflow: hidden;
+}
+.phase-sidebar {
+  padding: 48px 40px; display: flex; flex-direction: column; justify-content: center;
+}
+.phase-1-s { background: var(--carbon); }
+.phase-2-s { background: var(--verde); }
+.phase-3-s { background: var(--kraft); }
+.phase-num { font-family: var(--font-serif); font-size: 4rem; font-weight: 300; line-height: 1; margin-bottom: 8px; }
+.phase-1-s .phase-num { color: #333; }
+.phase-2-s .phase-num { color: rgba(255,255,255,.2); }
+.phase-3-s .phase-num { color: rgba(14,35,16,.25); }
+.phase-name { font-family: var(--font-serif); font-size: 1.3rem; font-weight: 400; }
+.phase-1-s .phase-name { color: #fff; }
+.phase-2-s .phase-name { color: #fff; }
+.phase-3-s .phase-name { color: var(--verde); }
+.phase-duration { font-size: .62rem; letter-spacing: 2px; text-transform: uppercase; margin-top: 6px; }
+.phase-1-s .phase-duration { color: #555; }
+.phase-2-s .phase-duration { color: rgba(255,255,255,.4); }
+.phase-3-s .phase-duration { color: rgba(14,35,16,.4); }
+.phase-main { background: #fff; padding: 48px; }
+.phase-headline { font-family: var(--font-serif); font-size: 1.6rem; color: var(--verde); margin-bottom: 16px; font-weight: 400; }
+.phase-desc { font-size: .9rem; color: var(--gris); line-height: 1.8; margin-bottom: 28px; }
+.phase-rules { list-style: none; margin-bottom: 28px; }
+.phase-rules li { font-size: .85rem; color: #333; padding: 6px 0; border-bottom: 1px solid var(--gris-claro); }
+.phase-rules li::before { content: '✓  '; color: var(--verde-claro); font-weight: 700; }
+.phase-rules li.no::before { content: '✗  '; color: #cc5555; }
+.phase-content-types { display: flex; gap: 10px; flex-wrap: wrap; }
+.content-type-tag { font-size: .65rem; font-weight: 700; letter-spacing: 1.5px; text-transform: uppercase; padding: 5px 14px; border-radius: 20px; background: var(--crema); color: var(--verde-med); }
+
+/* COPIES BANK */
+.copies-section { background: var(--carbon); max-width: 100%; padding: 100px 40px; }
+.copies-section > * { max-width: 1200px; margin-left: auto; margin-right: auto; }
+.copies-section .section-title { color: #fff; }
+.copies-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(320px, 1fr)); gap: 16px; margin-top: 60px; }
+.copy-card {
+  background: #1a1a1a; border: 1px solid #2a2a2a; border-radius: 12px;
+  padding: 28px; position: relative; transition: border-color .3s;
+}
+.copy-card:hover { border-color: var(--kraft); }
+.copy-phase { font-size: .58rem; letter-spacing: 2px; text-transform: uppercase; font-weight: 700; margin-bottom: 12px; }
+.copy-phase.p1 { color: #555; }
+.copy-phase.p2 { color: var(--verde-claro); }
+.copy-phase.p3 { color: var(--kraft); }
+.copy-platform { font-size: .65rem; letter-spacing: 1.5px; text-transform: uppercase; color: #444; margin-bottom: 16px; }
+.copy-text { font-family: var(--font-serif); font-size: 1.15rem; color: #fff; line-height: 1.65; font-style: italic; margin-bottom: 20px; white-space: pre-line; }
+.copy-hashtags { font-size: .72rem; color: var(--verde-claro); line-height: 1.8; margin-bottom: 16px; }
+.btn-copy-card {
+  background: none; border: 1px solid #333; color: #666;
+  padding: 6px 16px; border-radius: 20px; font-size: .68rem; font-weight: 600;
+  letter-spacing: 1px; text-transform: uppercase; cursor: pointer; transition: all .2s;
+}
+.btn-copy-card:hover { border-color: var(--kraft); color: var(--kraft); }
+.btn-copy-card.copied { border-color: #2d7a27; color: #2d7a27; }
+
+/* REELS */
+.reels-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 24px; margin-top: 60px; }
+.reel-card { background: #fff; border: 1.5px solid var(--gris-claro); border-radius: 12px; overflow: hidden; }
+.reel-header { background: var(--carbon); padding: 24px 28px; }
+.reel-num { font-size: .6rem; letter-spacing: 3px; text-transform: uppercase; color: #555; margin-bottom: 8px; }
+.reel-title { font-family: var(--font-serif); font-size: 1.4rem; color: #fff; font-weight: 400; }
+.reel-body { padding: 28px; }
+.reel-section-label { font-size: .6rem; letter-spacing: 2px; text-transform: uppercase; color: var(--kraft); margin-bottom: 8px; font-weight: 700; }
+.reel-text { font-size: .88rem; line-height: 1.75; color: #333; margin-bottom: 20px; }
+.reel-copy-box { background: var(--crema); border-left: 3px solid var(--kraft); padding: 14px 18px; margin-bottom: 16px; font-family: var(--font-serif); font-size: 1rem; font-style: italic; color: var(--verde); white-space: pre-line; }
+.reel-meta { display: flex; gap: 10px; flex-wrap: wrap; }
+.reel-badge { font-size: .62rem; letter-spacing: 1.5px; text-transform: uppercase; padding: 4px 12px; border-radius: 20px; background: var(--crema); color: var(--gris); font-weight: 600; }
+
+/* STORIES */
+.stories-row { display: flex; gap: 16px; overflow-x: auto; padding-bottom: 16px; margin-top: 60px; scroll-snap-type: x mandatory; }
+.story-frame {
+  width: 240px; min-width: 240px; background: var(--carbon); border-radius: 20px;
+  overflow: hidden; scroll-snap-align: start; position: relative;
+  aspect-ratio: 9/16; display: flex; flex-direction: column; justify-content: flex-end;
+  flex-shrink: 0;
+}
+.story-bg { position: absolute; inset: 0; }
+.story-bg.dark { background: var(--carbon); }
+.story-bg.verde { background: linear-gradient(180deg, #0e2310 0%, #1c3d1c 100%); }
+.story-bg.kraft { background: linear-gradient(180deg, #2a1f0a 0%, #c09a5c 100%); }
+.story-bg.crema { background: var(--crema); }
+.story-content { position: relative; z-index: 1; padding: 24px 20px; }
+.story-phase-dot { width: 8px; height: 8px; border-radius: 50%; margin-bottom: 16px; }
+.story-phase-dot.p1 { background: #555; }
+.story-phase-dot.p2 { background: var(--verde-claro); }
+.story-phase-dot.p3 { background: var(--kraft); }
+.story-text { font-family: var(--font-serif); font-size: 1.1rem; line-height: 1.4; margin-bottom: 12px; white-space: pre-line; }
+.dark .story-text, .verde .story-text, .kraft .story-text { color: #fff; }
+.crema .story-text { color: var(--verde); }
+.story-interaction { font-size: .7rem; color: rgba(255,255,255,.5); }
+.crema .story-interaction { color: var(--gris); }
+.story-label { position: absolute; top: 20px; left: 20px; font-size: .55rem; letter-spacing: 2px; text-transform: uppercase; }
+.dark .story-label { color: #444; }
+.verde .story-label { color: rgba(255,255,255,.3); }
+.kraft .story-label { color: rgba(255,255,255,.5); }
+.crema .story-label { color: var(--gris); }
+
+/* REFERENCES */
+.refs-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 16px; margin-top: 60px; }
+.ref-card { background: #fff; border: 1.5px solid var(--gris-claro); border-radius: 12px; padding: 32px; }
+.ref-emoji { font-size: 2rem; margin-bottom: 16px; display: block; }
+.ref-name { font-family: var(--font-serif); font-size: 1.3rem; color: var(--verde); margin-bottom: 8px; }
+.ref-desc { font-size: .82rem; color: var(--gris); line-height: 1.7; margin-bottom: 16px; }
+.ref-takeaway { font-size: .75rem; color: var(--verde-claro); font-weight: 600; padding: 8px 14px; background: #e8f4e8; border-radius: 6px; }
+
+/* METRICS */
+.metrics-grid { display: grid; grid-template-columns: repeat(4, 1fr); gap: 16px; margin-top: 60px; }
+.metric-card { background: #fff; border: 1.5px solid var(--gris-claro); border-radius: 12px; padding: 28px 24px; text-align: center; }
+.metric-num { font-family: var(--font-serif); font-size: 2.5rem; color: var(--verde); font-weight: 300; line-height: 1; margin-bottom: 8px; }
+.metric-label { font-size: .7rem; letter-spacing: 1.5px; text-transform: uppercase; color: var(--gris); margin-bottom: 12px; }
+.metric-desc { font-size: .78rem; color: #555; line-height: 1.6; }
+
+/* TOAST & UTILS */
+.toast { position: fixed; bottom: 32px; right: 32px; background: var(--carbon); color: #fff; padding: 12px 24px; border-radius: 8px; font-size: .82rem; opacity: 0; transition: opacity .3s; pointer-events: none; z-index: 9999; }
+.toast.show { opacity: 1; }
+.full-width { max-width: 100% !important; }
+.mt-60 { margin-top: 60px; }
+
+@media (max-width: 900px) {
+  section { padding: 60px 20px; }
+  .top-nav-inner { padding: 0 20px; }
+  .two-col { grid-template-columns: 1fr; }
+  .visual-grid { grid-template-columns: repeat(2, 1fr); }
+  .phase-block { grid-template-columns: 1fr; }
+  .phase-sidebar { padding: 32px; flex-direction: row; align-items: center; gap: 20px; }
+  .reels-grid { grid-template-columns: 1fr; }
+  .refs-grid { grid-template-columns: 1fr; }
+  .metrics-grid { grid-template-columns: repeat(2, 1fr); }
+  .concept-hero { padding: 48px 24px; }
+  .cover { padding: 100px 24px 60px; }
+  .cover-stats { gap: 32px; }
+}
+@media (max-width: 600px) {
+  .visual-grid { grid-template-columns: 1fr; }
+  .metrics-grid { grid-template-columns: 1fr; }
+  .nav-links { display: none; }
+}
+</style>
+</head>
+<body>
+
+<!-- NAV -->
+<nav class="top-nav">
+  <div class="top-nav-inner">
+    <div class="nav-logo">HARK<span>A</span>NA</div>
+    <div class="nav-links">
+      <a href="#pilares">Pilares</a>
+      <a href="#concepto">Concepto</a>
+      <a href="#linea-visual">Visual</a>
+      <a href="#fases">Fases</a>
+      <a href="#copies">Copies</a>
+      <a href="#reels">Reels</a>
+      <a href="#historias">Historias</a>
+      <a href="#referencias">Referencias</a>
+    </div>
+  </div>
+</nav>
+
+<!-- COVER -->
+<div class="cover" id="cover">
+  <p class="cover-eyebrow">Harkana · Estrategia de marca · Lanzamiento</p>
+  <h1 class="cover-title">
+    <span class="kraft-word italic">Transformar</span><br>
+    un producto<br>
+    en un <span class="kraft-word">estilo de vida</span>.
+  </h1>
+  <div class="cover-divider"></div>
+  <p class="cover-concept">"No es lo que tomás. Es cómo vivís."</p>
+  <p class="cover-sub">La web comunica características.<br>Las redes deben comunicar sensación.</p>
+  <div class="cover-stats">
+    <div class="stat">
+      <div class="stat-num">3</div>
+      <div class="stat-label">Fases de lanzamiento</div>
+    </div>
+    <div class="stat">
+      <div class="stat-num">5</div>
+      <div class="stat-label">Pilares de marca</div>
+    </div>
+    <div class="stat">
+      <div class="stat-num">30</div>
+      <div class="stat-label">Días de estrategia</div>
+    </div>
+  </div>
+  <div class="cover-scroll">↓ Scrolleá</div>
+</div>
+
+<!-- PILARES DE MARCA -->
+<div id="pilares" style="background:var(--carbon);padding:100px 40px;">
+  <div style="max-width:1200px;margin:0 auto;">
+    <p class="section-label" style="color:var(--kraft);">01 — Identidad</p>
+    <h2 class="section-title" style="color:#fff;">Los pilares de Harkana.<br><em>Lo que no negocia.</em></h2>
+    <p class="section-intro" style="color:#555;margin-bottom:0;">Estos cinco pilares son la base de toda comunicación. Cada post, cada reel, cada copy debe poder tracear hacia al menos uno de ellos.</p>
+  </div>
+  <div class="pillars-grid" style="max-width:1200px;margin:60px auto 0;">
+    <div class="pillar">
+      <span class="pillar-icon">🌿</span>
+      <div class="pillar-name">Orgánico real</div>
+      <div class="pillar-desc">Sin agroquímicos. Certificado. No es marketing — es la forma en que se cultiva.</div>
+      <div class="pillar-sensacion">Sensación → Confianza. "Sé lo que como."</div>
+    </div>
+    <div class="pillar">
+      <span class="pillar-icon">🍃</span>
+      <div class="pillar-name">Natural</div>
+      <div class="pillar-desc">La naturaleza es el packaging, el origen y el resultado. No hay artificios.</div>
+      <div class="pillar-sensacion">Sensación → Alivio. "Volver a lo simple."</div>
+    </div>
+    <div class="pillar">
+      <span class="pillar-icon">✦</span>
+      <div class="pillar-name">Premium</div>
+      <div class="pillar-desc">No masivo. No genérico. Una marca que sabe lo que es y no necesita bajar el precio para convencer.</div>
+      <div class="pillar-sensacion">Sensación → Orgullo. "Me elijo."</div>
+    </div>
+    <div class="pillar">
+      <span class="pillar-icon">🤲</span>
+      <div class="pillar-name">Proceso cuidado</div>
+      <div class="pillar-desc">El camino Misiones → Córdoba es parte de la historia. Artesanal no es un adjetivo — es una decisión.</div>
+      <div class="pillar-sensacion">Sensación → Conexión. "Alguien lo hizo con amor."</div>
+    </div>
+    <div class="pillar">
+      <span class="pillar-icon">◎</span>
+      <div class="pillar-name">Pureza</div>
+      <div class="pillar-desc">Sin TACC. Sin polvillo. Sin nada que sobre. La pureza como valor, no como atributo técnico.</div>
+      <div class="pillar-sensacion">Sensación → Paz. "Esto me hace bien."</div>
+    </div>
+  </div>
+</div>
+
+<hr class="section-divider">
+
+<!-- WEB VS REDES -->
+<section id="web-vs-redes">
+  <p class="section-label">02 — Estrategia de comunicación</p>
+  <h2 class="section-title">La web vende.<br><em>Las redes conectan.</em></h2>
+  <p class="section-intro">No son el mismo canal. No deben decir lo mismo. Esta distinción es la clave de toda la estrategia.</p>
+  <div class="two-col">
+    <div class="col-card col-web">
+      <div class="col-label">harkana.com.ar</div>
+      <div class="col-title">La web comunica<br>características.</div>
+      <ul class="col-items">
+        <li>Sin TACC · sin polvillo · sin agroquímicos</li>
+        <li>Cultivada en Misiones · embolsada en Córdoba</li>
+        <li>Presentaciones: 500g, 1kg, 3kg</li>
+        <li>Envíos a todo el país</li>
+        <li>Precio · disponibilidad · cómo pedir</li>
+        <li>Certificaciones y proceso</li>
+      </ul>
+    </div>
+    <div class="col-card col-redes">
+      <div class="col-label">Instagram · Reels · Stories</div>
+      <div class="col-title">Las redes comunican<br>sensación.</div>
+      <ul class="col-items">
+        <li>El momento del primer mate del día</li>
+        <li>La calma que no encontrás en ningún otro lado</li>
+        <li>El orgullo de elegir bien</li>
+        <li>La comunidad de quienes se cuidan</li>
+        <li>El ritual como identidad personal</li>
+        <li>El estilo de vida que representa tomar Harkana</li>
+      </ul>
+    </div>
+  </div>
+</section>
+
+<hr class="section-divider">
+
+<!-- CONCEPTO CREATIVO -->
+<section id="concepto">
+  <p class="section-label">03 — Concepto creativo</p>
+  <h2 class="section-title">El eje de todo.</h2>
+  <p class="section-intro">Un solo concepto que gobierna todas las piezas. Si el contenido no conecta con esto, no es de Harkana.</p>
+  <div class="concept-hero">
+    <div class="concept-quote">
+      "No es lo que tomás.<br><strong>Es cómo vivís."</strong>
+    </div>
+    <div class="concept-source">Concepto central · Harkana · Lanzamiento 2024</div>
+  </div>
+  <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(240px,1fr));gap:16px;margin-top:24px;">
+    <div style="background:#fff;border:1.5px solid var(--gris-claro);border-radius:12px;padding:28px;">
+      <div style="font-size:.6rem;letter-spacing:2px;text-transform:uppercase;color:var(--kraft);margin-bottom:12px;">Lo que dice</div>
+      <div style="font-family:var(--font-serif);font-size:1.1rem;color:var(--verde);line-height:1.5;">El mate es excusa.<br>El ritmo de vida es el producto.</div>
+    </div>
+    <div style="background:#fff;border:1.5px solid var(--gris-claro);border-radius:12px;padding:28px;">
+      <div style="font-size:.6rem;letter-spacing:2px;text-transform:uppercase;color:var(--kraft);margin-bottom:12px;">Lo que evita</div>
+      <div style="font-family:var(--font-serif);font-size:1.1rem;color:var(--verde);line-height:1.5;">No competir por precio.<br>No comparar con otras marcas.</div>
+    </div>
+    <div style="background:#fff;border:1.5px solid var(--gris-claro);border-radius:12px;padding:28px;">
+      <div style="font-size:.6rem;letter-spacing:2px;text-transform:uppercase;color:var(--kraft);margin-bottom:12px;">Lo que construye</div>
+      <div style="font-family:var(--font-serif);font-size:1.1rem;color:var(--verde);line-height:1.5;">Identidad de consumidor.<br>Comunidad de valores compartidos.</div>
+    </div>
+  </div>
+</section>
+
+<hr class="section-divider">
+
+<!-- LÍNEA VISUAL -->
+<section id="linea-visual">
+  <p class="section-label">04 — Línea visual</p>
+  <h2 class="section-title">Minimalismo extremo.<br><em>Mucho aire.</em></h2>
+  <p class="section-intro">La identidad visual no se negocia. Cada pieza debe sentirse como de la misma marca. Estas seis reglas son suficientes.</p>
+  <div class="visual-grid">
+    <div class="visual-item vi-1">
+      <span class="visual-item-icon">⬛</span>
+      <div class="visual-item-title">Espacio vacío</div>
+      <div class="visual-item-desc">El aire es diseño. No llenar el frame. El vacío transmite calma y premium.</div>
+    </div>
+    <div class="visual-item vi-2">
+      <span class="visual-item-icon">🌿</span>
+      <div class="visual-item-title">Texturas naturales</div>
+      <div class="visual-item-desc">Yerba, madera, kraft, piedra. Nada plástico, nada sintético en el cuadro.</div>
+    </div>
+    <div class="visual-item vi-3">
+      <span class="visual-item-icon">☀️</span>
+      <div class="visual-item-title">Luz suave</div>
+      <div class="visual-item-desc">Natural siempre que sea posible. Luz lateral o ventana. Nunca flash directo.</div>
+    </div>
+    <div class="visual-item vi-4">
+      <span class="visual-item-icon">🎞</span>
+      <div class="visual-item-title">Cámara lenta</div>
+      <div class="visual-item-desc">Slow motion en reels. El tiempo más lento = calidad percibida más alta.</div>
+    </div>
+    <div class="visual-item vi-5">
+      <span class="visual-item-icon">🔍</span>
+      <div class="visual-item-title">Detalle macro</div>
+      <div class="visual-item-desc">De cerca, lo ordinario se vuelve extraordinario. La yerba, el vapor, el kraft.</div>
+    </div>
+    <div class="visual-item vi-6">
+      <span class="visual-item-icon">🎨</span>
+      <div class="visual-item-title">Paleta cerrada</div>
+      <div class="visual-item-desc">Verde oscuro · Kraft dorado · Crema · Negro. Cuatro colores. Sin excepciones.</div>
+    </div>
+  </div>
+</section>
+
+<hr class="section-divider">
+
+<!-- FASES -->
+<section id="fases">
+  <p class="section-label">05 — Estrategia de contenido</p>
+  <h2 class="section-title">Tres fases.<br><em>Un arco narrativo.</em></h2>
+  <p class="section-intro">No publicar todo junto. El misterio genera deseo. El deseo genera identidad. La identidad genera conversión.</p>
+  <div class="phases">
+
+    <div class="phase-block">
+      <div class="phase-sidebar phase-1-s">
+        <div>
+          <div class="phase-num">01</div>
+          <div class="phase-name">Intriga</div>
+          <div class="phase-duration">Días 1–10</div>
+        </div>
+      </div>
+      <div class="phase-main">
+        <div class="phase-headline">Construir misterio.<br>Sembrar preguntas.</div>
+        <div class="phase-desc">La audiencia no sabe qué viene. Solo siente que algo está pasando. El objetivo no es informar — es despertar curiosidad. El mejor contenido de esta fase es el que genera la pregunta "¿qué es esto?"</div>
+        <ul class="phase-rules">
+          <li class="no">Mostrar el packaging o el logo</li>
+          <li class="no">Mencionar el nombre de la marca</li>
+          <li class="no">Hablar de precio o disponibilidad</li>
+          <li class="no">Hacer publicaciones "publicitarias"</li>
+          <li>Solo sensaciones, texturas, momentos</li>
+          <li>Frases cortas sin contexto</li>
+          <li>Preguntas sin respuesta</li>
+          <li>Visuales minimalistas de alto impacto</li>
+        </ul>
+        <div class="phase-content-types">
+          <span class="content-type-tag">🖤 Foto black</span>
+          <span class="content-type-tag">💨 Vapor macro</span>
+          <span class="content-type-tag">🌅 Luz mañana</span>
+          <span class="content-type-tag">📱 Encuesta</span>
+          <span class="content-type-tag">⏳ Cuenta regresiva</span>
+        </div>
+      </div>
+    </div>
+
+    <div class="phase-block">
+      <div class="phase-sidebar phase-2-s">
+        <div>
+          <div class="phase-num">02</div>
+          <div class="phase-name">Descubrimiento</div>
+          <div class="phase-duration">Días 11–21</div>
+        </div>
+      </div>
+      <div class="phase-main">
+        <div class="phase-headline">Revelar el origen.<br>Mostrar el proceso.</div>
+        <div class="phase-desc">Las piezas empiezan a encajar. El origen, la materia prima, el proceso artesanal. La marca aparece de forma fragmentada — primero el material, luego el proceso, luego una inicial. El seguidor activo puede intuir, pero todavía no confirmar.</div>
+        <ul class="phase-rules">
+          <li class="no">Revelar el producto completo</li>
+          <li class="no">Usar el logo completo con fondo</li>
+          <li class="no">Publicar precios</li>
+          <li>Mostrar la yerba en macro y en bruto</li>
+          <li>Mostrar el proceso de embolsado</li>
+          <li>Comunicar los atributos (sin TACC, etc.)</li>
+          <li>Mostrar Misiones como origen</li>
+          <li>Primera letra del logotipo (H)</li>
+        </ul>
+        <div class="phase-content-types">
+          <span class="content-type-tag">🌾 Campo Misiones</span>
+          <span class="content-type-tag">🤲 Proceso artesanal</span>
+          <span class="content-type-tag">📦 Kraft parcial</span>
+          <span class="content-type-tag">🔬 Macro yerba</span>
+          <span class="content-type-tag">📍 Mapa origen</span>
+        </div>
+      </div>
+    </div>
+
+    <div class="phase-block">
+      <div class="phase-sidebar phase-3-s">
+        <div>
+          <div class="phase-num">03</div>
+          <div class="phase-name">Revelación</div>
+          <div class="phase-duration">Días 22–30</div>
+        </div>
+      </div>
+      <div class="phase-main">
+        <div class="phase-headline">Mostrar todo.<br>Habilitar la conversión.</div>
+        <div class="phase-desc">Después de 21 días construyendo intriga y deseo, la marca se revela completa. El producto aparece en toda su dimensión, integrado en un estilo de vida. Recién aquí se habilita la venta, y desde una posición de deseo — no de oferta.</div>
+        <ul class="phase-rules">
+          <li>Producto completo con logo visible</li>
+          <li>Lifestyle integrado (persona + producto)</li>
+          <li>Brand film "No es lo que tomás"</li>
+          <li>CTA hacia web o WhatsApp</li>
+          <li>Primera oferta de lanzamiento (30% OFF)</li>
+          <li>Testimonials reales de primeros compradores</li>
+          <li>Contenido mayorista</li>
+        </ul>
+        <div class="phase-content-types">
+          <span class="content-type-tag">✨ Foto heroína</span>
+          <span class="content-type-tag">🎬 Brand film</span>
+          <span class="content-type-tag">🛒 CTA + link</span>
+          <span class="content-type-tag">💬 Testimonials</span>
+          <span class="content-type-tag">🏷 Oferta lanzamiento</span>
+        </div>
+      </div>
+    </div>
+
+  </div>
+</section>
+
+<!-- COPIES BANK -->
+<div class="copies-section" id="copies">
+  <p class="section-label" style="color:var(--kraft);">06 — Banco de copies</p>
+  <h2 class="section-title">Las frases ya escritas.<br><em>Listas para usar.</em></h2>
+  <p class="section-intro" style="color:#555;">Copies ordenados por fase. Todos pueden usarse tal cual o adaptarse. Hacé clic en "Copiar" para tener el texto en el portapapeles.</p>
+  <div class="copies-grid">
+
+    <!-- FASE 1 -->
+    <div class="copy-card">
+      <div class="copy-phase p1">Fase 1 · Intriga</div>
+      <div class="copy-platform">📸 Instagram Feed</div>
+      <div class="copy-text">.</div>
+      <button class="btn-copy-card" onclick="copyCopyCard('.', this)">Copiar</button>
+    </div>
+    <div class="copy-card">
+      <div class="copy-phase p1">Fase 1 · Intriga</div>
+      <div class="copy-platform">📱 Historia</div>
+      <div class="copy-text">¿Cuándo fue la última vez
+que te tomaste
+un momento real?</div>
+      <button class="btn-copy-card" onclick="copyCopyCard('¿Cuándo fue la última vez\nque te tomaste\nun momento real?', this)">Copiar</button>
+    </div>
+    <div class="copy-card">
+      <div class="copy-phase p1">Fase 1 · Intriga</div>
+      <div class="copy-platform">🎬 Reel</div>
+      <div class="copy-text">El mate no se apura.</div>
+      <div class="copy-hashtags">#ritual #silencio #momento</div>
+      <button class="btn-copy-card" onclick="copyCopyCard('El mate no se apura.\n\n#ritual #silencio #momento', this)">Copiar</button>
+    </div>
+    <div class="copy-card">
+      <div class="copy-phase p1">Fase 1 · Intriga</div>
+      <div class="copy-platform">📸 Feed</div>
+      <div class="copy-text">Primero el mate.
+Después, todo lo demás.</div>
+      <div class="copy-hashtags">#mañana #ritual #mate</div>
+      <button class="btn-copy-card" onclick="copyCopyCard('Primero el mate.\nDespués, todo lo demás.\n\n#mañana #ritual #mate', this)">Copiar</button>
+    </div>
+    <div class="copy-card">
+      <div class="copy-phase p1">Fase 1 · Intriga</div>
+      <div class="copy-platform">📸 Feed</div>
+      <div class="copy-text">Algunas cosas
+no se apuran.</div>
+      <div class="copy-hashtags">#artesanal #tiempo #natural</div>
+      <button class="btn-copy-card" onclick="copyCopyCard('Algunas cosas\nno se apuran.\n\n#artesanal #tiempo #natural', this)">Copiar</button>
+    </div>
+    <div class="copy-card">
+      <div class="copy-phase p1">Fase 1 · Intriga</div>
+      <div class="copy-platform">📱 Historia</div>
+      <div class="copy-text">No es lo que tomás.</div>
+      <button class="btn-copy-card" onclick="copyCopyCard('No es lo que tomás.', this)">Copiar</button>
+    </div>
+
+    <!-- FASE 2 -->
+    <div class="copy-card">
+      <div class="copy-phase p2">Fase 2 · Descubrimiento</div>
+      <div class="copy-platform">📸 Feed</div>
+      <div class="copy-text">De la tierra.
+Sin más vuelta.</div>
+      <div class="copy-hashtags">#organico #natural #yerbamate</div>
+      <button class="btn-copy-card" onclick="copyCopyCard('De la tierra.\nSin más vuelta.\n\n#organico #natural #yerbamate', this)">Copiar</button>
+    </div>
+    <div class="copy-card">
+      <div class="copy-phase p2">Fase 2 · Descubrimiento</div>
+      <div class="copy-platform">🎬 Reel</div>
+      <div class="copy-text">Nació acá.
+
+— Misiones, Argentina.</div>
+      <div class="copy-hashtags">#misiones #argentina #organico</div>
+      <button class="btn-copy-card" onclick="copyCopyCard('Nació acá.\n\n— Misiones, Argentina.\n\n#misiones #argentina #organico', this)">Copiar</button>
+    </div>
+    <div class="copy-card">
+      <div class="copy-phase p2">Fase 2 · Descubrimiento</div>
+      <div class="copy-platform">📱 Historia</div>
+      <div class="copy-text">Cultivada en Misiones.
+Embolsada en Córdoba.
+
+Con tiempo. Con cuidado.</div>
+      <button class="btn-copy-card" onclick="copyCopyCard('Cultivada en Misiones.\nEmbolsada en Córdoba.\n\nCon tiempo. Con cuidado.', this)">Copiar</button>
+    </div>
+    <div class="copy-card">
+      <div class="copy-phase p2">Fase 2 · Descubrimiento</div>
+      <div class="copy-platform">📸 Feed</div>
+      <div class="copy-text">Sin agroquímicos.
+Sin apuro.
+Sin mentiras.</div>
+      <div class="copy-hashtags">#sinTACC #organico #puro</div>
+      <button class="btn-copy-card" onclick="copyCopyCard('Sin agroquímicos.\nSin apuro.\nSin mentiras.\n\n#sinTACC #organico #puro', this)">Copiar</button>
+    </div>
+    <div class="copy-card">
+      <div class="copy-phase p2">Fase 2 · Descubrimiento</div>
+      <div class="copy-platform">🎬 Reel</div>
+      <div class="copy-text">Cada bolsa,
+embolsada a mano.
+
+Así nomás.</div>
+      <div class="copy-hashtags">#artesanal #proceso #cordoba</div>
+      <button class="btn-copy-card" onclick="copyCopyCard('Cada bolsa,\nembolsada a mano.\n\nAsí nomás.\n\n#artesanal #proceso #cordoba', this)">Copiar</button>
+    </div>
+    <div class="copy-card">
+      <div class="copy-phase p2">Fase 2 · Descubrimiento</div>
+      <div class="copy-platform">📱 Historia</div>
+      <div class="copy-text">Hecho con tiempo.
+Para tomarlo con tiempo.</div>
+      <button class="btn-copy-card" onclick="copyCopyCard('Hecho con tiempo.\nPara tomarlo con tiempo.', this)">Copiar</button>
+    </div>
+
+    <!-- FASE 3 -->
+    <div class="copy-card">
+      <div class="copy-phase p3">Fase 3 · Revelación</div>
+      <div class="copy-platform">📸 Feed · Lanzamiento</div>
+      <div class="copy-text">HARKANA.
+Yerba orgánica de verdad.
+
+Ya llegó.</div>
+      <div class="copy-hashtags">#harkana #yerbaorganica #lanzamiento #sinTACC</div>
+      <button class="btn-copy-card" onclick="copyCopyCard('HARKANA.\nYerba orgánica de verdad.\n\nYa llegó.\n\n#harkana #yerbaorganica #lanzamiento #sinTACC', this)">Copiar</button>
+    </div>
+    <div class="copy-card">
+      <div class="copy-phase p3">Fase 3 · Revelación</div>
+      <div class="copy-platform">🎬 Brand Film</div>
+      <div class="copy-text">No es lo que tomás.
+Es cómo vivís.
+
+HARKANA.</div>
+      <div class="copy-hashtags">#harkana #estilodevida #ritual #organico</div>
+      <button class="btn-copy-card" onclick="copyCopyCard('No es lo que tomás.\nEs cómo vivís.\n\nHARKANA.\n\n#harkana #estilodevida #ritual #organico', this)">Copiar</button>
+    </div>
+    <div class="copy-card">
+      <div class="copy-phase p3">Fase 3 · Revelación</div>
+      <div class="copy-platform">📸 Feed · Lifestyle</div>
+      <div class="copy-text">No es solo mate.
+Es tu momento del día.</div>
+      <div class="copy-hashtags">#harkana #ritual #mateorganico #momentos</div>
+      <button class="btn-copy-card" onclick="copyCopyCard('No es solo mate.\nEs tu momento del día.\n\n#harkana #ritual #mateorganico #momentos', this)">Copiar</button>
+    </div>
+    <div class="copy-card">
+      <div class="copy-phase p3">Fase 3 · Revelación</div>
+      <div class="copy-platform">📸 Feed · Atributos</div>
+      <div class="copy-text">Orgánica. Certificada.
+Sin TACC. Sin polvillo.
+Sin agroquímicos.
+
+HARKANA.</div>
+      <div class="copy-hashtags">#harkana #organica #certificada #sinTACC #pura</div>
+      <button class="btn-copy-card" onclick="copyCopyCard('Orgánica. Certificada.\nSin TACC. Sin polvillo.\nSin agroquímicos.\n\nHARKANA.\n\n#harkana #organica #certificada #sinTACC #pura', this)">Copiar</button>
+    </div>
+    <div class="copy-card">
+      <div class="copy-phase p3">Fase 3 · Revelación</div>
+      <div class="copy-platform">📱 Historia · Oferta</div>
+      <div class="copy-text">30% OFF en tu primer pedido.
+
+Porque queremos que
+lo pruebes de verdad.
+
+⏳ Solo por hoy.</div>
+      <button class="btn-copy-card" onclick="copyCopyCard('30% OFF en tu primer pedido.\n\nPorque queremos que\nlo pruebes de verdad.\n\n⏳ Solo por hoy.', this)">Copiar</button>
+    </div>
+    <div class="copy-card">
+      <div class="copy-phase p3">Fase 3 · Revelación</div>
+      <div class="copy-platform">📸 Feed · Mayorista</div>
+      <div class="copy-text">Si tenés un almacén,
+un dietético, un negocio...
+
+Harkana mayorista.
+Consultanos.</div>
+      <div class="copy-hashtags">#harkana #mayorista #revendedor #negocio</div>
+      <button class="btn-copy-card" onclick="copyCopyCard('Si tenés un almacén,\nun dietético, un negocio...\n\nHarkana mayorista.\nConsultanos.\n\n#harkana #mayorista #revendedor #negocio', this)">Copiar</button>
+    </div>
+  </div>
+</div>
+
+<!-- REELS -->
+<section id="reels">
+  <p class="section-label">07 — Guiones de reels</p>
+  <h2 class="section-title">Los cuatro reels<br><em>que definen la marca.</em></h2>
+  <p class="section-intro">Cada reel tiene un rol específico en el arco narrativo. Se pueden filmar en 1-2 días de producción.</p>
+  <div class="reels-grid">
+
+    <div class="reel-card">
+      <div class="reel-header">
+        <div class="reel-num">Reel 01 · Fase 1</div>
+        <div class="reel-title">El vapor</div>
+      </div>
+      <div class="reel-body">
+        <div class="reel-section-label">Objetivo</div>
+        <div class="reel-text">Instalar la sensación sin mostrar nada. Intriga pura.</div>
+        <div class="reel-section-label">Guion visual</div>
+        <div class="reel-text"><strong>0-3 seg:</strong> Pantalla casi negra. Vapor aparece de abajo, lentamente.<br><strong>3-8 seg:</strong> El vapor llena el frame. Cámara lenta. Solo sonido ambiente.<br><strong>8-12 seg:</strong> El vapor se disuelve. Pantalla negra. Texto aparece.</div>
+        <div class="reel-section-label">Copy final</div>
+        <div class="reel-copy-box">El mate no se apura.</div>
+        <div class="reel-section-label">Producción</div>
+        <div class="reel-text">Filmar con teléfono en slow motion (240fps). Fondo oscuro. Una vela o luz LED cálida detrás para iluminar el vapor. Sin música — solo ambiente.</div>
+        <div class="reel-meta">
+          <span class="reel-badge">⏱ 12-15 seg</span>
+          <span class="reel-badge">🔇 Sin música</span>
+          <span class="reel-badge">📱 Vertical 9:16</span>
+        </div>
+      </div>
+    </div>
+
+    <div class="reel-card">
+      <div class="reel-header">
+        <div class="reel-num">Reel 02 · Fase 2</div>
+        <div class="reel-title">El origen</div>
+      </div>
+      <div class="reel-body">
+        <div class="reel-section-label">Objetivo</div>
+        <div class="reel-text">Conectar con el origen. Misiones como lugar sagrado de la yerba.</div>
+        <div class="reel-section-label">Guion visual</div>
+        <div class="reel-text"><strong>0-5 seg:</strong> Plano de yerbales, verde intenso. Texto aparece: "Misiones."<br><strong>5-15 seg:</strong> Manos cosechando / manipulando yerba.<br><strong>15-22 seg:</strong> Transición: embolsado artesanal en Córdoba.<br><strong>22-28 seg:</strong> Bolsa kraft en primer plano (logo parcialmente visible).</div>
+        <div class="reel-section-label">Copy final</div>
+        <div class="reel-copy-box">De Misiones a tu mate.
+
+El camino importa.</div>
+        <div class="reel-section-label">Música sugerida</div>
+        <div class="reel-text">Folk argentino suave. Guitarra acústica. Sin letra. Vibe: documental de naturaleza.</div>
+        <div class="reel-meta">
+          <span class="reel-badge">⏱ 28-30 seg</span>
+          <span class="reel-badge">🎸 Folk acústico</span>
+          <span class="reel-badge">📱 Vertical 9:16</span>
+        </div>
+      </div>
+    </div>
+
+    <div class="reel-card">
+      <div class="reel-header">
+        <div class="reel-num">Reel 03 · Fase 3</div>
+        <div class="reel-title">El brand film</div>
+      </div>
+      <div class="reel-body">
+        <div class="reel-section-label">Objetivo</div>
+        <div class="reel-text">Lanzamiento oficial. El reel más importante. Debe verse 100 veces y seguir impactando.</div>
+        <div class="reel-section-label">Guion visual</div>
+        <div class="reel-text"><strong>0-3 seg:</strong> Mañana. Luz entrando. Solo.<br><strong>3-10 seg:</strong> Manos preparan el mate. Slow motion.<br><strong>10-20 seg:</strong> Persona sostiene el mate. Mira por ventana.<br><strong>20-28 seg:</strong> La bolsa de Harkana en el fondo, soft focus.<br><strong>28-35 seg:</strong> Logo aparece. Fade. Texto:</div>
+        <div class="reel-section-label">Copy final</div>
+        <div class="reel-copy-box">No es lo que tomás.
+Es cómo vivís.
+
+HARKANA.</div>
+        <div class="reel-section-label">Música sugerida</div>
+        <div class="reel-text">Ambiental minimalista. Piano o guitarra. Tempo lento. Sin letra. Vibe: lanzamiento de marca premium.</div>
+        <div class="reel-meta">
+          <span class="reel-badge">⏱ 35 seg</span>
+          <span class="reel-badge">🎹 Piano ambiental</span>
+          <span class="reel-badge">📱 Vertical 9:16</span>
+        </div>
+      </div>
+    </div>
+
+    <div class="reel-card">
+      <div class="reel-header">
+        <div class="reel-num">Reel 04 · Fase 3</div>
+        <div class="reel-title">El ritual completo</div>
+      </div>
+      <div class="reel-body">
+        <div class="reel-section-label">Objetivo</div>
+        <div class="reel-text">Mostrar el ritual de preparación. El producto como parte natural de la rutina.</div>
+        <div class="reel-section-label">Guion visual</div>
+        <div class="reel-text"><strong>0-5 seg:</strong> Apertura de bolsa kraft Harkana.<br><strong>5-12 seg:</strong> Yerba cae en la guampa. Macro.<br><strong>12-20 seg:</strong> Cebado. El sonido importa.<br><strong>20-28 seg:</strong> Primer sorbo. La cara en paz.<br><strong>28-32 seg:</strong> Bolsa en fondo. Logo visible.</div>
+        <div class="reel-section-label">Copy final</div>
+        <div class="reel-copy-box">Cada sorbo, un poco más vos.
+
+Harkana. Yerba orgánica.</div>
+        <div class="reel-section-label">Música sugerida</div>
+        <div class="reel-text">ASMR + música suave. Los sonidos del ritual son protagonistas.</div>
+        <div class="reel-meta">
+          <span class="reel-badge">⏱ 32 seg</span>
+          <span class="reel-badge">🎵 ASMR + ambient</span>
+          <span class="reel-badge">📱 Vertical 9:16</span>
+        </div>
+      </div>
+    </div>
+
+  </div>
+</section>
+
+<hr class="section-divider">
+
+<!-- HISTORIAS -->
+<section id="historias">
+  <p class="section-label">08 — Secuencia de historias</p>
+  <h2 class="section-title">Historias que<br><em>construyen comunidad.</em></h2>
+  <p class="section-intro">Las historias son el canal más íntimo. Estas seis representan un arco completo de las 3 fases.</p>
+  <div class="stories-row">
+
+    <div class="story-frame">
+      <div class="story-bg dark"></div>
+      <div class="story-label">Día 2 · Fase 1</div>
+      <div class="story-content">
+        <div class="story-phase-dot p1"></div>
+        <div class="story-text">¿Cuándo fue la última vez que te tomaste un momento real?</div>
+        <div class="story-interaction">[ Encuesta: Hoy / No recuerdo ]</div>
+      </div>
+    </div>
+
+    <div class="story-frame">
+      <div class="story-bg dark"></div>
+      <div class="story-label">Día 5 · Fase 1</div>
+      <div class="story-content">
+        <div class="story-phase-dot p1"></div>
+        <div class="story-text">Algo viene. 🌿
+
+En 25 días, algo cambia.</div>
+        <div class="story-interaction">[ ⏳ Cuenta regresiva ]</div>
+      </div>
+    </div>
+
+    <div class="story-frame">
+      <div class="story-bg dark"></div>
+      <div class="story-label">Día 10 · Fase 1</div>
+      <div class="story-content">
+        <div class="story-phase-dot p1"></div>
+        <div class="story-text">No es lo que tomás.</div>
+        <div class="story-interaction" style="color:rgba(255,255,255,.2);margin-top:60px;font-size:.8rem;letter-spacing:2px;">continuará...</div>
+      </div>
+    </div>
+
+    <div class="story-frame">
+      <div class="story-bg verde"></div>
+      <div class="story-label">Día 16 · Fase 2</div>
+      <div class="story-content">
+        <div class="story-phase-dot p2"></div>
+        <div class="story-text">Sin TACC.
+Sin agroquímicos.
+Sin polvillo.
+
+Solo yerba.</div>
+      </div>
+    </div>
+
+    <div class="story-frame">
+      <div class="story-bg verde"></div>
+      <div class="story-label">Día 21 · Fase 2</div>
+      <div class="story-content">
+        <div class="story-phase-dot p2"></div>
+        <div class="story-text">Hecho con tiempo.
+Para tomarlo
+con tiempo.</div>
+        <div class="story-interaction">[ Slider: ¿Te tomás tus momentos? ]</div>
+      </div>
+    </div>
+
+    <div class="story-frame">
+      <div class="story-bg kraft"></div>
+      <div class="story-label">Día 24 · Fase 3</div>
+      <div class="story-content">
+        <div class="story-phase-dot p3"></div>
+        <div class="story-text" style="color:#1a1a1a;">HARKANA.
+
+Ya llegó.</div>
+        <div class="story-interaction" style="color:rgba(0,0,0,.5);">↑ Ver en bio → Pedí ahora</div>
+      </div>
+    </div>
+
+  </div>
+</section>
+
+<hr class="section-divider">
+
+<!-- REFERENCIAS -->
+<section id="referencias">
+  <p class="section-label">09 — Referencias de marca</p>
+  <h2 class="section-title">El tono que<br><em>inspira a Harkana.</em></h2>
+  <p class="section-intro">No copiar. Entender qué hace que estas marcas funcionen emocionalmente y aplicarlo al universo Harkana.</p>
+  <div class="refs-grid">
+    <div class="ref-card">
+      <span class="ref-emoji">☕</span>
+      <div class="ref-name">Café de especialidad</div>
+      <div class="ref-desc">Marcas como Onyx, Stumptown, Intelligentsia. Producto premium que educa al consumidor sin bajarlo de categoría. El origen es un pilar central.</div>
+      <div class="ref-takeaway">Aplicar: mostrar el origen como historia, no como dato.</div>
+    </div>
+    <div class="ref-card">
+      <span class="ref-emoji">🌾</span>
+      <div class="ref-name">Orgánicos premium</div>
+      <div class="ref-desc">Marcas como Whole Foods 365, Organics by Alaska. Estética minimalista, textura natural, fotografía de alta exposición. El "sin X" como propuesta de valor.</div>
+      <div class="ref-takeaway">Aplicar: los atributos negativos (sin TACC) como ventaja, no como nicho.</div>
+    </div>
+    <div class="ref-card">
+      <span class="ref-emoji">🏔</span>
+      <div class="ref-name">Lifestyle minimalista</div>
+      <div class="ref-desc">Marcas como Muji, Aesop, Le Labo. Poco texto. Mucho aire. La simplicidad como lujo. El ritual de uso como experiencia de marca.</div>
+      <div class="ref-takeaway">Aplicar: el mate como ritual lento, conscientemente contracultural al apuro.</div>
+    </div>
+  </div>
+</section>
+
+<hr class="section-divider">
+
+<!-- MÉTRICAS -->
+<section id="metricas">
+  <p class="section-label">10 — Métricas de éxito</p>
+  <h2 class="section-title">¿Cómo saber<br><em>si está funcionando?</em></h2>
+  <p class="section-intro">Las métricas correctas para cada fase. No medir ventas en Fase 1 — eso es un error de lectura.</p>
+  <div class="metrics-grid">
+    <div class="metric-card">
+      <div class="metric-num">F1</div>
+      <div class="metric-label">Intriga</div>
+      <div class="metric-desc">Medir: tiempo en story, respuestas a encuestas, new followers. No medir: ventas ni clics a web.</div>
+    </div>
+    <div class="metric-card">
+      <div class="metric-num">F2</div>
+      <div class="metric-label">Descubrimiento</div>
+      <div class="metric-desc">Medir: guardados de posts, compartidos de reels, preguntas en DM. Es el mejor indicador de interés real.</div>
+    </div>
+    <div class="metric-card">
+      <div class="metric-num">F3</div>
+      <div class="metric-label">Revelación</div>
+      <div class="metric-desc">Medir: clics al link en bio, conversaciones en WhatsApp, conversiones reales. Aquí sí importan las ventas.</div>
+    </div>
+    <div class="metric-card">
+      <div class="metric-num">∞</div>
+      <div class="metric-label">Siempre</div>
+      <div class="metric-desc">El NPS informal (¿te lo recomendaron?), las menciones espontáneas, y el porcentaje de segunda compra.</div>
+    </div>
+  </div>
+</section>
+
+<div style="background:var(--carbon);padding:80px 40px;text-align:center;margin-top:80px;">
+  <div style="max-width:600px;margin:0 auto;">
+    <div style="font-size:.62rem;letter-spacing:4px;text-transform:uppercase;color:#444;margin-bottom:24px;">HARKANA · Estrategia de lanzamiento</div>
+    <div style="font-family:var(--font-serif);font-size:clamp(1.5rem,3vw,2.5rem);color:#fff;font-weight:300;line-height:1.3;margin-bottom:24px;">
+      "No es lo que tomás.<br><em style="color:var(--kraft);">Es cómo vivís."</em>
+    </div>
+    <div style="width:40px;height:1px;background:#333;margin:24px auto;"></div>
+    <p style="font-size:.78rem;color:#555;line-height:1.8;">
+      Ver <a href="calendario-contenido.html" style="color:var(--kraft);text-decoration:none;">calendario de 30 días →</a>
+    </p>
+  </div>
+</div>
+
+<div class="toast" id="toast"></div>
+
+<script>
+function copyCopyCard(text, btn) {
+  navigator.clipboard.writeText(text).then(() => {
+    const orig = btn.textContent;
+    btn.textContent = 'Copiado ✓'; btn.classList.add('copied');
+    setTimeout(() => { btn.textContent = orig; btn.classList.remove('copied'); }, 2000);
+  });
+}
+
+// Nav active on scroll
+const sections = ['pilares','web-vs-redes','concepto','linea-visual','fases','copies','reels','historias','referencias','metricas'];
+const navLinks = document.querySelectorAll('.nav-links a');
+window.addEventListener('scroll', () => {
+  const pos = window.scrollY + 120;
+  sections.forEach((id, i) => {
+    const el = document.getElementById(id);
+    if (el && el.offsetTop <= pos) {
+      navLinks.forEach(l => l.classList.remove('active'));
+      if (navLinks[i]) navLinks[i].classList.add('active');
+    }
+  });
+});
+
+function showToast(msg) {
+  const t = document.getElementById('toast');
+  t.textContent = msg; t.classList.add('show');
+  setTimeout(() => t.classList.remove('show'), 3000);
+}
+</script>
+</body>
+</html>

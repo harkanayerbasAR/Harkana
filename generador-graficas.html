@@ -1,0 +1,1713 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>HARKANA — Generador de Gráficas de Lanzamiento</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,200;0,300;0,400;1,200;1,300;1,400&family=Inter:wght@200;300;400&display=swap" rel="stylesheet">
+<style>
+:root {
+  --verde: #0e2310; --kraft: #c09a5c; --crema: #faf6ef; --carbon: #141414;
+  --font-serif: 'Cormorant Garamond', Georgia, serif;
+  --font-sans: 'Inter', system-ui, sans-serif;
+}
+* { box-sizing: border-box; margin: 0; padding: 0; }
+body { background: #080808; color: #ccc; font-family: var(--font-sans); min-height: 100vh; }
+
+/* HEADER */
+header {
+  background: #0a0a0a; border-bottom: 1px solid #1a1a1a;
+  padding: 20px 40px; display: flex; align-items: center; justify-content: space-between;
+}
+.logo { font-family: var(--font-serif); color: #fff; font-size: 1.2rem; letter-spacing: 5px; font-weight: 300; }
+.logo span { color: var(--kraft); }
+.header-sub { font-size: .6rem; letter-spacing: 3px; text-transform: uppercase; color: #444; margin-top: 4px; }
+
+/* HERO */
+.hero { padding: 60px 40px; max-width: 900px; margin: 0 auto; text-align: center; }
+.hero-label { font-size: .6rem; letter-spacing: 4px; text-transform: uppercase; color: var(--kraft); margin-bottom: 20px; }
+.hero-title { font-family: var(--font-serif); font-size: clamp(2rem, 4vw, 3.5rem); font-weight: 200; color: #fff; line-height: 1.2; margin-bottom: 16px; }
+.hero-title em { color: var(--kraft); font-style: italic; }
+.hero-desc { font-size: .85rem; color: #555; line-height: 1.8; max-width: 560px; margin: 0 auto; }
+
+/* LEGEND */
+.legend { display: flex; gap: 20px; justify-content: center; margin: 32px 0; flex-wrap: wrap; }
+.legend-item { display: flex; align-items: center; gap: 8px; font-size: .65rem; letter-spacing: 2px; text-transform: uppercase; color: #555; }
+.legend-dot { width: 8px; height: 8px; border-radius: 50%; }
+.ld-f1 { background: #444; }
+.ld-feed { background: #c09a5c; }
+.ld-story { background: #2d5a27; }
+
+/* GRID */
+.section { max-width: 1200px; margin: 0 auto; padding: 0 32px 80px; }
+.section-title { font-size: .58rem; letter-spacing: 4px; text-transform: uppercase; color: #333; margin-bottom: 32px; padding-top: 20px; border-top: 1px solid #1a1a1a; }
+
+.cards-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(280px, 1fr)); gap: 24px; }
+
+/* CARD */
+.card { background: #0f0f0f; border: 1px solid #1a1a1a; border-radius: 12px; overflow: hidden; transition: border-color .2s; }
+.card:hover { border-color: #333; }
+.card-header { padding: 16px 20px 12px; display: flex; align-items: center; gap: 10px; border-bottom: 1px solid #1a1a1a; }
+.card-day { font-size: .6rem; font-weight: 600; letter-spacing: 2px; text-transform: uppercase; color: var(--kraft); }
+.card-format { font-size: .58rem; letter-spacing: 1.5px; text-transform: uppercase; color: #444; margin-left: auto; }
+.card-title { font-family: var(--font-serif); font-size: 1.05rem; color: #fff; font-weight: 300; padding: 0 20px 12px; }
+
+.preview-wrap {
+  margin: 0 20px; border-radius: 8px; overflow: hidden;
+  background: #000; position: relative; cursor: pointer;
+}
+.preview-wrap.story-wrap { max-width: 160px; margin: 0 auto; }
+.preview-wrap canvas { display: block; width: 100%; height: auto; }
+
+.card-copy { margin: 14px 20px; padding: 12px 16px; background: #1a1a1a; border-radius: 6px; border-left: 2px solid var(--kraft); }
+.card-copy p { font-size: .78rem; color: #888; font-style: italic; line-height: 1.6; white-space: pre-line; font-family: var(--font-serif); }
+.card-copy small { display: block; font-size: .6rem; color: #444; margin-top: 6px; font-style: normal; font-family: var(--font-sans); }
+
+.card-actions { padding: 14px 20px 20px; display: flex; gap: 8px; }
+.btn-dl {
+  flex: 1; border: none; border-radius: 6px; padding: 9px 12px;
+  font-size: .68rem; font-weight: 600; letter-spacing: 1px; text-transform: uppercase;
+  cursor: pointer; transition: all .2s; display: flex; align-items: center; justify-content: center; gap: 6px;
+}
+.btn-dl-main { background: var(--kraft); color: #0a0a0a; }
+.btn-dl-main:hover { background: #d4a96a; }
+.btn-dl-alt { background: #1a1a1a; color: #666; border: 1px solid #2a2a2a; }
+.btn-dl-alt:hover { border-color: #555; color: #999; }
+.btn-dl:disabled { opacity: .35; cursor: not-allowed; }
+
+/* NOTE */
+.card-note { margin: 0 20px 16px; font-size: .68rem; color: #444; line-height: 1.6; font-style: italic; }
+
+/* DOWNLOAD ALL */
+.dl-all-wrap { text-align: center; padding: 40px 32px; }
+.btn-dl-all {
+  background: var(--verde); color: var(--kraft); border: none;
+  padding: 14px 40px; border-radius: 50px; font-size: .78rem; font-weight: 600;
+  letter-spacing: 2px; text-transform: uppercase; cursor: pointer; transition: all .2s;
+}
+.btn-dl-all:hover { background: #1c3d1c; }
+
+/* TOAST */
+.toast { position: fixed; bottom: 28px; right: 28px; background: #1a1a1a; border: 1px solid #333; color: #ccc; padding: 10px 20px; border-radius: 8px; font-size: .78rem; opacity: 0; transition: opacity .3s; pointer-events: none; z-index: 999; }
+.toast.show { opacity: 1; }
+
+@media (max-width: 600px) {
+  header { padding: 16px 20px; }
+  .hero { padding: 40px 20px; }
+  .section { padding: 0 16px 60px; }
+  .cards-grid { grid-template-columns: 1fr; }
+}
+</style>
+</head>
+<body>
+
+<header>
+  <div>
+    <div class="logo">HARK<span>A</span>NA</div>
+    <div class="header-sub">Generador de Gráficas · 30 días completos</div>
+  </div>
+</header>
+
+<div class="hero">
+  <p class="hero-label">Lanzamiento · 30 días</p>
+  <h1 class="hero-title">Las imágenes<br>que no muestran <em>nada.</em><br>Y lo dicen todo.</h1>
+  <p class="hero-desc">Piezas gráficas puras para la Fase 1 del lanzamiento. Sin producto. Sin logo. Solo sensaciones. Descargalas y subílas directamente a Instagram.</p>
+  <div class="legend">
+    <div class="legend-item"><span class="legend-dot ld-feed"></span>Feed 1:1 (1080×1080)</div>
+    <div class="legend-item"><span class="legend-dot ld-story"></span>Historia 9:16 (1080×1920)</div>
+  </div>
+</div>
+
+<div class="section">
+  <div class="section-title">30 días completos · Feeds, Stories y Covers de Reel · Descargá y publicá</div>
+  <div class="cards-grid" id="cardsGrid"></div>
+</div>
+
+<div class="dl-all-wrap">
+  <p style="font-size:.72rem;color:#444;margin-bottom:16px;letter-spacing:1px;">Descargar todas las piezas de una vez</p>
+  <button class="btn-dl-all" onclick="downloadAll()">⬇ Descargar todas ({{ n }} imágenes)</button>
+</div>
+
+<div class="toast" id="toast"></div>
+
+<script>
+// ══════════════════════════════════════════════════════
+// DEFINICIÓN DE PIEZAS
+// ══════════════════════════════════════════════════════
+const PIEZAS = [
+  {
+    id: 'dia1-feed',
+    dia: 1, format: 'feed', w: 1080, h: 1080,
+    titulo: 'El punto de partida',
+    copy: '.',
+    caption: '.',
+    hashtags: '',
+    nota: 'El punto es el mensaje. Máximo minimalismo. Primera publicación.',
+    render: renderDia1Feed
+  },
+  {
+    id: 'dia2-story',
+    dia: 2, format: 'story', w: 1080, h: 1920,
+    titulo: '¿Cuándo fue la última vez?',
+    copy: '¿Cuándo fue la última vez\nque te tomaste\nun momento real?',
+    caption: '¿Cuándo fue la última vez que te tomaste un momento real?\n\n(Encuesta en la historia)',
+    hashtags: '',
+    nota: 'Agregá una encuesta de Instagram: "Hoy" / "No recuerdo"',
+    render: renderDia2Story
+  },
+  {
+    id: 'dia4-feed',
+    dia: 4, format: 'feed', w: 1080, h: 1080,
+    titulo: 'Primero el mate.',
+    copy: 'Primero el mate.\nDespués, todo lo demás.',
+    caption: 'Primero el mate.\nDespués, todo lo demás.\n\n#ritual #mate #mañana',
+    hashtags: '#ritual #mate #mañana',
+    nota: 'Usar con una foto tuya de atmósfera de mañana (opcional). También funciona sola.',
+    render: renderDia4Feed
+  },
+  {
+    id: 'dia5-story',
+    dia: 5, format: 'story', w: 1080, h: 1920,
+    titulo: 'Algo viene.',
+    copy: 'Algo viene.\n\nEn 25 días,\nalgo cambia.',
+    caption: 'Algo viene. 🌿',
+    hashtags: '',
+    nota: 'Agregá un sticker de cuenta regresiva a 25 días en Instagram',
+    render: renderDia5Story
+  },
+  {
+    id: 'dia6-feed',
+    dia: 6, format: 'feed', w: 1080, h: 1080,
+    titulo: 'Algunas cosas no se apuran.',
+    copy: 'Algunas cosas\nno se apuran.',
+    caption: 'Algunas cosas no se apuran.\n\n#artesanal #tiempo #natural',
+    hashtags: '#artesanal #tiempo #natural',
+    nota: 'Imagen abstracta de textura. Funciona sola o combinada con una foto macro.',
+    render: renderDia6Feed
+  },
+  {
+    id: 'dia10-story',
+    dia: 10, format: 'story', w: 1080, h: 1920,
+    titulo: '"No es lo que tomás."',
+    copy: 'No es lo que tomás.',
+    caption: 'No es lo que tomás.',
+    hashtags: '',
+    nota: 'Frase incompleta a propósito. La continuación llega en el Día 30.',
+    render: renderDia10Story
+  },
+  {
+    id: 'dia20-feed',
+    dia: 20, format: 'feed', w: 1080, h: 1080,
+    titulo: 'La H — Primera inicial',
+    copy: 'H.',
+    caption: 'H.\n\n#harkana',
+    hashtags: '#harkana',
+    nota: 'Primera aparición del logo. Solo la H. Los seguidores empiezan a conectar.',
+    render: renderDia20Feed
+  },
+  {
+    id: 'dia21-story',
+    dia: 21, format: 'story', w: 1080, h: 1920,
+    titulo: 'Hecho con tiempo.',
+    copy: 'Hecho con tiempo.\nPara tomarlo\ncon tiempo.',
+    caption: 'Hecho con tiempo. Para tomarlo con tiempo.',
+    hashtags: '',
+    nota: 'Manifiesto de marca. Frase evergreen — puede reusarse siempre.',
+    render: renderDia21Story
+  },
+  {
+    id: 'dia7-story',
+    dia: 7, format: 'story', w: 1080, h: 1920,
+    titulo: '¿Cómo tomás el mate?',
+    copy: '¿Cómo tomás\nel mate?',
+    caption: '¿Cómo tomás el mate?\n\n(Encuesta en la historia)',
+    hashtags: '',
+    nota: 'Agregá una encuesta de Instagram: "🎵 Con música" / "🤫 En silencio"',
+    render: renderDia7Story
+  },
+  {
+    id: 'dia11-feed',
+    dia: 11, format: 'feed', w: 1080, h: 1080,
+    titulo: 'Textura kraft',
+    copy: '',
+    caption: '.',
+    hashtags: '',
+    nota: 'Sin texto. La textura del packaging habla sola. Primera pista visual del material.',
+    render: renderDia11Feed
+  },
+  {
+    id: 'dia13-story',
+    dia: 13, format: 'story', w: 1080, h: 1920,
+    titulo: 'Del norte al corazón del país.',
+    copy: 'Del norte\nal corazón\ndel país.',
+    caption: 'Del norte al corazón del país.\n\n#argentina #misionero #córdoba #yerba',
+    hashtags: '#argentina #misionero #córdoba #yerba',
+    nota: 'Primera pista geográfica. El mapa conecta el origen (Misiones) con el destino.',
+    render: renderDia13Story
+  },
+  {
+    id: 'dia16-story',
+    dia: 16, format: 'story', w: 1080, h: 1920,
+    titulo: 'Sin aditivos. Sin conservantes.',
+    copy: 'Sin aditivos.\nSin conservantes.\nSin apuro.\n\nSolo yerba.',
+    caption: 'Sin aditivos. Sin conservantes. Sin apuro.\n\nSolo yerba.',
+    hashtags: '#organico #natural #sinconservantes #yerbamate',
+    nota: 'La lista de "Sin" es el argumento de venta más honesto. Directo y poderoso.',
+    render: renderDia16Story
+  },
+  {
+    id: 'dia18-story',
+    dia: 18, format: 'story', w: 1080, h: 1920,
+    titulo: '¿Ya sabés lo que viene?',
+    copy: '¿Ya sabés\nlo que viene?',
+    caption: '¿Ya sabés lo que viene? 🌿',
+    hashtags: '',
+    nota: 'Agregá encuesta de Instagram: "Ya lo sé 🌿" / "Aún no, pero quiero"',
+    render: renderDia18Story
+  },
+  {
+    id: 'dia27-story',
+    dia: 27, format: 'story', w: 1080, h: 1920,
+    titulo: '30% — Descuento de lanzamiento',
+    copy: '30%\nDescuento\nde lanzamiento.\nSolo 24 horas.',
+    caption: '30% de descuento por lanzamiento. Solo por 24 horas. 🌿\n\n↑ Link en bio',
+    hashtags: '#harkana #lanzamiento #yerbaorganica #oferta',
+    nota: 'Agregá un sticker de cuenta regresiva de 24hs en Instagram. Poné el link de compra.',
+    render: renderDia27Story
+  },
+  // ── PIEZAS NUEVAS ─────────────────────────────────────
+  {
+    id: 'dia3-reel',
+    dia: 3, format: 'reel', w: 1080, h: 1920,
+    titulo: 'Vapor. Silencio. Presencia.',
+    copy: 'El mate\nno se apura.',
+    caption: 'El mate no se apura.\n\n#ritual #silencio #momento',
+    hashtags: '#ritual #silencio #momento',
+    nota: '🎬 COVER para Reel. Grabá 10-15 seg de vapor sobre la taza en cámara lenta. Sin música, solo sonido ambiente.',
+    render: renderDia3Reel
+  },
+  {
+    id: 'dia8-feed',
+    dia: 8, format: 'feed', w: 1080, h: 1080,
+    titulo: 'La materia prima',
+    copy: 'De la tierra.\nSin más vuelta.',
+    caption: 'De la tierra. Sin más vuelta.\n\n#organico #natural #yerbamate',
+    hashtags: '#organico #natural #yerbamate',
+    nota: 'Primera pista del producto. Podés subir esta gráfica o reemplazarla con una macro de yerba en tu mano.',
+    render: renderDia8Feed
+  },
+  {
+    id: 'dia9-reel',
+    dia: 9, format: 'reel', w: 1080, h: 1920,
+    titulo: 'El sonido del cebado',
+    copy: 'Ese sonido.\nYa sabés cuál.',
+    caption: 'Ese sonido. Ya sabés cuál.\n\n#asmr #mate #ritual',
+    hashtags: '#asmr #mate #ritual',
+    nota: '🎬 COVER para Reel ASMR. Grabá el cebado de cerca, enfocá el audio: agua, burbujeo. Sin voz ni música.',
+    render: renderDia9Reel
+  },
+  {
+    id: 'dia12-reel',
+    dia: 12, format: 'reel', w: 1080, h: 1920,
+    titulo: 'Misiones desde el origen',
+    copy: 'Nació acá.\n\n— Misiones,\nArgentina.',
+    caption: 'Nació acá.\n— Misiones, Argentina.\n\n#misiones #argentina #organico #yerbananativa',
+    hashtags: '#misiones #argentina #organico #yerbananativa',
+    nota: '🎬 COVER para Reel. Usá videos de yerbales, selva misionera o stock de Misiones. Música ambiental.',
+    render: renderDia12Reel
+  },
+  {
+    id: 'dia14-feed',
+    dia: 14, format: 'feed', w: 1080, h: 1080,
+    titulo: 'La yerba de cerca',
+    copy: 'Sin agroquímicos.\nSin apuro.\nSin mentiras.',
+    caption: 'Sin agroquímicos. Sin apuro. Sin mentiras.\n\n#sinTACC #organico #puro #yerbaorganica',
+    hashtags: '#sinTACC #organico #puro #yerbaorganica',
+    nota: 'Atributos de pureza. Podés subir esta gráfica o reemplazarla con una macro de hojas de yerba.',
+    render: renderDia14Feed
+  },
+  {
+    id: 'dia15-reel',
+    dia: 15, format: 'reel', w: 1080, h: 1920,
+    titulo: 'El proceso: manos que embolan',
+    copy: 'Cada bolsa,\nembolsada\na mano.\n\nAsí nomás.',
+    caption: 'Cada bolsa, embolsada a mano. Así nomás.\n\n#artesanal #proceso #cordoba #hechoenargentina',
+    hashtags: '#artesanal #proceso #cordoba #hechoenargentina',
+    nota: '🎬 COVER para Reel. Grabá el proceso de embolsado: manos, bolsas kraft, yerba. Luz cálida y natural.',
+    render: renderDia15Reel
+  },
+  {
+    id: 'dia17-feed',
+    dia: 17, format: 'feed', w: 1080, h: 1080,
+    titulo: 'La bolsa (primer plano)',
+    copy: 'Lo que hay adentro\nes tan importante\ncomo lo de afuera.',
+    caption: 'Lo que hay adentro es tan importante como lo de afuera.\n\n#packaging #kraft #artesanal',
+    hashtags: '#packaging #kraft #artesanal',
+    nota: 'Primera vez que se ve el packaging. Podés reemplazar con foto de esquina de bolsa kraft.',
+    render: renderDia17Feed
+  },
+  {
+    id: 'dia19-reel',
+    dia: 19, format: 'reel', w: 1080, h: 1920,
+    titulo: 'De la semilla al mate',
+    copy: 'De Misiones\na tu mate.\n\nEl camino\nimporta.',
+    caption: 'De Misiones a tu mate. El camino importa.\n\n#origenes #organico #misiones #cordoba #artesanal',
+    hashtags: '#origenes #organico #misiones #cordoba #artesanal',
+    nota: '🎬 COVER para Reel de montaje. Yerbales → manos → embolsado → bolsa kraft. Música ambiental.',
+    render: renderDia19Reel
+  },
+  {
+    id: 'dia22-feed',
+    dia: 22, format: 'feed', w: 1080, h: 1080,
+    titulo: 'HARKANA — Revelación oficial',
+    copy: 'HARKANA.\nYerba orgánica\nde verdad.\n\nYa llegó.',
+    caption: 'HARKANA.\nYerba orgánica de verdad.\n\nYa llegó. 🌿\n\n#harkana #yerbaorganica #lanzamiento #sinTACC #organico #artesanal',
+    hashtags: '#harkana #yerbaorganica #lanzamiento #sinTACC #organico #artesanal',
+    nota: '🚀 POST DE LANZAMIENTO. Reemplazá esta gráfica con la foto heroína del producto completo si ya la tenés.',
+    render: renderDia22Feed
+  },
+  {
+    id: 'dia23-reel',
+    dia: 23, format: 'reel', w: 1080, h: 1920,
+    titulo: 'Brand film — "No es lo que tomás."',
+    copy: 'No es lo que tomás.\nEs cómo vivís.\n\nHARKANA.',
+    caption: 'No es lo que tomás.\nEs cómo vivís.\n\nHARKANA 🌿\n\n#harkana #yerbaorganica #estilodevida #ritual #organico',
+    hashtags: '#harkana #yerbaorganica #estilodevida #ritual #organico',
+    nota: '🎬 COVER para Brand Film. El reel más importante del lanzamiento: persona, mañana, mate, producto.',
+    render: renderDia23Reel
+  },
+  {
+    id: 'dia24-story',
+    dia: 24, format: 'story', w: 1080, h: 1920,
+    titulo: '¡Ya llegó! — CTA',
+    copy: 'HARKANA ya llegó.\n\nYerba orgánica.\nSin TACC.\nDesde Misiones.\n\n→ Link en bio',
+    caption: 'HARKANA ya llegó. 🌿\nYerba orgánica. Sin TACC. Desde Misiones.\n\n↑ Link en bio para pedidos',
+    hashtags: '',
+    nota: 'Primer momento de conversión. Activá el link en bio con tracking. Agregá botón de swipe up.',
+    render: renderDia24Story
+  },
+  {
+    id: 'dia25-feed',
+    dia: 25, format: 'feed', w: 1080, h: 1080,
+    titulo: 'El momento del día',
+    copy: 'No es solo mate.\nEs tu momento\ndel día.',
+    caption: 'No es solo mate.\nEs tu momento del día.\n\n#harkana #ritual #mateorganico #sinTACC #momentos',
+    hashtags: '#harkana #ritual #mateorganico #sinTACC #momentos',
+    nota: 'Podés reemplazar con foto lifestyle: manos, ventana, jardín con el mate y la bolsa visible.',
+    render: renderDia25Feed
+  },
+  {
+    id: 'dia26-feed',
+    dia: 26, format: 'feed', w: 1080, h: 1080,
+    titulo: 'Los atributos completos',
+    copy: 'Orgánica.\nCertificada.\nSin TACC.\nSin polvillo.\nSin agroquímicos.\n\nHARKANA.',
+    caption: 'Orgánica. Certificada. Sin TACC. Sin polvillo. Sin agroquímicos.\n\nHARKANA.\n\n#harkana #organica #certificada #sinTACC #pura #argentina',
+    hashtags: '#harkana #organica #certificada #sinTACC #pura #argentina',
+    nota: 'Presentación formal de todos los atributos. Útil como pinned post o highlight.',
+    render: renderDia26Feed
+  },
+  {
+    id: 'dia28-reel',
+    dia: 28, format: 'reel', w: 1080, h: 1920,
+    titulo: 'Primeras reacciones',
+    copy: '¿Qué pasa cuando\nalguien prueba\nHarkana\npor primera vez?\n\nEsto.',
+    caption: '¿Qué pasa cuando alguien prueba Harkana por primera vez?\n\nEsto. 🌿\n\n#harkana #testimonial #organico #yerbamate',
+    hashtags: '#harkana #testimonial #organico #yerbamate',
+    nota: '🎬 COVER para Reel testimonial. Grabá la reacción genuina de alguien probando Harkana. Formato selfie está perfecto.',
+    render: renderDia28Reel
+  },
+  {
+    id: 'dia29-feed',
+    dia: 29, format: 'feed', w: 1080, h: 1080,
+    titulo: 'Harkana Mayorista',
+    copy: 'Si tenés un almacén,\nun dietético,\nun negocio...\n\nHarkana mayorista.\nConsultanos.',
+    caption: 'Si tenés un almacén, un dietético, un negocio...\n\nHarkana mayorista. Consultanos por DM o WhatsApp.\n\n#harkana #mayorista #revendedor #yerbaorganica #negocio',
+    hashtags: '#harkana #mayorista #revendedor #yerbaorganica #negocio',
+    nota: 'Primero construiste la marca, ahora abrís el canal mayorista. Incluí WhatsApp en bio.',
+    render: renderDia29Feed
+  },
+  {
+    id: 'dia30-story',
+    dia: 30, format: 'story', w: 1080, h: 1920,
+    titulo: 'Cierre de ciclo',
+    copy: 'Empezó como\nun punto.\n\nTermina como\nun estilo de vida.\n\nGracias por estar.\n\n→ Pedidos en bio.',
+    caption: 'Empezó como un punto. Termina como un estilo de vida.\n\nGracias por estar. 🌿\n\n↑ Pedidos en bio.',
+    hashtags: '',
+    nota: 'Cierra el arco narrativo del lanzamiento. Referencia al Día 1. Abre la etapa de contenido regular.',
+    render: renderDia30Story
+  },
+];
+
+// ══════════════════════════════════════════════════════
+// RENDERERS — uno por pieza
+// ══════════════════════════════════════════════════════
+
+function renderDia1Feed(ctx, w, h) {
+  // Fondo negro puro
+  ctx.fillStyle = '#000000';
+  ctx.fillRect(0, 0, w, h);
+  // Un solo punto blanco, perfectamente centrado
+  const r = w * 0.008; // 8.6px a 1080px — pequeño pero presente
+  ctx.beginPath();
+  ctx.arc(w/2, h/2, r, 0, Math.PI * 2);
+  ctx.fillStyle = 'rgba(255,255,255,0.92)';
+  ctx.fill();
+}
+
+function renderDia2Story(ctx, w, h) {
+  // Fondo verde muy oscuro
+  ctx.fillStyle = '#080f08';
+  ctx.fillRect(0, 0, w, h);
+  // Gradiente sutil
+  const g = ctx.createRadialGradient(w/2, h*0.45, 0, w/2, h*0.45, w*0.8);
+  g.addColorStop(0, 'rgba(14,35,16,0.5)');
+  g.addColorStop(1, 'rgba(0,0,0,0)');
+  ctx.fillStyle = g;
+  ctx.fillRect(0, 0, w, h);
+  // Línea decorativa superior
+  ctx.fillStyle = 'rgba(192,154,92,0.2)';
+  ctx.fillRect(w*0.5 - w*0.15, h*0.22, w*0.3, 1);
+  // Texto pregunta
+  ctx.textAlign = 'center';
+  ctx.textBaseline = 'middle';
+  const lines = ['¿Cuándo fue', 'la última vez', 'que te tomaste', 'un momento real?'];
+  const lineH = h * 0.075;
+  const startY = h * 0.42;
+  lines.forEach((line, i) => {
+    const sz = i === 3 ? w * 0.058 : w * 0.065;
+    ctx.font = `200 ${sz}px 'Cormorant Garamond', Georgia, serif`;
+    ctx.fillStyle = i === 3 ? 'rgba(255,255,255,0.65)' : 'rgba(255,255,255,0.92)';
+    ctx.fillText(line, w/2, startY + i * lineH);
+  });
+  // Línea decorativa inferior
+  ctx.fillStyle = 'rgba(192,154,92,0.2)';
+  ctx.fillRect(w*0.5 - w*0.15, startY + 4 * lineH + h*0.025, w*0.3, 1);
+}
+
+function renderDia4Feed(ctx, w, h) {
+  // Fondo negro con gradiente muy sutil verde
+  ctx.fillStyle = '#070d07';
+  ctx.fillRect(0, 0, w, h);
+  const g = ctx.createRadialGradient(w*0.3, h*0.3, 0, w*0.3, h*0.3, w*0.9);
+  g.addColorStop(0, 'rgba(14,35,16,0.3)');
+  g.addColorStop(1, 'rgba(0,0,0,0)');
+  ctx.fillStyle = g;
+  ctx.fillRect(0, 0, w, h);
+  // Texto
+  ctx.textAlign = 'center'; ctx.textBaseline = 'middle';
+  // Línea 1
+  ctx.font = `300 ${w*0.078}px 'Cormorant Garamond', Georgia, serif`;
+  ctx.fillStyle = 'rgba(255,255,255,0.94)';
+  ctx.shadowColor = 'rgba(0,0,0,0.3)'; ctx.shadowBlur = 20;
+  ctx.fillText('Primero el mate.', w/2, h*0.44);
+  ctx.shadowBlur = 0;
+  // Separador
+  ctx.fillStyle = 'rgba(192,154,92,0.35)';
+  ctx.fillRect(w/2 - w*0.12, h*0.515, w*0.24, 1);
+  // Línea 2
+  ctx.font = `200 italic ${w*0.055}px 'Cormorant Garamond', Georgia, serif`;
+  ctx.fillStyle = 'rgba(255,255,255,0.55)';
+  ctx.fillText('Después, todo lo demás.', w/2, h*0.575);
+}
+
+function renderDia5Story(ctx, w, h) {
+  // Fondo negro total
+  ctx.fillStyle = '#000000';
+  ctx.fillRect(0, 0, w, h);
+  // Brillo muy sutil central
+  const g = ctx.createRadialGradient(w/2, h*0.42, 0, w/2, h*0.42, w*0.6);
+  g.addColorStop(0, 'rgba(192,154,92,0.04)');
+  g.addColorStop(1, 'rgba(0,0,0,0)');
+  ctx.fillStyle = g;
+  ctx.fillRect(0, 0, w, h);
+  // Emoji hoja (si el sistema lo soporta)
+  ctx.font = `${w*0.08}px serif`;
+  ctx.textAlign = 'center'; ctx.textBaseline = 'middle';
+  ctx.fillText('🌿', w/2, h*0.32);
+  // Texto principal
+  ctx.font = `200 ${w*0.09}px 'Cormorant Garamond', Georgia, serif`;
+  ctx.fillStyle = 'rgba(255,255,255,0.95)';
+  ctx.fillText('Algo viene.', w/2, h*0.44);
+  // Separador
+  ctx.fillStyle = 'rgba(192,154,92,0.25)';
+  ctx.fillRect(w/2 - w*0.1, h*0.51, w*0.2, 1);
+  // Subtexto
+  ctx.font = `300 ${w*0.042}px 'Cormorant Garamond', Georgia, serif`;
+  ctx.fillStyle = 'rgba(255,255,255,0.35)';
+  ctx.fillText('En 25 días,', w/2, h*0.57);
+  ctx.fillText('algo cambia.', w/2, h*0.625);
+}
+
+function renderDia6Feed(ctx, w, h) {
+  // Fondo casi negro con textura simulada
+  ctx.fillStyle = '#050505';
+  ctx.fillRect(0, 0, w, h);
+  // Patrón de puntos muy sutil (simula textura natural)
+  ctx.fillStyle = 'rgba(255,255,255,0.018)';
+  for (let x = 0; x < w; x += 32) {
+    for (let y = 0; y < h; y += 32) {
+      ctx.beginPath();
+      ctx.arc(x + Math.sin(x*y)*8, y + Math.cos(x+y)*6, 1.2, 0, Math.PI*2);
+      ctx.fill();
+    }
+  }
+  // Gradiente sutil
+  const g = ctx.createLinearGradient(0, 0, w, h);
+  g.addColorStop(0, 'rgba(14,35,16,0.12)');
+  g.addColorStop(1, 'rgba(0,0,0,0)');
+  ctx.fillStyle = g; ctx.fillRect(0, 0, w, h);
+  // Texto
+  ctx.textAlign = 'center'; ctx.textBaseline = 'middle';
+  ctx.font = `200 ${w*0.082}px 'Cormorant Garamond', Georgia, serif`;
+  ctx.fillStyle = 'rgba(255,255,255,0.90)';
+  ctx.fillText('Algunas cosas', w/2, h*0.43);
+  ctx.font = `300 italic ${w*0.065}px 'Cormorant Garamond', Georgia, serif`;
+  ctx.fillStyle = 'rgba(192,154,92,0.75)';
+  ctx.fillText('no se apuran.', w/2, h*0.545);
+}
+
+function renderDia10Story(ctx, w, h) {
+  // Negro absoluto
+  ctx.fillStyle = '#000000';
+  ctx.fillRect(0, 0, w, h);
+  // Texto — grande, centrado, poderoso
+  ctx.textAlign = 'center'; ctx.textBaseline = 'middle';
+  // Frase grande
+  ctx.font = `200 ${w*0.072}px 'Cormorant Garamond', Georgia, serif`;
+  ctx.fillStyle = 'rgba(255,255,255,0.97)';
+  ctx.fillText('No es lo que', w/2, h*0.42);
+  ctx.fillText('tomás.', w/2, h*0.505);
+  // Punto al final como eco del Día 1
+  ctx.font = `200 ${w*0.05}px 'Cormorant Garamond', Georgia, serif`;
+  ctx.fillStyle = 'rgba(192,154,92,0.4)';
+  ctx.fillText('(continuará.)', w/2, h*0.63);
+}
+
+function renderDia20Feed(ctx, w, h) {
+  // Fondo verde muy oscuro
+  ctx.fillStyle = '#080d08';
+  ctx.fillRect(0, 0, w, h);
+  // La letra H — grandísima, centrada
+  ctx.textAlign = 'center'; ctx.textBaseline = 'middle';
+  // Sombra/glow suave
+  ctx.shadowColor = 'rgba(192,154,92,0.15)';
+  ctx.shadowBlur = 60;
+  ctx.font = `200 ${w*0.62}px 'Cormorant Garamond', Georgia, serif`;
+  ctx.fillStyle = 'rgba(255,255,255,0.93)';
+  ctx.fillText('H', w/2, h*0.50);
+  ctx.shadowBlur = 0;
+  // Punto debajo — eco del Día 1
+  ctx.font = `300 ${w*0.06}px 'Cormorant Garamond', Georgia, serif`;
+  ctx.fillStyle = 'rgba(192,154,92,0.55)';
+  ctx.fillText('.', w/2, h*0.82);
+}
+
+function renderDia21Story(ctx, w, h) {
+  // Fondo verde oscuro cálido
+  ctx.fillStyle = '#070e07';
+  ctx.fillRect(0, 0, w, h);
+  // Gradiente diagonal sutil
+  const g = ctx.createLinearGradient(0, 0, w, h);
+  g.addColorStop(0, 'rgba(14,35,16,0.4)');
+  g.addColorStop(1, 'rgba(192,154,92,0.04)');
+  ctx.fillStyle = g; ctx.fillRect(0, 0, w, h);
+  // Línea kraft decorativa
+  ctx.fillStyle = 'rgba(192,154,92,0.3)';
+  ctx.fillRect(w*0.12, h*0.34, w*0.76, 1);
+  ctx.fillRect(w*0.12, h*0.66, w*0.76, 1);
+  // Texto
+  ctx.textAlign = 'center'; ctx.textBaseline = 'middle';
+  ctx.font = `200 ${w*0.074}px 'Cormorant Garamond', Georgia, serif`;
+  ctx.fillStyle = 'rgba(255,255,255,0.93)';
+  ctx.fillText('Hecho con tiempo.', w/2, h*0.42);
+  ctx.font = `200 italic ${w*0.056}px 'Cormorant Garamond', Georgia, serif`;
+  ctx.fillStyle = 'rgba(255,255,255,0.55)';
+  ctx.fillText('Para tomarlo', w/2, h*0.52);
+  ctx.fillText('con tiempo.', w/2, h*0.585);
+}
+
+// ── NUEVOS RENDERERS ────────────────────────────────────
+
+function renderDia3Reel(ctx, w, h) {
+  ctx.fillStyle = '#050808';
+  ctx.fillRect(0, 0, w, h);
+  // Niebla/vapor: capas de gradientes radiales superpuestos
+  const fogLayers = [
+    { x: w*0.42, y: h*0.38, r: w*0.55, a: 0.07 },
+    { x: w*0.58, y: h*0.32, r: w*0.48, a: 0.05 },
+    { x: w*0.50, y: h*0.28, r: w*0.35, a: 0.09 },
+    { x: w*0.46, y: h*0.22, r: w*0.22, a: 0.11 },
+    { x: w*0.52, y: h*0.18, r: w*0.15, a: 0.08 },
+  ];
+  fogLayers.forEach(f => {
+    const g = ctx.createRadialGradient(f.x, f.y, 0, f.x, f.y, f.r);
+    g.addColorStop(0, `rgba(180,210,195,${f.a})`);
+    g.addColorStop(0.5, `rgba(120,170,150,${f.a*0.4})`);
+    g.addColorStop(1, 'rgba(0,0,0,0)');
+    ctx.fillStyle = g; ctx.fillRect(0, 0, w, h);
+  });
+  // Línea vertical que sugiere el vapor ascendiendo
+  const vapGrad = ctx.createLinearGradient(w*0.5, h*0.62, w*0.5, h*0.08);
+  vapGrad.addColorStop(0, 'rgba(180,220,200,0)');
+  vapGrad.addColorStop(0.3, 'rgba(180,220,200,0.06)');
+  vapGrad.addColorStop(0.7, 'rgba(180,220,200,0.04)');
+  vapGrad.addColorStop(1, 'rgba(180,220,200,0)');
+  ctx.fillStyle = vapGrad;
+  ctx.fillRect(w*0.47, h*0.08, w*0.06, h*0.54);
+  // Línea decorativa
+  ctx.fillStyle = 'rgba(192,154,92,0.18)';
+  ctx.fillRect(w*0.25, h*0.68, w*0.5, 1);
+  // Texto
+  ctx.textAlign = 'center'; ctx.textBaseline = 'middle';
+  ctx.font = `200 ${w*0.078}px 'Cormorant Garamond', Georgia, serif`;
+  ctx.fillStyle = 'rgba(255,255,255,0.88)';
+  ctx.fillText('El mate', w/2, h*0.745);
+  ctx.font = `200 italic ${w*0.065}px 'Cormorant Garamond', Georgia, serif`;
+  ctx.fillStyle = 'rgba(192,154,92,0.85)';
+  ctx.fillText('no se apura.', w/2, h*0.815);
+  // Etiqueta reel
+  ctx.font = `300 ${w*0.022}px 'Inter', system-ui, sans-serif`;
+  ctx.fillStyle = 'rgba(255,255,255,0.2)';
+  ctx.fillText('🎬  COVER · Reel · Día 3', w/2, h*0.93);
+}
+
+function renderDia8Feed(ctx, w, h) {
+  // Fondo tierra oscura
+  ctx.fillStyle = '#0d0805';
+  ctx.fillRect(0, 0, w, h);
+  // Textura orgánica: partículas irregulares simulando yerba suelta
+  const seed8 = [0.37,0.71,0.23,0.89,0.44,0.62,0.15,0.93,0.55,0.08,0.76,0.31];
+  for (let i = 0; i < 1200; i++) {
+    const xi = ((Math.sin(i*7.3+1)*0.5+0.5)) * w;
+    const yi = ((Math.cos(i*5.1+2)*0.5+0.5)) * h;
+    const sz = 1 + (Math.abs(Math.sin(i*3.7))*4);
+    const alpha = 0.04 + Math.abs(Math.sin(i*2.9))*0.12;
+    const green = Math.sin(i*1.3) > 0;
+    ctx.fillStyle = green
+      ? `rgba(40,80,35,${alpha})`
+      : `rgba(100,75,35,${alpha})`;
+    ctx.beginPath();
+    ctx.ellipse(xi, yi, sz, sz*0.4, i*0.7, 0, Math.PI*2);
+    ctx.fill();
+  }
+  // Gradiente de luz lateral (simula luz lateral de macro)
+  const light = ctx.createRadialGradient(w*0.25, h*0.35, 0, w*0.25, h*0.35, w*0.9);
+  light.addColorStop(0, 'rgba(140,110,50,0.12)');
+  light.addColorStop(0.5, 'rgba(60,90,40,0.06)');
+  light.addColorStop(1, 'rgba(0,0,0,0.3)');
+  ctx.fillStyle = light; ctx.fillRect(0, 0, w, h);
+  // Overlay oscuro en zona de texto
+  const textOverlay = ctx.createLinearGradient(0, h*0.45, 0, h);
+  textOverlay.addColorStop(0, 'rgba(0,0,0,0)');
+  textOverlay.addColorStop(1, 'rgba(0,0,0,0.75)');
+  ctx.fillStyle = textOverlay; ctx.fillRect(0, 0, w, h);
+  // Texto
+  ctx.textAlign = 'center'; ctx.textBaseline = 'middle';
+  ctx.font = `200 ${w*0.085}px 'Cormorant Garamond', Georgia, serif`;
+  ctx.fillStyle = 'rgba(255,255,255,0.92)';
+  ctx.fillText('De la tierra.', w/2, h*0.71);
+  ctx.font = `200 italic ${w*0.065}px 'Cormorant Garamond', Georgia, serif`;
+  ctx.fillStyle = 'rgba(192,154,92,0.8)';
+  ctx.fillText('Sin más vuelta.', w/2, h*0.80);
+}
+
+function renderDia9Reel(ctx, w, h) {
+  ctx.fillStyle = '#000000';
+  ctx.fillRect(0, 0, w, h);
+  // Visualización de onda sonora (simula ASMR)
+  const cx = w/2, cy = h*0.40;
+  const bars = 38;
+  const barW = w * 0.012;
+  const gap = w * 0.014;
+  const totalW = bars * (barW + gap);
+  const startX = cx - totalW/2;
+  const heights = [0.04,0.06,0.09,0.12,0.18,0.14,0.22,0.16,0.28,0.20,0.35,0.25,0.42,0.30,0.48,0.36,0.52,0.40,0.52,0.36,0.48,0.30,0.42,0.25,0.35,0.20,0.28,0.16,0.22,0.14,0.18,0.12,0.09,0.06,0.04,0.03,0.02,0.01];
+  for (let i = 0; i < bars; i++) {
+    const bh = heights[i] * h * 0.35;
+    const bx = startX + i*(barW+gap);
+    const alpha = 0.3 + heights[i] * 0.6;
+    ctx.fillStyle = `rgba(192,154,92,${alpha})`;
+    ctx.fillRect(bx, cy - bh/2, barW, bh);
+  }
+  // Línea central
+  ctx.fillStyle = 'rgba(255,255,255,0.06)';
+  ctx.fillRect(w*0.1, cy, w*0.8, 1);
+  // Texto
+  ctx.textAlign = 'center'; ctx.textBaseline = 'middle';
+  ctx.font = `300 ${w*0.048}px 'Cormorant Garamond', Georgia, serif`;
+  ctx.fillStyle = 'rgba(255,255,255,0.5)';
+  ctx.fillText('🎧', w/2, h*0.62);
+  ctx.font = `200 ${w*0.082}px 'Cormorant Garamond', Georgia, serif`;
+  ctx.fillStyle = 'rgba(255,255,255,0.92)';
+  ctx.fillText('Ese sonido.', w/2, h*0.70);
+  ctx.font = `200 italic ${w*0.058}px 'Cormorant Garamond', Georgia, serif`;
+  ctx.fillStyle = 'rgba(255,255,255,0.5)';
+  ctx.fillText('Ya sabés cuál.', w/2, h*0.775);
+  ctx.font = `300 ${w*0.022}px 'Inter', system-ui, sans-serif`;
+  ctx.fillStyle = 'rgba(255,255,255,0.18)';
+  ctx.fillText('🎬  COVER · Reel ASMR · Día 9', w/2, h*0.93);
+}
+
+function renderDia12Reel(ctx, w, h) {
+  // Fondos verdes intensos del monte misionero
+  ctx.fillStyle = '#040f04';
+  ctx.fillRect(0, 0, w, h);
+  // Capas de verde que sugieren follaje denso
+  const greens = [
+    { x: w*0.3, y: h*0.1, r: w*0.9, c: 'rgba(8,40,10,0.9)' },
+    { x: w*0.7, y: h*0.05, r: w*0.7, c: 'rgba(12,55,15,0.7)' },
+    { x: w*0.2, y: h*0.3, r: w*0.6, c: 'rgba(6,35,8,0.6)' },
+    { x: w*0.8, y: h*0.4, r: w*0.5, c: 'rgba(15,65,18,0.5)' },
+    { x: w*0.5, y: h*0.15, r: w*0.4, c: 'rgba(10,50,12,0.4)' },
+  ];
+  greens.forEach(g => {
+    const grad = ctx.createRadialGradient(g.x, g.y, 0, g.x, g.y, parseFloat(g.r));
+    grad.addColorStop(0, g.c);
+    grad.addColorStop(1, 'rgba(0,0,0,0)');
+    ctx.fillStyle = grad; ctx.fillRect(0, 0, w, h);
+  });
+  // Luz que se cuela (sugiere selva con claros de luz)
+  const rays = ctx.createLinearGradient(w*0.6, 0, w*0.3, h*0.6);
+  rays.addColorStop(0, 'rgba(180,230,160,0.04)');
+  rays.addColorStop(0.4, 'rgba(100,180,90,0.02)');
+  rays.addColorStop(1, 'rgba(0,0,0,0)');
+  ctx.fillStyle = rays; ctx.fillRect(0, 0, w, h);
+  // Overlay oscuro inferior para texto
+  const dark = ctx.createLinearGradient(0, h*0.4, 0, h);
+  dark.addColorStop(0, 'rgba(0,0,0,0)');
+  dark.addColorStop(1, 'rgba(0,0,0,0.85)');
+  ctx.fillStyle = dark; ctx.fillRect(0, 0, w, h);
+  // Texto
+  ctx.textAlign = 'center'; ctx.textBaseline = 'middle';
+  ctx.font = `200 ${w*0.08}px 'Cormorant Garamond', Georgia, serif`;
+  ctx.fillStyle = 'rgba(255,255,255,0.9)';
+  ctx.fillText('Nació acá.', w/2, h*0.66);
+  ctx.fillStyle = 'rgba(192,154,92,0.35)';
+  ctx.fillRect(w*0.3, h*0.715, w*0.4, 1);
+  ctx.font = `200 italic ${w*0.045}px 'Cormorant Garamond', Georgia, serif`;
+  ctx.fillStyle = 'rgba(192,154,92,0.75)';
+  ctx.fillText('— Misiones, Argentina.', w/2, h*0.765);
+  ctx.font = `300 ${w*0.022}px 'Inter', system-ui, sans-serif`;
+  ctx.fillStyle = 'rgba(255,255,255,0.18)';
+  ctx.fillText('🎬  COVER · Reel Origen · Día 12', w/2, h*0.93);
+}
+
+function renderDia14Feed(ctx, w, h) {
+  // Fondo verde muy oscuro, profundo
+  ctx.fillStyle = '#030a03';
+  ctx.fillRect(0, 0, w, h);
+  // Luz de hojas: puntos y manchas verdes que sugieren hojas iluminadas
+  for (let i = 0; i < 60; i++) {
+    const lx = (Math.sin(i*3.7)*0.5+0.5)*w;
+    const ly = (Math.cos(i*5.3)*0.5+0.5)*h;
+    const lr = w*0.03 + Math.abs(Math.sin(i*2.1))*w*0.08;
+    const la = 0.03 + Math.abs(Math.sin(i*1.7))*0.06;
+    const g = ctx.createRadialGradient(lx, ly, 0, lx, ly, lr);
+    g.addColorStop(0, `rgba(30,80,25,${la})`);
+    g.addColorStop(1, 'rgba(0,0,0,0)');
+    ctx.fillStyle = g; ctx.fillRect(0, 0, w, h);
+  }
+  // Vena central de hoja (línea diagonal sutil)
+  ctx.strokeStyle = 'rgba(40,90,30,0.12)';
+  ctx.lineWidth = w*0.002;
+  ctx.beginPath();
+  ctx.moveTo(w*0.2, h*0.1); ctx.lineTo(w*0.75, h*0.85);
+  ctx.stroke();
+  // Overlay texto zona
+  const ov = ctx.createLinearGradient(0, h*0.3, 0, h);
+  ov.addColorStop(0, 'rgba(0,0,0,0)');
+  ov.addColorStop(0.6, 'rgba(0,0,0,0.6)');
+  ov.addColorStop(1, 'rgba(0,0,0,0.85)');
+  ctx.fillStyle = ov; ctx.fillRect(0, 0, w, h);
+  // Las frases "Sin" en lista
+  ctx.textAlign = 'left'; ctx.textBaseline = 'middle';
+  const items14 = ['Sin agroquímicos.', 'Sin apuro.', 'Sin mentiras.'];
+  items14.forEach((txt, i) => {
+    ctx.font = `200 ${w*0.065}px 'Cormorant Garamond', Georgia, serif`;
+    ctx.fillStyle = i === 0 ? 'rgba(192,154,92,0.85)' : `rgba(255,255,255,${0.85 - i*0.12})`;
+    ctx.fillText(txt, w*0.1, h*0.62 + i*h*0.11);
+  });
+}
+
+function renderDia15Reel(ctx, w, h) {
+  // Fondo cálido artesanal
+  ctx.fillStyle = '#100c06';
+  ctx.fillRect(0, 0, w, h);
+  // Textura de madera/taller — líneas horizontales muy sutiles
+  for (let y = 0; y < h; y += 4) {
+    const a = 0.01 + Math.abs(Math.sin(y*0.08))*0.025;
+    ctx.fillStyle = `rgba(180,140,70,${a})`;
+    ctx.fillRect(0, y, w, 1);
+  }
+  // Luz cálida central (foco sobre mesa de trabajo)
+  const warmLight = ctx.createRadialGradient(w*0.5, h*0.38, 0, w*0.5, h*0.38, w*0.8);
+  warmLight.addColorStop(0, 'rgba(200,150,60,0.15)');
+  warmLight.addColorStop(0.4, 'rgba(140,100,40,0.08)');
+  warmLight.addColorStop(1, 'rgba(0,0,0,0)');
+  ctx.fillStyle = warmLight; ctx.fillRect(0, 0, w, h);
+  // Overlay texto
+  const ov15 = ctx.createLinearGradient(0, h*0.45, 0, h);
+  ov15.addColorStop(0, 'rgba(0,0,0,0)');
+  ov15.addColorStop(1, 'rgba(0,0,0,0.82)');
+  ctx.fillStyle = ov15; ctx.fillRect(0, 0, w, h);
+  // Kraft accent line
+  ctx.fillStyle = 'rgba(192,154,92,0.3)';
+  ctx.fillRect(w*0.15, h*0.62, w*0.7, 1);
+  // Texto
+  ctx.textAlign = 'center'; ctx.textBaseline = 'middle';
+  ctx.font = `200 ${w*0.072}px 'Cormorant Garamond', Georgia, serif`;
+  ctx.fillStyle = 'rgba(255,255,255,0.9)';
+  ctx.fillText('Cada bolsa,', w/2, h*0.68);
+  ctx.fillText('embolsada a mano.', w/2, h*0.755);
+  ctx.font = `200 italic ${w*0.05}px 'Cormorant Garamond', Georgia, serif`;
+  ctx.fillStyle = 'rgba(192,154,92,0.7)';
+  ctx.fillText('Así nomás.', w/2, h*0.835);
+  ctx.font = `300 ${w*0.022}px 'Inter', system-ui, sans-serif`;
+  ctx.fillStyle = 'rgba(255,255,255,0.18)';
+  ctx.fillText('🎬  COVER · Reel Proceso · Día 15', w/2, h*0.93);
+}
+
+function renderDia17Feed(ctx, w, h) {
+  // Fondo madera cálida oscura
+  ctx.fillStyle = '#0e0905';
+  ctx.fillRect(0, 0, w, h);
+  // Textura madera sutil
+  for (let y = 0; y < h; y += 3) {
+    const a = 0.008 + Math.abs(Math.sin(y*0.05+1))*0.018;
+    ctx.fillStyle = `rgba(160,110,50,${a})`;
+    ctx.fillRect(0, y, w, 1);
+  }
+  // Rectángulo que sugiere la bolsa kraft (vista parcial, esquina inferior derecha)
+  const bx = w*0.28, by = h*0.08, bw = w*0.9, bh = h*0.68;
+  // Sombra de la bolsa
+  ctx.shadowColor = 'rgba(0,0,0,0.6)'; ctx.shadowBlur = 40;
+  ctx.fillStyle = '#c09a5c';
+  roundRect17(ctx, bx, by, bw, bh, 8);
+  ctx.fill();
+  ctx.shadowBlur = 0;
+  // Efecto kraft: textura con gradiente
+  const kraftOverlay = ctx.createLinearGradient(bx, by, bx+bw, by+bh);
+  kraftOverlay.addColorStop(0, 'rgba(180,130,60,0.3)');
+  kraftOverlay.addColorStop(0.5, 'rgba(220,180,100,0.1)');
+  kraftOverlay.addColorStop(1, 'rgba(140,90,30,0.4)');
+  ctx.fillStyle = kraftOverlay;
+  roundRect17(ctx, bx, by, bw, bh, 8);
+  ctx.fill();
+  // Logo "H" difuminado en el kraft (fuera de encuadre a propósito)
+  ctx.font = `200 ${w*0.5}px 'Cormorant Garamond', Georgia, serif`;
+  ctx.fillStyle = 'rgba(120,80,25,0.25)';
+  ctx.textAlign = 'right'; ctx.textBaseline = 'top';
+  ctx.fillText('H', w*1.05, by + bh*0.05);
+  // Overlay izquierda oscura (el recorte/la zona de sombra)
+  const cutOverlay = ctx.createLinearGradient(0, 0, w*0.45, 0);
+  cutOverlay.addColorStop(0, 'rgba(14,9,5,1)');
+  cutOverlay.addColorStop(0.6, 'rgba(14,9,5,0.7)');
+  cutOverlay.addColorStop(1, 'rgba(14,9,5,0)');
+  ctx.fillStyle = cutOverlay; ctx.fillRect(0, 0, w, h);
+  // Overlay inferior para texto
+  const botOverlay = ctx.createLinearGradient(0, h*0.55, 0, h);
+  botOverlay.addColorStop(0, 'rgba(0,0,0,0)');
+  botOverlay.addColorStop(1, 'rgba(0,0,0,0.88)');
+  ctx.fillStyle = botOverlay; ctx.fillRect(0, 0, w, h);
+  // Texto
+  ctx.textAlign = 'center'; ctx.textBaseline = 'middle';
+  ctx.font = `200 ${w*0.055}px 'Cormorant Garamond', Georgia, serif`;
+  ctx.fillStyle = 'rgba(255,255,255,0.85)';
+  ctx.fillText('Lo que hay adentro', w/2, h*0.72);
+  ctx.fillText('es tan importante', w/2, h*0.79);
+  ctx.font = `200 italic ${w*0.055}px 'Cormorant Garamond', Georgia, serif`;
+  ctx.fillStyle = 'rgba(192,154,92,0.8)';
+  ctx.fillText('como lo de afuera.', w/2, h*0.86);
+}
+function roundRect17(ctx, x, y, w, h, r) {
+  ctx.beginPath();
+  ctx.moveTo(x+r,y); ctx.lineTo(x+w-r,y);
+  ctx.quadraticCurveTo(x+w,y,x+w,y+r);
+  ctx.lineTo(x+w,y+h-r);
+  ctx.quadraticCurveTo(x+w,y+h,x+w-r,y+h);
+  ctx.lineTo(x+r,y+h); ctx.quadraticCurveTo(x,y+h,x,y+h-r);
+  ctx.lineTo(x,y+r); ctx.quadraticCurveTo(x,y,x+r,y);
+  ctx.closePath();
+}
+
+function renderDia19Reel(ctx, w, h) {
+  ctx.fillStyle = '#050d05';
+  ctx.fillRect(0, 0, w, h);
+  // Fondo: mitad superior verde (campo/Misiones), mitad inferior kraft (embolsado/Córdoba)
+  const split = ctx.createLinearGradient(0, 0, 0, h);
+  split.addColorStop(0, 'rgba(10,40,12,0.8)');
+  split.addColorStop(0.42, 'rgba(5,18,5,0.4)');
+  split.addColorStop(0.58, 'rgba(80,55,20,0.3)');
+  split.addColorStop(1, 'rgba(25,15,5,0.7)');
+  ctx.fillStyle = split; ctx.fillRect(0, 0, w, h);
+  // Línea de separación (el viaje entre los dos mundos)
+  ctx.fillStyle = 'rgba(192,154,92,0.25)';
+  ctx.fillRect(0, h*0.5, w, 1);
+  // Flecha de viaje (tres puntos con línea)
+  const arrowY = h*0.5;
+  ctx.strokeStyle = 'rgba(192,154,92,0.4)';
+  ctx.lineWidth = 2;
+  ctx.setLineDash([8, 10]);
+  ctx.beginPath();
+  ctx.moveTo(w*0.15, arrowY); ctx.lineTo(w*0.82, arrowY);
+  ctx.stroke(); ctx.setLineDash([]);
+  // Puntos del viaje
+  [[w*0.15,'Misiones'],[w*0.5,'Córdoba'],[w*0.82,'Tu mate']].forEach(([px, label], i) => {
+    ctx.beginPath();
+    ctx.arc(px, arrowY, w*0.016, 0, Math.PI*2);
+    ctx.fillStyle = i===2 ? 'rgba(192,154,92,0.9)' : 'rgba(255,255,255,0.6)';
+    ctx.fill();
+    ctx.font = `300 ${w*0.028}px 'Inter', system-ui, sans-serif`;
+    ctx.fillStyle = 'rgba(255,255,255,0.5)';
+    ctx.textAlign = 'center';
+    ctx.fillText(label, px, arrowY - h*0.04);
+  });
+  // Texto principal
+  ctx.textAlign = 'center'; ctx.textBaseline = 'middle';
+  ctx.font = `200 ${w*0.075}px 'Cormorant Garamond', Georgia, serif`;
+  ctx.fillStyle = 'rgba(255,255,255,0.92)';
+  ctx.fillText('De Misiones', w/2, h*0.69);
+  ctx.fillText('a tu mate.', w/2, h*0.76);
+  ctx.fillStyle = 'rgba(192,154,92,0.2)';
+  ctx.fillRect(w*0.3, h*0.805, w*0.4, 1);
+  ctx.font = `200 italic ${w*0.045}px 'Cormorant Garamond', Georgia, serif`;
+  ctx.fillStyle = 'rgba(255,255,255,0.45)';
+  ctx.fillText('El camino importa.', w/2, h*0.85);
+  ctx.font = `300 ${w*0.022}px 'Inter', system-ui, sans-serif`;
+  ctx.fillStyle = 'rgba(255,255,255,0.18)';
+  ctx.fillText('🎬  COVER · Reel Montaje · Día 19', w/2, h*0.93);
+}
+
+function renderDia22Feed(ctx, w, h) {
+  // EL LANZAMIENTO — Verde oscuro profundo, máxima elegancia
+  ctx.fillStyle = '#050f05';
+  ctx.fillRect(0, 0, w, h);
+  // Gradiente radial cálido desde el centro
+  const hero = ctx.createRadialGradient(w*0.5, h*0.42, 0, w*0.5, h*0.42, w*0.75);
+  hero.addColorStop(0, 'rgba(14,35,16,0.9)');
+  hero.addColorStop(0.5, 'rgba(8,22,9,0.6)');
+  hero.addColorStop(1, 'rgba(0,0,0,0)');
+  ctx.fillStyle = hero; ctx.fillRect(0, 0, w, h);
+  // Halo dorado sutil detrás del logo
+  const halo = ctx.createRadialGradient(w*0.5, h*0.38, 0, w*0.5, h*0.38, w*0.4);
+  halo.addColorStop(0, 'rgba(192,154,92,0.08)');
+  halo.addColorStop(1, 'rgba(0,0,0,0)');
+  ctx.fillStyle = halo; ctx.fillRect(0, 0, w, h);
+  // HARKANA — nombre completo, grande
+  ctx.textAlign = 'center'; ctx.textBaseline = 'middle';
+  ctx.font = `300 ${w*0.095}px 'Cormorant Garamond', Georgia, serif`;
+  ctx.shadowColor = 'rgba(192,154,92,0.2)'; ctx.shadowBlur = 30;
+  ctx.fillStyle = '#ffffff';
+  ctx.fillText('HARKANA', w/2, h*0.36);
+  ctx.shadowBlur = 0;
+  // Línea dorada
+  ctx.fillStyle = 'rgba(192,154,92,0.5)';
+  ctx.fillRect(w*0.25, h*0.44, w*0.5, 1.5);
+  // Subtítulo
+  ctx.font = `200 italic ${w*0.042}px 'Cormorant Garamond', Georgia, serif`;
+  ctx.fillStyle = 'rgba(192,154,92,0.8)';
+  ctx.fillText('Yerba orgánica de verdad.', w/2, h*0.52);
+  // Separador pequeño
+  ctx.fillStyle = 'rgba(255,255,255,0.1)';
+  ctx.fillRect(w*0.42, h*0.575, w*0.16, 1);
+  // "Ya llegó"
+  ctx.font = `300 ${w*0.055}px 'Cormorant Garamond', Georgia, serif`;
+  ctx.fillStyle = 'rgba(255,255,255,0.75)';
+  ctx.fillText('Ya llegó.', w/2, h*0.635);
+  // Atributos pequeños
+  ctx.font = `300 ${w*0.025}px 'Inter', system-ui, sans-serif`;
+  ctx.fillStyle = 'rgba(255,255,255,0.3)';
+  ctx.fillText('ORGÁNICA  ·  SIN TACC  ·  MISIONES  ·  CÓRDOBA', w/2, h*0.75);
+  // Punto eco día 1
+  ctx.beginPath();
+  ctx.arc(w/2, h*0.87, w*0.006, 0, Math.PI*2);
+  ctx.fillStyle = 'rgba(192,154,92,0.6)';
+  ctx.fill();
+}
+
+function renderDia23Reel(ctx, w, h) {
+  ctx.fillStyle = '#000000';
+  ctx.fillRect(0, 0, w, h);
+  // Viñeta cinematográfica (barras negras arriba y abajo)
+  ctx.fillStyle = 'rgba(0,0,0,0.85)';
+  ctx.fillRect(0, 0, w, h*0.12);
+  ctx.fillRect(0, h*0.88, w, h*0.12);
+  // Gradiente ambiente verde en zona media
+  const cinGrad = ctx.createRadialGradient(w*0.5, h*0.5, 0, w*0.5, h*0.5, w*0.8);
+  cinGrad.addColorStop(0, 'rgba(8,22,9,0.5)');
+  cinGrad.addColorStop(1, 'rgba(0,0,0,0)');
+  ctx.fillStyle = cinGrad; ctx.fillRect(0, 0, w, h);
+  // Línea horizontal cinematográfica
+  ctx.fillStyle = 'rgba(192,154,92,0.15)';
+  ctx.fillRect(0, h*0.5, w, 1);
+  // Frase — "No es lo que tomás."
+  ctx.textAlign = 'center'; ctx.textBaseline = 'middle';
+  ctx.font = `200 ${w*0.075}px 'Cormorant Garamond', Georgia, serif`;
+  ctx.fillStyle = 'rgba(255,255,255,0.94)';
+  ctx.fillText('No es lo que tomás.', w/2, h*0.38);
+  ctx.font = `200 italic ${w*0.065}px 'Cormorant Garamond', Georgia, serif`;
+  ctx.fillStyle = 'rgba(192,154,92,0.85)';
+  ctx.fillText('Es cómo vivís.', w/2, h*0.46);
+  // Separador
+  ctx.fillStyle = 'rgba(192,154,92,0.2)';
+  ctx.fillRect(w*0.35, h*0.545, w*0.3, 1);
+  // HARKANA como firma
+  ctx.font = `300 ${w*0.058}px 'Cormorant Garamond', Georgia, serif`;
+  ctx.fillStyle = 'rgba(255,255,255,0.6)';
+  ctx.fillText('HARKANA', w/2, h*0.605);
+  // Etiqueta
+  ctx.font = `300 ${w*0.022}px 'Inter', system-ui, sans-serif`;
+  ctx.fillStyle = 'rgba(255,255,255,0.15)';
+  ctx.fillText('🎬  COVER · Brand Film · Día 23', w/2, h*0.94);
+}
+
+function renderDia24Story(ctx, w, h) {
+  // Verde marca, el primer CTA
+  ctx.fillStyle = '#050f05';
+  ctx.fillRect(0, 0, w, h);
+  const g24 = ctx.createRadialGradient(w*0.5, h*0.45, 0, w*0.5, h*0.45, w*0.9);
+  g24.addColorStop(0, 'rgba(14,35,16,0.7)');
+  g24.addColorStop(1, 'rgba(0,0,0,0)');
+  ctx.fillStyle = g24; ctx.fillRect(0, 0, w, h);
+  ctx.textAlign = 'center'; ctx.textBaseline = 'middle';
+  // HARKANA pequeño arriba
+  ctx.font = `300 ${w*0.048}px 'Cormorant Garamond', Georgia, serif`;
+  ctx.fillStyle = 'rgba(192,154,92,0.6)';
+  ctx.fillText('HARKANA', w/2, h*0.22);
+  // Línea
+  ctx.fillStyle = 'rgba(192,154,92,0.2)';
+  ctx.fillRect(w*0.3, h*0.265, w*0.4, 1);
+  // "Ya llegó."
+  ctx.font = `200 ${w*0.092}px 'Cormorant Garamond', Georgia, serif`;
+  ctx.fillStyle = '#ffffff';
+  ctx.shadowColor = 'rgba(0,0,0,0.5)'; ctx.shadowBlur = 20;
+  ctx.fillText('Ya llegó.', w/2, h*0.38);
+  ctx.shadowBlur = 0;
+  // Atributos en lista
+  const attrs = ['Yerba orgánica.', 'Sin TACC.', 'Desde Misiones.'];
+  attrs.forEach((a, i) => {
+    ctx.font = `300 ${w*0.042}px 'Cormorant Garamond', Georgia, serif`;
+    ctx.fillStyle = `rgba(255,255,255,${0.65 - i*0.1})`;
+    ctx.fillText(a, w/2, h*0.50 + i*h*0.075);
+  });
+  // CTA
+  ctx.fillStyle = 'rgba(192,154,92,0.2)';
+  ctx.fillRect(w*0.2, h*0.70, w*0.6, 1);
+  ctx.font = `400 ${w*0.038}px 'Inter', system-ui, sans-serif`;
+  ctx.fillStyle = 'rgba(192,154,92,0.9)';
+  ctx.fillText('→  Link en bio para pedidos', w/2, h*0.765);
+  ctx.font = `300 ${w*0.026}px 'Inter', system-ui, sans-serif`;
+  ctx.fillStyle = 'rgba(255,255,255,0.25)';
+  ctx.fillText('Activá el swipe up para ir directo', w/2, h*0.88);
+}
+
+function renderDia25Feed(ctx, w, h) {
+  // Lifestyle cálido — paleta amanecer
+  ctx.fillStyle = '#0a0805';
+  ctx.fillRect(0, 0, w, h);
+  // Luz de mañana desde esquina superior izquierda
+  const morning = ctx.createRadialGradient(w*0.1, h*0.1, 0, w*0.1, h*0.1, w*1.1);
+  morning.addColorStop(0, 'rgba(220,180,100,0.12)');
+  morning.addColorStop(0.3, 'rgba(180,140,60,0.06)');
+  morning.addColorStop(0.6, 'rgba(50,100,40,0.04)');
+  morning.addColorStop(1, 'rgba(0,0,0,0)');
+  ctx.fillStyle = morning; ctx.fillRect(0, 0, w, h);
+  // Overlay inferior
+  const ov25 = ctx.createLinearGradient(0, h*0.35, 0, h);
+  ov25.addColorStop(0, 'rgba(0,0,0,0)');
+  ov25.addColorStop(1, 'rgba(0,0,0,0.82)');
+  ctx.fillStyle = ov25; ctx.fillRect(0, 0, w, h);
+  // Sombra de taza (sugiere el ritual sin mostrar producto)
+  ctx.fillStyle = 'rgba(20,15,8,0.4)';
+  ctx.beginPath();
+  ctx.ellipse(w*0.5, h*0.38, w*0.15, w*0.05, 0.1, 0, Math.PI*2);
+  ctx.fill();
+  // Texto
+  ctx.textAlign = 'center'; ctx.textBaseline = 'middle';
+  ctx.font = `200 ${w*0.075}px 'Cormorant Garamond', Georgia, serif`;
+  ctx.fillStyle = 'rgba(255,255,255,0.9)';
+  ctx.fillText('No es solo mate.', w/2, h*0.70);
+  ctx.font = `200 italic ${w*0.065}px 'Cormorant Garamond', Georgia, serif`;
+  ctx.fillStyle = 'rgba(192,154,92,0.8)';
+  ctx.fillText('Es tu momento', w/2, h*0.785);
+  ctx.fillText('del día.', w/2, h*0.860);
+  // HARKANA pequeño
+  ctx.font = `300 ${w*0.025}px 'Inter', system-ui, sans-serif`;
+  ctx.fillStyle = 'rgba(255,255,255,0.25)';
+  ctx.fillText('HARKANA', w/2, h*0.945);
+}
+
+function renderDia26Feed(ctx, w, h) {
+  // Crema — máxima legibilidad, manifiesto de atributos
+  ctx.fillStyle = '#faf6ef';
+  ctx.fillRect(0, 0, w, h);
+  // Gradiente sutil de fondo
+  const bg26 = ctx.createLinearGradient(0, 0, w, h);
+  bg26.addColorStop(0, 'rgba(14,35,16,0.04)');
+  bg26.addColorStop(1, 'rgba(192,154,92,0.06)');
+  ctx.fillStyle = bg26; ctx.fillRect(0, 0, w, h);
+  // Línea superior
+  ctx.fillStyle = 'rgba(14,35,16,0.15)';
+  ctx.fillRect(w*0.08, h*0.10, w*0.84, 1);
+  ctx.textAlign = 'center'; ctx.textBaseline = 'middle';
+  // Encabezado
+  ctx.font = `300 ${w*0.025}px 'Inter', system-ui, sans-serif`;
+  ctx.fillStyle = 'rgba(14,35,16,0.4)';
+  ctx.fillText('LO QUE HARKANA ES', w/2, h*0.16);
+  // Atributos como lista grande
+  const attrs26 = [
+    { t: 'Orgánica.', c: 'rgba(14,35,16,0.88)' },
+    { t: 'Certificada.', c: 'rgba(14,35,16,0.78)' },
+    { t: 'Sin TACC.', c: 'rgba(14,35,16,0.68)' },
+    { t: 'Sin polvillo.', c: 'rgba(14,35,16,0.58)' },
+    { t: 'Sin agroquímicos.', c: 'rgba(14,35,16,0.48)' },
+  ];
+  attrs26.forEach((a, i) => {
+    ctx.font = `300 ${w*0.068}px 'Cormorant Garamond', Georgia, serif`;
+    ctx.fillStyle = a.c;
+    ctx.fillText(a.t, w/2, h*0.295 + i*h*0.105);
+  });
+  // Línea inferior
+  ctx.fillStyle = 'rgba(192,154,92,0.4)';
+  ctx.fillRect(w*0.25, h*0.845, w*0.5, 1.5);
+  // HARKANA firma
+  ctx.font = `300 ${w*0.07}px 'Cormorant Garamond', Georgia, serif`;
+  ctx.fillStyle = 'rgba(14,35,16,0.7)';
+  ctx.fillText('HARKANA', w/2, h*0.91);
+  // Línea inferior cierre
+  ctx.fillStyle = 'rgba(14,35,16,0.1)';
+  ctx.fillRect(w*0.08, h*0.95, w*0.84, 1);
+}
+
+function renderDia28Reel(ctx, w, h) {
+  ctx.fillStyle = '#060606';
+  ctx.fillRect(0, 0, w, h);
+  // Gradiente verde sutil
+  const g28 = ctx.createRadialGradient(w*0.5, h*0.5, 0, w*0.5, h*0.5, w*0.9);
+  g28.addColorStop(0, 'rgba(10,30,12,0.4)');
+  g28.addColorStop(1, 'rgba(0,0,0,0)');
+  ctx.fillStyle = g28; ctx.fillRect(0, 0, w, h);
+  // Comillas grandes como diseño
+  ctx.font = `200 ${w*0.3}px 'Cormorant Garamond', Georgia, serif`;
+  ctx.fillStyle = 'rgba(192,154,92,0.06)';
+  ctx.textAlign = 'left'; ctx.textBaseline = 'top';
+  ctx.fillText('"', w*0.05, h*0.12);
+  ctx.textAlign = 'right';
+  ctx.fillText('"', w*0.95, h*0.68);
+  // Texto principal
+  ctx.textAlign = 'center'; ctx.textBaseline = 'middle';
+  ctx.font = `200 ${w*0.055}px 'Cormorant Garamond', Georgia, serif`;
+  ctx.fillStyle = 'rgba(255,255,255,0.82)';
+  ctx.fillText('¿Qué pasa cuando', w/2, h*0.42);
+  ctx.fillText('alguien prueba', w/2, h*0.495);
+  ctx.font = `300 ${w*0.068}px 'Cormorant Garamond', Georgia, serif`;
+  ctx.fillStyle = 'rgba(192,154,92,0.9)';
+  ctx.fillText('Harkana', w/2, h*0.578);
+  ctx.font = `200 ${w*0.055}px 'Cormorant Garamond', Georgia, serif`;
+  ctx.fillStyle = 'rgba(255,255,255,0.82)';
+  ctx.fillText('por primera vez?', w/2, h*0.653);
+  // Separador
+  ctx.fillStyle = 'rgba(192,154,92,0.25)';
+  ctx.fillRect(w*0.38, h*0.71, w*0.24, 1);
+  // "Esto."
+  ctx.font = `200 italic ${w*0.075}px 'Cormorant Garamond', Georgia, serif`;
+  ctx.fillStyle = 'rgba(255,255,255,0.6)';
+  ctx.fillText('Esto.', w/2, h*0.77);
+  ctx.font = `300 ${w*0.022}px 'Inter', system-ui, sans-serif`;
+  ctx.fillStyle = 'rgba(255,255,255,0.15)';
+  ctx.fillText('🎬  COVER · Reel Testimonial · Día 28', w/2, h*0.93);
+}
+
+function renderDia29Feed(ctx, w, h) {
+  // Profesional pero cálido — mayorista
+  ctx.fillStyle = '#0a0f0a';
+  ctx.fillRect(0, 0, w, h);
+  const g29 = ctx.createLinearGradient(0, 0, w, h);
+  g29.addColorStop(0, 'rgba(14,35,16,0.4)');
+  g29.addColorStop(1, 'rgba(192,154,92,0.06)');
+  ctx.fillStyle = g29; ctx.fillRect(0, 0, w, h);
+  ctx.textAlign = 'center'; ctx.textBaseline = 'middle';
+  // Ícono/símbolo bolsas múltiples (tres rectángulos)
+  const boxY = h*0.26, boxH = h*0.12, boxW = w*0.13;
+  const positions = [w*0.35, w*0.50, w*0.65];
+  positions.forEach((bx, i) => {
+    ctx.fillStyle = `rgba(192,154,92,${0.4 + i*0.15})`;
+    roundRect17(ctx, bx - boxW/2, boxY - boxH/2*(1+i*0.15), boxW, boxH*(1+i*0.2), 4);
+    ctx.fill();
+  });
+  // Línea
+  ctx.fillStyle = 'rgba(192,154,92,0.2)';
+  ctx.fillRect(w*0.15, h*0.41, w*0.7, 1);
+  // Texto
+  ctx.font = `200 ${w*0.052}px 'Cormorant Garamond', Georgia, serif`;
+  ctx.fillStyle = 'rgba(255,255,255,0.8)';
+  ctx.fillText('Si tenés un almacén,', w/2, h*0.50);
+  ctx.fillText('un dietético,', w/2, h*0.565);
+  ctx.font = `200 italic ${w*0.052}px 'Cormorant Garamond', Georgia, serif`;
+  ctx.fillStyle = 'rgba(255,255,255,0.55)';
+  ctx.fillText('un negocio...', w/2, h*0.63);
+  // Línea
+  ctx.fillStyle = 'rgba(192,154,92,0.2)';
+  ctx.fillRect(w*0.3, h*0.675, w*0.4, 1);
+  // CTA
+  ctx.font = `300 ${w*0.065}px 'Cormorant Garamond', Georgia, serif`;
+  ctx.fillStyle = 'rgba(192,154,92,0.9)';
+  ctx.fillText('Harkana mayorista.', w/2, h*0.745);
+  ctx.font = `300 ${w*0.042}px 'Cormorant Garamond', Georgia, serif`;
+  ctx.fillStyle = 'rgba(255,255,255,0.5)';
+  ctx.fillText('Consultanos.', w/2, h*0.815);
+  ctx.font = `300 ${w*0.024}px 'Inter', system-ui, sans-serif`;
+  ctx.fillStyle = 'rgba(255,255,255,0.25)';
+  ctx.fillText('DM · WhatsApp · harkana.com.ar', w/2, h*0.92);
+}
+
+function renderDia30Story(ctx, w, h) {
+  // Cierre del arco — eco del Día 1 pero con todo el peso de los 30 días
+  ctx.fillStyle = '#000000';
+  ctx.fillRect(0, 0, w, h);
+  // Verde muy sutil que insinúa el mundo que se creó
+  const g30 = ctx.createRadialGradient(w*0.5, h*0.5, 0, w*0.5, h*0.5, w*1.0);
+  g30.addColorStop(0, 'rgba(8,22,9,0.35)');
+  g30.addColorStop(1, 'rgba(0,0,0,0)');
+  ctx.fillStyle = g30; ctx.fillRect(0, 0, w, h);
+  // El punto — eco del Día 1, pero ahora con contexto
+  const dotR = w*0.008;
+  ctx.beginPath();
+  ctx.arc(w/2, h*0.22, dotR, 0, Math.PI*2);
+  ctx.fillStyle = 'rgba(255,255,255,0.5)';
+  ctx.fill();
+  // Línea que baja desde el punto (el viaje de 30 días)
+  const line30 = ctx.createLinearGradient(w/2, h*0.22, w/2, h*0.48);
+  line30.addColorStop(0, 'rgba(192,154,92,0.4)');
+  line30.addColorStop(1, 'rgba(192,154,92,0)');
+  ctx.strokeStyle = line30;
+  ctx.lineWidth = 1;
+  ctx.beginPath();
+  ctx.moveTo(w/2, h*0.22+dotR);
+  ctx.lineTo(w/2, h*0.48);
+  ctx.stroke();
+  // Texto principal
+  ctx.textAlign = 'center'; ctx.textBaseline = 'middle';
+  ctx.font = `200 ${w*0.062}px 'Cormorant Garamond', Georgia, serif`;
+  ctx.fillStyle = 'rgba(255,255,255,0.88)';
+  ctx.fillText('Empezó como', w/2, h*0.54);
+  ctx.fillText('un punto.', w/2, h*0.605);
+  ctx.fillStyle = 'rgba(192,154,92,0.2)';
+  ctx.fillRect(w*0.3, h*0.648, w*0.4, 1);
+  ctx.font = `200 italic ${w*0.062}px 'Cormorant Garamond', Georgia, serif`;
+  ctx.fillStyle = 'rgba(192,154,92,0.8)';
+  ctx.fillText('Termina como', w/2, h*0.705);
+  ctx.fillText('un estilo de vida.', w/2, h*0.775);
+  // Agradecimiento
+  ctx.fillStyle = 'rgba(255,255,255,0.12)';
+  ctx.fillRect(w*0.2, h*0.82, w*0.6, 1);
+  ctx.font = `300 ${w*0.038}px 'Cormorant Garamond', Georgia, serif`;
+  ctx.fillStyle = 'rgba(255,255,255,0.45)';
+  ctx.fillText('Gracias por estar.', w/2, h*0.865);
+  ctx.font = `400 ${w*0.032}px 'Inter', system-ui, sans-serif`;
+  ctx.fillStyle = 'rgba(192,154,92,0.6)';
+  ctx.fillText('→  Pedidos en bio', w/2, h*0.925);
+  // HARKANA firma final
+  ctx.font = `300 ${w*0.028}px 'Cormorant Garamond', Georgia, serif`;
+  ctx.fillStyle = 'rgba(255,255,255,0.18)';
+  ctx.fillText('HARKANA', w/2, h*0.963);
+}
+
+// ── FIN NUEVOS RENDERERS ────────────────────────────────
+
+function renderDia7Story(ctx, w, h) {
+  // Fondo crema cálido
+  ctx.fillStyle = '#f5f0e8';
+  ctx.fillRect(0, 0, w, h);
+  // Línea decorativa superior
+  ctx.fillStyle = 'rgba(14,35,16,0.15)';
+  ctx.fillRect(w*0.15, h*0.25, w*0.7, 1);
+  // Pregunta
+  ctx.textAlign = 'center'; ctx.textBaseline = 'middle';
+  ctx.font = `300 ${w*0.068}px 'Cormorant Garamond', Georgia, serif`;
+  ctx.fillStyle = 'rgba(14,35,16,0.88)';
+  ctx.fillText('¿Cómo tomás', w/2, h*0.35);
+  ctx.fillText('el mate?', w/2, h*0.42);
+  // Línea decorativa inferior pregunta
+  ctx.fillStyle = 'rgba(192,154,92,0.4)';
+  ctx.fillRect(w*0.35, h*0.475, w*0.3, 1);
+  // Opciones
+  const optY = [h*0.57, h*0.68];
+  const opts = ['🎵  Con música', '🤫  En silencio'];
+  opts.forEach((opt, i) => {
+    // Caja opción
+    const bx = w*0.15, bw = w*0.7, bh = h*0.075, by = optY[i] - bh/2;
+    ctx.fillStyle = i === 0 ? 'rgba(14,35,16,0.08)' : 'rgba(192,154,92,0.12)';
+    roundRect(ctx, bx, by, bw, bh, 12);
+    ctx.fill();
+    ctx.strokeStyle = i === 0 ? 'rgba(14,35,16,0.2)' : 'rgba(192,154,92,0.35)';
+    ctx.lineWidth = 1.5;
+    roundRect(ctx, bx, by, bw, bh, 12);
+    ctx.stroke();
+    ctx.font = `300 ${w*0.052}px 'Cormorant Garamond', Georgia, serif`;
+    ctx.fillStyle = i === 0 ? 'rgba(14,35,16,0.85)' : 'rgba(160,112,48,0.9)';
+    ctx.fillText(opt, w/2, optY[i]);
+  });
+  // Nota inferior
+  ctx.font = `300 ${w*0.028}px 'Inter', system-ui, sans-serif`;
+  ctx.fillStyle = 'rgba(14,35,16,0.3)';
+  ctx.fillText('Reemplazá con encuesta de Instagram', w/2, h*0.82);
+}
+
+function roundRect(ctx, x, y, w, h, r) {
+  ctx.beginPath();
+  ctx.moveTo(x + r, y);
+  ctx.lineTo(x + w - r, y);
+  ctx.quadraticCurveTo(x + w, y, x + w, y + r);
+  ctx.lineTo(x + w, y + h - r);
+  ctx.quadraticCurveTo(x + w, y + h, x + w - r, y + h);
+  ctx.lineTo(x + r, y + h);
+  ctx.quadraticCurveTo(x, y + h, x, y + h - r);
+  ctx.lineTo(x, y + r);
+  ctx.quadraticCurveTo(x, y, x + r, y);
+  ctx.closePath();
+}
+
+function renderDia11Feed(ctx, w, h) {
+  // Base: color kraft cálido
+  ctx.fillStyle = '#b8894a';
+  ctx.fillRect(0, 0, w, h);
+  // Capa de textura: ruido simulado con pequeños rectángulos
+  const seed = 42;
+  for (let i = 0; i < 18000; i++) {
+    const xi = ((Math.sin(i * 9301 + seed) + 1) / 2) * w;
+    const yi = ((Math.cos(i * 6271 + seed) + 1) / 2) * h;
+    const sz = 1 + ((Math.sin(i * 2131) + 1) / 2) * 2.5;
+    const alpha = 0.03 + ((Math.sin(i * 7913) + 1) / 2) * 0.06;
+    ctx.fillStyle = Math.sin(i) > 0
+      ? `rgba(255,240,200,${alpha})`
+      : `rgba(80,50,20,${alpha})`;
+    ctx.fillRect(xi, yi, sz, sz);
+  }
+  // Vetas horizontales sutiles (como fibra de papel)
+  for (let y = 0; y < h; y += 3) {
+    const a = 0.02 + Math.abs(Math.sin(y * 0.07)) * 0.04;
+    ctx.fillStyle = `rgba(200,160,80,${a})`;
+    ctx.fillRect(0, y, w, 1);
+  }
+  // Viñeta oscura en bordes
+  const vig = ctx.createRadialGradient(w/2, h/2, w*0.3, w/2, h/2, w*0.75);
+  vig.addColorStop(0, 'rgba(0,0,0,0)');
+  vig.addColorStop(1, 'rgba(0,0,0,0.28)');
+  ctx.fillStyle = vig;
+  ctx.fillRect(0, 0, w, h);
+  // Watermark "H" muy sutil
+  ctx.textAlign = 'center'; ctx.textBaseline = 'middle';
+  ctx.font = `200 ${w*0.55}px 'Cormorant Garamond', Georgia, serif`;
+  ctx.fillStyle = 'rgba(255,255,255,0.05)';
+  ctx.fillText('H', w/2, h/2);
+}
+
+function renderDia13Story(ctx, w, h) {
+  // Fondo crema
+  ctx.fillStyle = '#faf6ef';
+  ctx.fillRect(0, 0, w, h);
+  // Título
+  ctx.textAlign = 'center'; ctx.textBaseline = 'middle';
+  ctx.font = `300 ${w*0.055}px 'Cormorant Garamond', Georgia, serif`;
+  ctx.fillStyle = 'rgba(14,35,16,0.5)';
+  ctx.fillText('El origen.', w/2, h*0.16);
+  // Puntos del mapa: Misiones (arriba derecha) y Córdoba (centro)
+  const misionesX = w*0.68, misionesY = h*0.34;
+  const cordobaX = w*0.44, cordobaY = h*0.52;
+  // Silueta muy simplificada de Argentina (solo contorno aproximado)
+  ctx.beginPath();
+  ctx.moveTo(w*0.38, h*0.22);
+  ctx.lineTo(w*0.72, h*0.22);
+  ctx.lineTo(w*0.74, h*0.38);
+  ctx.lineTo(w*0.68, h*0.5);
+  ctx.lineTo(w*0.62, h*0.62);
+  ctx.lineTo(w*0.55, h*0.72);
+  ctx.lineTo(w*0.48, h*0.8);
+  ctx.lineTo(w*0.42, h*0.74);
+  ctx.lineTo(w*0.36, h*0.62);
+  ctx.lineTo(w*0.32, h*0.5);
+  ctx.lineTo(w*0.34, h*0.38);
+  ctx.lineTo(w*0.38, h*0.22);
+  ctx.strokeStyle = 'rgba(14,35,16,0.15)';
+  ctx.lineWidth = 2;
+  ctx.stroke();
+  ctx.fillStyle = 'rgba(14,35,16,0.04)';
+  ctx.fill();
+  // Línea que conecta los dos puntos
+  ctx.beginPath();
+  ctx.moveTo(misionesX, misionesY);
+  ctx.lineTo(cordobaX, cordobaY);
+  ctx.strokeStyle = 'rgba(192,154,92,0.55)';
+  ctx.lineWidth = 2;
+  ctx.setLineDash([6, 8]);
+  ctx.stroke();
+  ctx.setLineDash([]);
+  // Punto Misiones
+  ctx.beginPath();
+  ctx.arc(misionesX, misionesY, w*0.018, 0, Math.PI*2);
+  ctx.fillStyle = 'rgba(14,35,16,0.75)';
+  ctx.fill();
+  ctx.font = `300 ${w*0.032}px 'Inter', system-ui, sans-serif`;
+  ctx.fillStyle = 'rgba(14,35,16,0.65)';
+  ctx.textAlign = 'left';
+  ctx.fillText('Misiones', misionesX + w*0.03, misionesY);
+  // Punto Córdoba
+  ctx.beginPath();
+  ctx.arc(cordobaX, cordobaY, w*0.018, 0, Math.PI*2);
+  ctx.fillStyle = 'rgba(192,154,92,0.9)';
+  ctx.fill();
+  ctx.fillStyle = 'rgba(160,112,48,0.8)';
+  ctx.textAlign = 'right';
+  ctx.fillText('Córdoba', cordobaX - w*0.03, cordobaY);
+  // Texto inferior
+  ctx.textAlign = 'center';
+  ctx.font = `200 italic ${w*0.062}px 'Cormorant Garamond', Georgia, serif`;
+  ctx.fillStyle = 'rgba(14,35,16,0.8)';
+  ctx.fillText('Del norte', w/2, h*0.88);
+  ctx.fillText('al corazón del país.', w/2, h*0.935);
+}
+
+function renderDia16Story(ctx, w, h) {
+  // Negro total
+  ctx.fillStyle = '#000000';
+  ctx.fillRect(0, 0, w, h);
+  // Lista de "Sin"
+  const items = [
+    { pre: 'Sin', post: 'aditivos.' },
+    { pre: 'Sin', post: 'conservantes.' },
+    { pre: 'Sin', post: 'pesticidas.' },
+    { pre: 'Sin', post: 'apuro.' },
+  ];
+  ctx.textAlign = 'left'; ctx.textBaseline = 'middle';
+  const startY = h * 0.30;
+  const lineH = h * 0.115;
+  items.forEach((item, i) => {
+    const y = startY + i * lineH;
+    // "Sin" en kraft
+    ctx.font = `300 ${w*0.07}px 'Cormorant Garamond', Georgia, serif`;
+    ctx.fillStyle = 'rgba(192,154,92,0.75)';
+    const sinW = ctx.measureText(item.pre + ' ').width;
+    ctx.fillText(item.pre + ' ', w*0.14, y);
+    // Palabra clave en blanco
+    ctx.font = `200 ${w*0.07}px 'Cormorant Garamond', Georgia, serif`;
+    ctx.fillStyle = 'rgba(255,255,255,0.92)';
+    ctx.fillText(item.post, w*0.14 + sinW, y);
+  });
+  // Separador
+  ctx.fillStyle = 'rgba(192,154,92,0.2)';
+  ctx.fillRect(w*0.14, startY + 4*lineH + h*0.01, w*0.45, 1);
+  // Cierre
+  ctx.textAlign = 'center';
+  ctx.font = `200 italic ${w*0.07}px 'Cormorant Garamond', Georgia, serif`;
+  ctx.fillStyle = 'rgba(255,255,255,0.55)';
+  ctx.fillText('Solo yerba.', w/2, startY + 4*lineH + h*0.09);
+}
+
+function renderDia18Story(ctx, w, h) {
+  // Fondo verde oscuro
+  ctx.fillStyle = '#0a1a0a';
+  ctx.fillRect(0, 0, w, h);
+  // Gradiente sutil
+  const g = ctx.createRadialGradient(w/2, h*0.4, 0, w/2, h*0.4, w*0.8);
+  g.addColorStop(0, 'rgba(14,35,16,0.6)');
+  g.addColorStop(1, 'rgba(0,0,0,0)');
+  ctx.fillStyle = g;
+  ctx.fillRect(0, 0, w, h);
+  // Línea decorativa
+  ctx.fillStyle = 'rgba(192,154,92,0.2)';
+  ctx.fillRect(w*0.2, h*0.26, w*0.6, 1);
+  // Texto pregunta
+  ctx.textAlign = 'center'; ctx.textBaseline = 'middle';
+  ctx.font = `200 ${w*0.073}px 'Cormorant Garamond', Georgia, serif`;
+  ctx.fillStyle = 'rgba(255,255,255,0.92)';
+  ctx.fillText('¿Ya sabés', w/2, h*0.36);
+  ctx.fillText('lo que viene?', w/2, h*0.44);
+  // Separador
+  ctx.fillStyle = 'rgba(192,154,92,0.3)';
+  ctx.fillRect(w*0.35, h*0.50, w*0.3, 1);
+  // Opciones
+  const ops = ['Ya lo sé 🌿', 'Aún no, pero quiero'];
+  const opsY = [h*0.59, h*0.68];
+  ops.forEach((op, i) => {
+    ctx.font = `300 ${w*0.048}px 'Cormorant Garamond', Georgia, serif`;
+    ctx.fillStyle = i === 0
+      ? 'rgba(192,154,92,0.9)'
+      : 'rgba(255,255,255,0.45)';
+    ctx.fillText(op, w/2, opsY[i]);
+  });
+  // Nota inferior
+  ctx.font = `300 ${w*0.028}px 'Inter', system-ui, sans-serif`;
+  ctx.fillStyle = 'rgba(255,255,255,0.18)';
+  ctx.fillText('Reemplazá con encuesta de Instagram', w/2, h*0.84);
+}
+
+function renderDia27Story(ctx, w, h) {
+  // Fondo verde oscuro profundo
+  ctx.fillStyle = '#070e07';
+  ctx.fillRect(0, 0, w, h);
+  // Gradiente cálido desde arriba
+  const g = ctx.createLinearGradient(0, 0, 0, h*0.6);
+  g.addColorStop(0, 'rgba(14,35,16,0.5)');
+  g.addColorStop(1, 'rgba(0,0,0,0)');
+  ctx.fillStyle = g;
+  ctx.fillRect(0, 0, w, h);
+  // Número 30% — enorme, protagonista
+  ctx.textAlign = 'center'; ctx.textBaseline = 'middle';
+  ctx.font = `200 ${w*0.28}px 'Cormorant Garamond', Georgia, serif`;
+  ctx.fillStyle = 'rgba(192,154,92,0.95)';
+  ctx.fillText('30', w/2, h*0.33);
+  // Símbolo %
+  ctx.font = `200 ${w*0.14}px 'Cormorant Garamond', Georgia, serif`;
+  ctx.fillStyle = 'rgba(192,154,92,0.6)';
+  ctx.fillText('%', w/2 + w*0.28, h*0.27);
+  // Línea separadora
+  ctx.fillStyle = 'rgba(192,154,92,0.2)';
+  ctx.fillRect(w*0.12, h*0.47, w*0.76, 1);
+  // Texto descripción
+  ctx.font = `300 ${w*0.052}px 'Cormorant Garamond', Georgia, serif`;
+  ctx.fillStyle = 'rgba(255,255,255,0.85)';
+  ctx.fillText('Descuento de lanzamiento.', w/2, h*0.555);
+  // Urgencia
+  ctx.font = `300 italic ${w*0.042}px 'Cormorant Garamond', Georgia, serif`;
+  ctx.fillStyle = 'rgba(255,255,255,0.4)';
+  ctx.fillText('Solo por 24 horas.', w/2, h*0.625);
+  // Separador inferior
+  ctx.fillStyle = 'rgba(192,154,92,0.15)';
+  ctx.fillRect(w*0.3, h*0.69, w*0.4, 1);
+  // CTA
+  ctx.font = `400 ${w*0.032}px 'Inter', system-ui, sans-serif`;
+  ctx.fillStyle = 'rgba(192,154,92,0.6)';
+  ctx.fillText('↑  Link en bio', w/2, h*0.74);
+  // Nota inferior
+  ctx.font = `300 ${w*0.026}px 'Inter', system-ui, sans-serif`;
+  ctx.fillStyle = 'rgba(255,255,255,0.15)';
+  ctx.fillText('Agregá cuenta regresiva de 24hs de Instagram', w/2, h*0.88);
+}
+
+// ══════════════════════════════════════════════════════
+// BUILD UI
+// ══════════════════════════════════════════════════════
+async function init() {
+  await document.fonts.ready;
+
+  const grid = document.getElementById('cardsGrid');
+
+  PIEZAS.forEach(p => {
+    // Crear canvas off-screen a resolución completa
+    const fullCanvas = document.createElement('canvas');
+    fullCanvas.width = p.w; fullCanvas.height = p.h;
+    const ctx = fullCanvas.getContext('2d');
+    p.render(ctx, p.w, p.h);
+
+    // Preview canvas (scaled)
+    const prevCanvas = document.createElement('canvas');
+    const isStory = p.format === 'story';
+    const previewW = isStory ? 200 : 260;
+    const previewH = isStory ? Math.round(200 * p.h / p.w) : 260;
+    prevCanvas.width = previewW * 2; prevCanvas.height = previewH * 2;
+    prevCanvas.style.width = previewW + 'px';
+    prevCanvas.style.height = previewH + 'px';
+    const pctx = prevCanvas.getContext('2d');
+    pctx.drawImage(fullCanvas, 0, 0, prevCanvas.width, prevCanvas.height);
+
+    // Card HTML
+    const card = document.createElement('div');
+    card.className = 'card';
+    card.innerHTML = `
+      <div class="card-header">
+        <span class="card-day">Día ${p.dia}</span>
+        <span class="card-format">${p.format === 'feed' ? '📸 Feed 1:1' : '📱 Historia 9:16'}</span>
+      </div>
+      <div class="card-title">${p.titulo}</div>
+      <div class="preview-wrap ${isStory ? 'story-wrap' : ''}" onclick="previewFull('${p.id}')"></div>
+      <div class="card-copy">
+        <p>${p.copy}</p>
+        ${p.hashtags ? `<small>${p.hashtags}</small>` : ''}
+      </div>
+      <p class="card-note">💡 ${p.nota}</p>
+      <div class="card-actions">
+        <button class="btn-dl btn-dl-main" onclick="download('${p.id}')">⬇ Descargar PNG</button>
+        <button class="btn-dl btn-dl-alt" onclick="copyCaption('${p.id}')">📋 Caption</button>
+      </div>`;
+
+    card.querySelector('.preview-wrap').appendChild(prevCanvas);
+    grid.appendChild(card);
+
+    // Guardar referencia al canvas
+    p._canvas = fullCanvas;
+  });
+
+  // Update download all button count
+  document.querySelector('.btn-dl-all').textContent = `⬇ Descargar todas (${PIEZAS.length} imágenes)`;
+}
+
+// ══════════════════════════════════════════════════════
+// ACCIONES
+// ══════════════════════════════════════════════════════
+function download(id) {
+  const p = PIEZAS.find(x => x.id === id);
+  if (!p || !p._canvas) return;
+  p._canvas.toBlob(blob => {
+    const url = URL.createObjectURL(blob);
+    const a = document.createElement('a');
+    a.download = `harkana-dia${p.dia}-${p.format}.png`;
+    a.href = url; a.click();
+    setTimeout(() => URL.revokeObjectURL(url), 3000);
+    showToast(`Día ${p.dia} descargado ✓`);
+  }, 'image/png');
+}
+
+function copyCaption(id) {
+  const p = PIEZAS.find(x => x.id === id);
+  if (!p) return;
+  const text = p.caption + (p.hashtags ? '\n\n' + p.hashtags : '');
+  if (navigator.clipboard) {
+    navigator.clipboard.writeText(text).then(() => showToast('Caption copiado ✓'));
+  } else {
+    const ta = document.createElement('textarea');
+    ta.value = text; ta.style.position = 'fixed'; ta.style.opacity = '0';
+    document.body.appendChild(ta); ta.select();
+    document.execCommand('copy');
+    document.body.removeChild(ta);
+    showToast('Caption copiado ✓');
+  }
+}
+
+async function downloadAll() {
+  showToast('Descargando todas las piezas...');
+  for (const p of PIEZAS) {
+    await new Promise(r => {
+      p._canvas.toBlob(blob => {
+        const url = URL.createObjectURL(blob);
+        const a = document.createElement('a');
+        a.download = `harkana-dia${p.dia}-${p.format}.png`;
+        a.href = url; a.click();
+        setTimeout(() => { URL.revokeObjectURL(url); r(); }, 500);
+      }, 'image/png');
+    });
+    await sleep(600);
+  }
+  showToast(`${PIEZAS.length} imágenes descargadas ✓`);
+}
+
+function previewFull(id) {
+  const p = PIEZAS.find(x => x.id === id);
+  if (!p || !p._canvas) return;
+  const win = window.open('', '_blank', 'width=600,height=600');
+  const img = p._canvas.toDataURL('image/png');
+  win.document.write(`<!DOCTYPE html><html><body style="margin:0;background:#000;display:flex;align-items:center;justify-content:center;min-height:100vh;"><img src="${img}" style="max-width:100%;max-height:100vh;object-fit:contain;"></body></html>`);
+}
+
+function showToast(msg) {
+  const t = document.getElementById('toast');
+  t.textContent = msg; t.classList.add('show');
+  setTimeout(() => t.classList.remove('show'), 3000);
+}
+function sleep(ms) { return new Promise(r => setTimeout(r, ms)); }
+
+init();
+</script>
+</body>
+</html>
