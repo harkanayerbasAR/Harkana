@@ -27,7 +27,7 @@
 <meta property="og:description" content="Yerba orgánica premium cultivada en Misiones, embolsada en Córdoba. Sin TACC. Envíos a todo Argentina.">
 <meta property="og:type" content="website">
 <meta property="og:url" content="https://harkana.com.ar">
-<meta property="og:image" content="https://harkana.com.ar/CONTENIDO/fotos_clasificar/IMG_9965.JPEG">
+<meta property="og:image" content="https://harkana.com.ar/CONTENIDO/IMG_9965.JPEG">
 <meta name="twitter:card" content="summary_large_image">
 <meta name="twitter:title" content="HARKANA — Yerba Orgánica de verdad">
 <meta name="twitter:description" content="Yerba orgánica premium cultivada en Misiones, embolsada en Córdoba. Sin TACC. Envíos a todo Argentina.">
@@ -38,7 +38,7 @@
   "name": "Harkana Yerba Orgánica",
   "description": "Yerba mate orgánica premium cultivada en Misiones, embolsada artesanalmente en Córdoba. Sin TACC.",
   "brand": { "@type": "Brand", "name": "Harkana" },
-  "image": "https://harkana.com.ar/CONTENIDO/fotos_clasificar/IMG_9965.JPEG",
+  "image": "https://harkana.com.ar/CONTENIDO/IMG_9965.JPEG",
   "offers": [
     { "@type": "Offer", "name": "Bolsa 500g Kraft Artesanal", "price": "5000", "priceCurrency": "ARS", "availability": "https://schema.org/InStock" },
     { "@type": "Offer", "name": "Bolsa 1kg", "price": "8000", "priceCurrency": "ARS", "availability": "https://schema.org/InStock" },
@@ -599,7 +599,55 @@ footer { background:var(--carbon); padding:80px 0 40px; }
   .wsp-float { width:52px; height:52px; bottom:20px; right:16px; }
   /* Bloque oferta legible en mobile */
   .marquee-track span { font-size:.65rem; letter-spacing:1.5px; padding:0 20px; }
+  /* Hero botones full-width en mobile */
+  .hero-actions { flex-direction:column; align-items:stretch; }
+  .hero-actions a { width:100%; text-align:center; justify-content:center; min-height:52px; font-size:.85rem; }
+  /* CTA final full-width en mobile */
+  .cta-final-btns { flex-direction:column; align-items:stretch; }
+  .cta-final-btns a { width:100%; text-align:center; justify-content:center; min-height:56px; font-size:1rem !important; padding:16px 24px !important; }
+  /* Padding secciones mobile */
+  section { padding-left:1.25rem !important; padding-right:1.25rem !important; }
+  img { max-width:100%; height:auto; }
+  body { font-size:16px; }
 }
+
+/* ── SECCIÓN POR QUÉ HARKANA ── */
+.grid-porque {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: 1.5rem;
+}
+@media (max-width: 600px) {
+  .grid-porque { grid-template-columns: 1fr; gap: 1rem; }
+}
+.card-porque {
+  background: #ffffff;
+  border: 1px solid rgba(0,0,0,0.08);
+  border-radius: 12px;
+  padding: 1.5rem;
+  transition: transform .2s ease, box-shadow .2s ease;
+}
+.card-porque:hover { transform: translateY(-3px); box-shadow: 0 8px 24px rgba(0,0,0,.09); }
+.icono-porque { font-size: 2rem; display: block; margin-bottom: .75rem; }
+.card-porque h3 { font-size: 1rem; font-weight: 600; margin-bottom: .5rem; color: inherit; }
+.card-porque p { font-size: .9rem; line-height: 1.6; color: #555; margin: 0; }
+
+/* ── FAQ ── */
+.faq-item { border-bottom: 1px solid rgba(0,0,0,.1); }
+.faq-pregunta {
+  width: 100%; background: none; border: none;
+  padding: 1.2rem 0; text-align: left;
+  font-size: 1rem; font-weight: 600;
+  cursor: pointer; display: flex; justify-content: space-between;
+  align-items: center; color: inherit; font-family: inherit;
+  transition: opacity .2s;
+}
+.faq-pregunta:hover { opacity: .75; }
+.faq-icono { font-size: 1.4rem; font-weight: 300; transition: transform .25s ease; flex-shrink: 0; margin-left: 1rem; }
+.faq-pregunta[aria-expanded="true"] .faq-icono { transform: rotate(45deg); }
+.faq-respuesta { max-height: 0; overflow: hidden; transition: max-height .35s ease, padding .25s ease; padding: 0; }
+.faq-respuesta.abierta { max-height: 300px; padding-bottom: 1.2rem; }
+.faq-respuesta p { font-size: .95rem; line-height: 1.7; color: #555; margin: 0; }
 
 /* ── EXIT POPUP ── */
 #exit-popup {
@@ -790,11 +838,41 @@ footer { background:var(--carbon); padding:80px 0 40px; }
 </div>
 
 <!-- ════════ HISTORIA ════════ -->
+<!-- ════════ POR QUÉ HARKANA ════════ -->
+<section id="por-que-harkana" style="padding:80px 0;background:var(--crema-oscura,#f0e8d8);">
+  <div class="container">
+    <p class="section-label reveal" style="text-align:center;justify-content:center;margin-bottom:12px;">La diferencia real</p>
+    <h2 class="section-title reveal delay-1" style="text-align:center;margin-bottom:48px;">¿Por qué elegir <em>Harkana?</em></h2>
+    <div class="grid-porque">
+      <div class="card-porque reveal delay-1">
+        <span class="icono-porque">🌱</span>
+        <h3>Orgánica de verdad</h3>
+        <p>Cultivada sin agroquímicos, respetando el origen. No es marketing — es el proceso real desde Misiones.</p>
+      </div>
+      <div class="card-porque reveal delay-2">
+        <span class="icono-porque">💪</span>
+        <h3>Más sabor, más rendimiento</h3>
+        <p>Rinde más cebadas sin perder intensidad. Tu yerba actual no aguanta la comparación.</p>
+      </div>
+      <div class="card-porque reveal delay-3">
+        <span class="icono-porque">🧉</span>
+        <h3>Para quienes toman en serio el mate</h3>
+        <p>No es para cualquiera. Es para el que ya sabe que la calidad de la yerba cambia todo.</p>
+      </div>
+      <div class="card-porque reveal delay-4">
+        <span class="icono-porque">🇦🇷</span>
+        <h3>Selección cuidada desde el origen</h3>
+        <p>Cada lote pasa por control de calidad real. Producción artesanal en pequeñas cantidades.</p>
+      </div>
+    </div>
+  </div>
+</section>
+
 <section id="historia">
   <div class="container">
     <div class="historia-grid">
       <div class="historia-img-wrap reveal-left">
-        <img src="CONTENIDO/fotos_clasificar/cambio de foto silla.jpeg" alt="Proceso de envasado artesanal de Harkana Yerba Orgánica en Alejandro Roca, Córdoba" loading="lazy">
+        <img src="CONTENIDO/cambio de foto silla.jpeg" alt="Proceso de envasado artesanal de Harkana Yerba Orgánica en Alejandro Roca, Córdoba" loading="lazy">
         <div class="historia-img-overlay">
           <span>Envasado artesanal</span>
           <strong>Uno por uno, a mano.</strong>
@@ -963,7 +1041,7 @@ footer { background:var(--carbon); padding:80px 0 40px; }
       <!-- 500g -->
       <div class="producto-card reveal delay-1">
         <div class="producto-photo">
-          <img src="CONTENIDO/fotos_clasificar/IMG_9965.JPEG" alt="Bolsa Harkana Yerba Orgánica 500g kraft artesanal con ilustración botánica" loading="lazy">
+          <img src="CONTENIDO/IMG_9965.JPEG" alt="Bolsa Harkana Yerba Orgánica 500g kraft artesanal con ilustración botánica" loading="lazy">
           <span class="producto-tag popular">⭐ Más popular</span>
         </div>
         <div class="producto-body">
@@ -997,7 +1075,7 @@ footer { background:var(--carbon); padding:80px 0 40px; }
       <!-- 1kg -->
       <div class="producto-card reveal delay-2">
         <div class="producto-photo">
-          <img src="CONTENIDO/fotos_clasificar/IMG_9352.JPEG" alt="Bolsa Harkana Yerba Orgánica 1kg" loading="lazy">
+          <img src="CONTENIDO/IMG_9352.JPEG" alt="Bolsa Harkana Yerba Orgánica 1kg" loading="lazy">
           <span class="producto-tag">Rendidor</span>
         </div>
         <div class="producto-body">
@@ -1031,7 +1109,7 @@ footer { background:var(--carbon); padding:80px 0 40px; }
       <!-- 3kg -->
       <div class="producto-card reveal delay-3">
         <div class="producto-photo">
-          <img src="CONTENIDO/fotos_clasificar/IMG_9883.JPEG" alt="Bolsa Harkana Yerba Orgánica 3kg mayorista" loading="lazy">
+          <img src="CONTENIDO/IMG_9883.JPEG" alt="Bolsa Harkana Yerba Orgánica 3kg mayorista" loading="lazy">
           <span class="producto-tag">Mayorista</span>
         </div>
         <div class="producto-body">
@@ -1202,7 +1280,7 @@ footer { background:var(--carbon); padding:80px 0 40px; }
       </div>
       <div class="celiacos-visual reveal-right">
         <div class="celiacos-visual-bg">
-          <img src="CONTENIDO/fotos_clasificar/IMG_9965.JPEG" alt="Harkana Yerba Orgánica 500g kraft — certificada sin TACC, apta para celíacos" loading="lazy">
+          <img src="CONTENIDO/IMG_9965.JPEG" alt="Harkana Yerba Orgánica 500g kraft — certificada sin TACC, apta para celíacos" loading="lazy">
         </div>
         <div class="celiacos-cert">
           <span>🌾</span>
@@ -1310,16 +1388,16 @@ footer { background:var(--carbon); padding:80px 0 40px; }
   </div>
   <div style="padding:0 40px;">
     <div class="gallery-grid reveal">
-      <div class="g-item g1" onclick="openLightbox(this)"><img src="CONTENIDO/fotos_clasificar/foto galeria 1.jpg" alt="Harkana Yerba Orgánica" loading="lazy"></div>
-      <div class="g-item g2" onclick="openLightbox(this)"><img src="CONTENIDO/fotos_clasificar/foto galeria 2.JPEG" alt="Harkana Yerba Orgánica" loading="lazy"></div>
-      <div class="g-item g3" onclick="openLightbox(this)"><img src="CONTENIDO/fotos_clasificar/foto galeria 3.PNG" alt="Harkana Yerba Orgánica" loading="lazy"></div>
-      <div class="g-item g4" onclick="openLightbox(this)"><img src="CONTENIDO/fotos_clasificar/foto galeria 4.jpg" alt="Harkana Yerba Orgánica" loading="lazy"></div>
-      <div class="g-item g5" onclick="openLightbox(this)"><img src="CONTENIDO/fotos_clasificar/foto galeria 5.JPEG" alt="Harkana Yerba Orgánica" loading="lazy"></div>
-      <div class="g-item g6" onclick="openLightbox(this)"><img src="CONTENIDO/fotos_clasificar/foto galeria 6.jpeg" alt="Harkana Yerba Orgánica" loading="lazy"></div>
-      <div class="g-item g7" onclick="openLightbox(this)"><img src="CONTENIDO/fotos_clasificar/foto galeria 7.jpeg" alt="Harkana Yerba Orgánica" loading="lazy"></div>
-      <div class="g-item g8" onclick="openLightbox(this)"><img src="CONTENIDO/fotos_clasificar/foto galeria 8.JPEG" alt="Harkana Yerba Orgánica" loading="lazy"></div>
-      <div class="g-item g9" onclick="openLightbox(this)"><img src="CONTENIDO/fotos_clasificar/foto galeria 9.JPEG" alt="Harkana Yerba Orgánica" loading="lazy"></div>
-      <div class="g-item g10" onclick="openLightbox(this)"><img src="CONTENIDO/fotos_clasificar/foto galeria 10.png" alt="Harkana Yerba Orgánica" loading="lazy"></div>
+      <div class="g-item g1" onclick="openLightbox(this)"><img src="CONTENIDO/foto galeria 1.jpg" alt="Harkana Yerba Orgánica" loading="lazy"></div>
+      <div class="g-item g2" onclick="openLightbox(this)"><img src="CONTENIDO/foto galeria 2.JPEG" alt="Harkana Yerba Orgánica" loading="lazy"></div>
+      <div class="g-item g3" onclick="openLightbox(this)"><img src="CONTENIDO/foto galeria 3.PNG" alt="Harkana Yerba Orgánica" loading="lazy"></div>
+      <div class="g-item g4" onclick="openLightbox(this)"><img src="CONTENIDO/foto galeria 4.jpg" alt="Harkana Yerba Orgánica" loading="lazy"></div>
+      <div class="g-item g5" onclick="openLightbox(this)"><img src="CONTENIDO/foto galeria 5.JPEG" alt="Harkana Yerba Orgánica" loading="lazy"></div>
+      <div class="g-item g6" onclick="openLightbox(this)"><img src="CONTENIDO/foto galeria 6.jpeg" alt="Harkana Yerba Orgánica" loading="lazy"></div>
+      <div class="g-item g7" onclick="openLightbox(this)"><img src="CONTENIDO/foto galeria 7.jpeg" alt="Harkana Yerba Orgánica" loading="lazy"></div>
+      <div class="g-item g8" onclick="openLightbox(this)"><img src="CONTENIDO/foto galeria 8.JPEG" alt="Harkana Yerba Orgánica" loading="lazy"></div>
+      <div class="g-item g9" onclick="openLightbox(this)"><img src="CONTENIDO/foto galeria 9.JPEG" alt="Harkana Yerba Orgánica" loading="lazy"></div>
+      <div class="g-item g10" onclick="openLightbox(this)"><img src="CONTENIDO/foto galeria 10.png" alt="Harkana Yerba Orgánica" loading="lazy"></div>
     </div>
   </div>
 </section>
@@ -1524,15 +1602,61 @@ footer { background:var(--carbon); padding:80px 0 40px; }
   </div>
 </section>
 
+<!-- ════════ FAQ ════════ -->
+<section id="faq" style="padding:80px 0;background:#ffffff;">
+  <div class="container">
+    <p class="section-label reveal" style="text-align:center;justify-content:center;margin-bottom:12px;">Preguntas frecuentes</p>
+    <h2 class="section-title reveal delay-1" style="text-align:center;margin-bottom:48px;">Todo lo que querés <em>saber</em></h2>
+    <div style="max-width:700px;margin:0 auto;">
+
+      <div class="faq-item">
+        <button class="faq-pregunta" onclick="toggleFaq(this)" aria-expanded="false">¿Es realmente orgánica?<span class="faq-icono">+</span></button>
+        <div class="faq-respuesta"><p>Sí. Está producida sin agroquímicos y con procesos naturales. Cultivada en las tierras coloradas de Misiones, donde el suelo y el clima hacen el trabajo. No es un sello de marketing — es la forma en que trabajamos desde 2019.</p></div>
+      </div>
+
+      <div class="faq-item">
+        <button class="faq-pregunta" onclick="toggleFaq(this)" aria-expanded="false">¿Por qué el mate rinde más?<span class="faq-icono">+</span></button>
+        <div class="faq-respuesta"><p>Porque al no tener polvillo ni partículas finas, la hoja mantiene su estructura y libera el sabor de forma progresiva. Más cebadas, mismo sabor — sin el amargor repentino de las yerbas industriales.</p></div>
+      </div>
+
+      <div class="faq-item">
+        <button class="faq-pregunta" onclick="toggleFaq(this)" aria-expanded="false">¿Hacen envíos a todo el país?<span class="faq-icono">+</span></button>
+        <div class="faq-respuesta"><p>Sí, enviamos a todo Argentina por Andreani y Correo Argentino. El costo de envío se coordina al momento del pedido según tu ubicación.</p></div>
+      </div>
+
+      <div class="faq-item">
+        <button class="faq-pregunta" onclick="toggleFaq(this)" aria-expanded="false">¿Cuánto tarda en llegar?<span class="faq-icono">+</span></button>
+        <div class="faq-respuesta"><p>Entre 2 y 5 días hábiles según tu ubicación. Zonas del interior de Córdoba suelen ser más rápidas. Te avisamos cuando despachamos con el número de seguimiento.</p></div>
+      </div>
+
+      <div class="faq-item">
+        <button class="faq-pregunta" onclick="toggleFaq(this)" aria-expanded="false">¿Es apta para celíacos?<span class="faq-icono">+</span></button>
+        <div class="faq-respuesta"><p>Sí, 100% Sin TACC. Producida en un ambiente controlado, sin contaminación cruzada con gluten. Apta para celíacos y personas sensibles al gluten.</p></div>
+      </div>
+
+      <div class="faq-item">
+        <button class="faq-pregunta" onclick="toggleFaq(this)" aria-expanded="false">¿Cómo pago?<span class="faq-icono">+</span></button>
+        <div class="faq-respuesta"><p>Aceptamos transferencia bancaria (con 10% OFF), Mercado Pago y efectivo en mano si retirás en Alejandro Roca. Todo se coordina por WhatsApp al confirmar el pedido.</p></div>
+      </div>
+
+      <div class="faq-item" style="border-bottom:none;">
+        <button class="faq-pregunta" onclick="toggleFaq(this)" aria-expanded="false">¿Puedo ser revendedor?<span class="faq-icono">+</span></button>
+        <div class="faq-respuesta"><p>Sí, tenemos precio mayorista a partir de cierto volumen. Contamos con supermercados, kioscos y distribuidores en Córdoba y Buenos Aires. Escribinos por WhatsApp y te mandamos la lista de precios sin compromiso.</p></div>
+      </div>
+
+    </div>
+  </div>
+</section>
+
 <!-- ════════ CTA FINAL ════════ -->
 <section style="background:var(--verde);padding:100px 0;text-align:center;">
   <div class="container">
     <p class="section-label reveal" style="justify-content:center;margin-bottom:16px;">Una sola vez</p>
     <h2 class="section-title reveal delay-1" style="color:#fff;text-align:center;margin-bottom:16px;">Probá Harkana<br><em>hoy.</em></h2>
     <p class="reveal delay-2" style="font-size:1.1rem;color:rgba(255,255,255,.65);max-width:480px;margin:0 auto 40px;line-height:1.7;font-family:var(--font-serif);font-style:italic;">"Una vez que cambiás de yerba, no volvés atrás."</p>
-    <div class="reveal delay-3" style="display:flex;gap:16px;justify-content:center;flex-wrap:wrap;margin-bottom:16px;">
-      <a href="#productos" class="btn-primary" data-action="comprar" onclick="if(typeof fbq!=='undefined')fbq('track','InitiateCheckout');if(typeof gtag!=='undefined')gtag('event','comprar_ahora',{button_location:'cta_final'});">Comprar ahora →</a>
-      <a href="https://wa.me/5493585099308?text=Hola%20Harkana!%20%F0%9F%8C%BF%20Quiero%20m%C3%A1s%20info%20sobre%20la%20yerba%20org%C3%A1nica." target="_blank" class="btn-secondary" data-action="whatsapp-compra" onclick="if(typeof fbq!=='undefined')fbq('track','Contact');if(typeof gtag!=='undefined')gtag('event','click_whatsapp',{button_location:'cta_final'});">Escribinos por WhatsApp</a>
+    <div class="cta-final-btns reveal delay-3" style="display:flex;gap:16px;justify-content:center;flex-wrap:wrap;margin-bottom:16px;">
+      <a href="#productos" class="btn-primary" data-action="comprar" style="min-height:56px;font-size:1.05rem;padding:16px 40px;" onclick="if(typeof fbq!=='undefined')fbq('track','InitiateCheckout');if(typeof gtag!=='undefined')gtag('event','comprar_ahora',{button_location:'cta_final'});">Comprar ahora →</a>
+      <a href="https://wa.me/5493585099308?text=Hola%20Harkana!%20%F0%9F%8C%BF%20Quiero%20m%C3%A1s%20info%20sobre%20la%20yerba%20org%C3%A1nica." target="_blank" class="btn-secondary" data-action="whatsapp-compra" style="min-height:56px;font-size:1.05rem;padding:16px 36px;" onclick="if(typeof fbq!=='undefined')fbq('track','Contact');if(typeof gtag!=='undefined')gtag('event','click_whatsapp',{button_location:'cta_final'});">Escribinos por WhatsApp</a>
     </div>
     <p class="reveal delay-4" style="font-size:.7rem;color:rgba(255,255,255,.3);letter-spacing:1px;">Envíos a todo el país · Producción artesanal en lotes pequeños · Respuesta rápida</p>
   </div>
@@ -1818,6 +1942,18 @@ window.addEventListener('DOMContentLoaded', function() {
     localStorage.setItem('harkana_banner_closed', '1');
   });
 })();
+
+// ── FAQ ACORDEÓN ──
+function toggleFaq(btn) {
+  const respuesta = btn.nextElementSibling;
+  const abierta = respuesta.classList.contains('abierta');
+  document.querySelectorAll('.faq-respuesta').forEach(r => r.classList.remove('abierta'));
+  document.querySelectorAll('.faq-pregunta').forEach(b => b.setAttribute('aria-expanded', 'false'));
+  if (!abierta) {
+    respuesta.classList.add('abierta');
+    btn.setAttribute('aria-expanded', 'true');
+  }
+}
 </script>
 
 <!-- ════════ EXIT POPUP ════════ -->
