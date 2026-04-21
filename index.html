@@ -4,9 +4,9 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <meta name="theme-color" content="#0e2310">
-<meta name="description" content="Harkana — Yerba mate orgánica Argentina. Cultivada en Misiones, embolsada artesanalmente en Córdoba. Sin TACC, sin polvillo, sin agroquímicos. Envíos a todo el país. Presentaciones 500g, 1kg y 3kg.">
+<meta name="description" content="Yerba mate orgánica premium de Misiones. Sin agroquímicos, sin polvillo, apta celíacos. Envasada artesanalmente en Córdoba. Envíos a todo Argentina. Comprá online.">
 <meta name="keywords" content="yerba organica Argentina, yerba sin TACC, yerba mate organica Misiones, yerba organica Cordoba, yerba mate sin agroquimicos, yerba organica premium, harkana, yerba artesanal, yerba mate sin polvillo, comprar yerba organica">
-<title>HARKANA — Yerba Orgánica de verdad</title>
+<title>Harkana — Yerba Mate Orgánica Premium | Envíos a todo Argentina</title>
 <link rel="icon" href="favicon.ico">
 <link rel="icon" type="image/jpeg" href="CONTENIDO/LOGO oficial harkana.jpeg">
 <link rel="apple-touch-icon" href="CONTENIDO/LOGO oficial harkana.jpeg">
@@ -22,15 +22,47 @@
     send_page_view: true
   });
 </script>
-<link rel="canonical" href="https://harkana.com.ar">
-<meta property="og:title" content="HARKANA — Yerba Orgánica de verdad">
-<meta property="og:description" content="Yerba orgánica premium cultivada en Misiones, embolsada en Córdoba. Sin TACC. Envíos a todo Argentina.">
+<meta name="author" content="Harkana">
+<link rel="canonical" href="https://harkana.com.ar/">
 <meta property="og:type" content="website">
+<meta property="og:title" content="Harkana — Yerba Mate Orgánica Premium">
+<meta property="og:description" content="Yerba orgánica de Misiones. Sin agroquímicos. Sin polvillo. Apta celíacos. Envíos a todo Argentina.">
+<meta property="og:image" content="https://harkana.com.ar/CONTENIDO/FOTO_INICIO_1.JPEG">
 <meta property="og:url" content="https://harkana.com.ar">
-<meta property="og:image" content="https://harkana.com.ar/CONTENIDO/IMG_9965.JPEG">
+<meta property="og:locale" content="es_AR">
+<meta property="og:site_name" content="Harkana Yerba Orgánica">
 <meta name="twitter:card" content="summary_large_image">
-<meta name="twitter:title" content="HARKANA — Yerba Orgánica de verdad">
-<meta name="twitter:description" content="Yerba orgánica premium cultivada en Misiones, embolsada en Córdoba. Sin TACC. Envíos a todo Argentina.">
+<meta name="twitter:title" content="Harkana — Yerba Mate Orgánica Premium">
+<meta name="twitter:description" content="Yerba orgánica de Misiones. Sin agroquímicos. Sin polvillo. Apta celíacos.">
+<meta name="twitter:image" content="https://harkana.com.ar/CONTENIDO/FOTO_INICIO_1.JPEG">
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "Organization",
+  "name": "Harkana",
+  "url": "https://harkana.com.ar",
+  "logo": "https://harkana.com.ar/CONTENIDO/HARKANA.png",
+  "description": "Yerba mate orgánica premium de Misiones, envasada artesanalmente en Córdoba",
+  "foundingDate": "2019",
+  "address": {
+    "@type": "PostalAddress",
+    "addressLocality": "Alejandro Roca",
+    "addressRegion": "Córdoba",
+    "addressCountry": "AR"
+  },
+  "contactPoint": {
+    "@type": "ContactPoint",
+    "contactType": "customer service",
+    "telephone": "+54-9-358-509-9308",
+    "availableLanguage": "Spanish"
+  },
+  "sameAs": [
+    "https://www.instagram.com/harkanaar",
+    "https://www.tiktok.com/@harkana.yerbas",
+    "https://www.facebook.com/share/18EDrurKs1/"
+  ]
+}
+</script>
 <script type="application/ld+json">
 {
   "@context": "https://schema.org/",
@@ -703,6 +735,141 @@ footer { background:var(--carbon); padding:80px 0 40px; }
 @media (max-width:600px) {
   .exit-popup-box { padding:36px 24px; }
 }
+
+/* ── NAV BTN COMPRAR ── */
+.nav-btn-comprar {
+  background: #2d5a27;
+  color: #fff !important;
+  padding: 8px 18px;
+  border-radius: 20px;
+  font-size: 0.78rem;
+  font-weight: 600;
+  letter-spacing: 0.05em;
+  text-decoration: none;
+  transition: opacity 0.2s ease;
+  white-space: nowrap;
+}
+.nav-btn-comprar:hover { opacity: 0.85; }
+
+/* ── BOTÓN FLOTANTE COMPRAR ── */
+#btn-flotante-comprar {
+  position: fixed;
+  bottom: 24px;
+  left: 24px;
+  background: #2d5a27;
+  color: #fff;
+  text-decoration: none;
+  padding: 12px 20px;
+  border-radius: 25px;
+  font-size: 0.85rem;
+  font-weight: 600;
+  letter-spacing: 0.04em;
+  z-index: 999;
+  opacity: 0;
+  transform: translateY(10px);
+  transition: opacity 0.3s ease, transform 0.3s ease;
+  pointer-events: none;
+  box-shadow: 0 4px 15px rgba(0,0,0,0.2);
+}
+#btn-flotante-comprar.visible {
+  opacity: 1;
+  transform: translateY(0);
+  pointer-events: auto;
+}
+#btn-flotante-comprar:hover { opacity: 0.9; }
+@media (max-width: 768px) {
+  #btn-flotante-comprar {
+    bottom: 80px;
+    left: 16px;
+    font-size: 0.8rem;
+    padding: 10px 16px;
+  }
+}
+
+/* ── POPUP MAYORISTA ── */
+#popup-mayorista {
+  display: none;
+  position: fixed;
+  inset: 0;
+  z-index: 9999;
+  align-items: center;
+  justify-content: center;
+}
+#popup-mayorista.activo { display: flex; }
+.popup-overlay {
+  position: absolute;
+  inset: 0;
+  background: rgba(0,0,0,0.55);
+  cursor: pointer;
+}
+.popup-contenido {
+  position: relative;
+  background: #fff;
+  border-radius: 16px;
+  padding: 2.5rem 2rem;
+  max-width: 420px;
+  width: 90%;
+  text-align: center;
+  z-index: 1;
+  animation: popupEntrada 0.35s ease;
+}
+@keyframes popupEntrada {
+  from { opacity: 0; transform: translateY(20px) scale(0.97); }
+  to   { opacity: 1; transform: translateY(0) scale(1); }
+}
+.popup-cerrar {
+  position: absolute;
+  top: 14px;
+  right: 16px;
+  background: none;
+  border: none;
+  font-size: 1.1rem;
+  cursor: pointer;
+  color: #888;
+  padding: 4px 8px;
+}
+.popup-cerrar:hover { color: #333; }
+.popup-badge {
+  display: inline-block;
+  background: #eaf3de;
+  color: #2d5a27;
+  font-size: 0.8rem;
+  font-weight: 600;
+  padding: 5px 14px;
+  border-radius: 20px;
+  margin-bottom: 1rem;
+}
+.popup-contenido h3 {
+  font-size: 1.4rem;
+  margin-bottom: 0.75rem;
+  line-height: 1.3;
+  color: #1a1a1a;
+}
+.popup-contenido p {
+  font-size: 0.95rem;
+  color: #444;
+  line-height: 1.6;
+  margin-bottom: 0.5rem;
+}
+.popup-sub { font-size: 0.85rem !important; color: #777 !important; }
+.popup-btn {
+  display: block;
+  background: #25D366;
+  color: #fff;
+  text-decoration: none;
+  padding: 14px 24px;
+  border-radius: 10px;
+  font-weight: 600;
+  font-size: 0.95rem;
+  margin: 1.25rem 0 0.75rem;
+  transition: opacity 0.2s;
+}
+.popup-btn:hover { opacity: 0.9; }
+.popup-nota { font-size: 0.78rem !important; color: #aaa !important; margin: 0 !important; }
+@media (max-width: 480px) {
+  .popup-contenido { padding: 2rem 1.5rem; }
+  .popup-contenido h3 { font-size: 1.2rem; }
+}
 </style>
 </head>
 <body>
@@ -716,6 +883,8 @@ footer { background:var(--carbon); padding:80px 0 40px; }
   <a href="#celiacos" onclick="toggleMobileNav()">Sin TACC</a>
   <a href="#galeria" onclick="toggleMobileNav()">Galería</a>
   <a href="#donde" onclick="toggleMobileNav()">Dónde</a>
+  <a href="#faq" onclick="toggleMobileNav()">Preguntas frecuentes</a>
+  <a href="#productos" onclick="toggleMobileNav()" style="color:var(--kraft)!important;">Comprar ahora</a>
   <a href="#contacto" onclick="toggleMobileNav()">Contacto</a>
 </div>
 
@@ -754,6 +923,8 @@ footer { background:var(--carbon); padding:80px 0 40px; }
     <li><a href="#celiacos">Sin TACC</a></li>
     <li><a href="#galeria">Galería</a></li>
     <li><a href="#donde">Dónde</a></li>
+    <li><a href="#faq">FAQ</a></li>
+    <li><a href="#productos" class="nav-btn-comprar">Comprar ahora</a></li>
     <li><a href="#contacto" class="nav-cta">Contacto</a></li>
   </ul>
   <div class="hamburger" onclick="toggleMobileNav()"><span></span><span></span><span></span></div>
@@ -763,7 +934,7 @@ footer { background:var(--carbon); padding:80px 0 40px; }
 <section id="hero">
   <div class="hero-content">
     <p class="hero-eyebrow reveal">Desde Misiones, para todo Argentina</p>
-    <h1 class="hero-title reveal delay-1">Tomá mate sin acidez,<br>sin polvillo y con<br><em>sabor real.</em></h1>
+    <h1 class="hero-title reveal delay-1">Yerba Mate Orgánica Premium —<br><em>Tomá mate sin acidez,<br>sin polvillo y con sabor real.</em></h1>
     <p class="hero-subtitle reveal delay-2">
       Yerba orgánica premium cultivada en Misiones, embolsada artesanalmente en Córdoba. Más suave, más limpia y pensada para quienes cuidan lo que consumen.
     </p>
@@ -1954,6 +2125,45 @@ function toggleFaq(btn) {
     btn.setAttribute('aria-expanded', 'true');
   }
 }
+
+// ── BOTÓN FLOTANTE COMPRAR ──
+(function() {
+  var btnFlotante = document.getElementById('btn-flotante-comprar');
+  var seccionProductos = document.getElementById('productos');
+  var hero = document.querySelector('#hero') || document.querySelector('section:first-of-type');
+  if (!btnFlotante) return;
+  function actualizarBoton() {
+    var scrollY = window.scrollY || window.pageYOffset;
+    var heroAltura = hero ? hero.offsetHeight : 600;
+    var mostrar = scrollY > heroAltura * 0.7;
+    if (seccionProductos) {
+      var rect = seccionProductos.getBoundingClientRect();
+      if (rect.top < window.innerHeight * 0.5 && rect.bottom > 0) mostrar = false;
+    }
+    btnFlotante.classList.toggle('visible', mostrar);
+  }
+  window.addEventListener('scroll', actualizarBoton, { passive: true });
+  actualizarBoton();
+})();
+
+// ── POPUP MAYORISTA ──
+(function() {
+  var CLAVE = 'harkana_popup_mayorista_visto';
+  function mostrarPopup() {
+    var popup = document.getElementById('popup-mayorista');
+    if (popup) popup.classList.add('activo');
+  }
+  function cerrarPopup() {
+    var popup = document.getElementById('popup-mayorista');
+    if (popup) popup.classList.remove('activo');
+    try { sessionStorage.setItem(CLAVE, '1'); } catch(e) {}
+  }
+  window.cerrarPopup = cerrarPopup;
+  document.addEventListener('keydown', function(e) { if (e.key === 'Escape') cerrarPopup(); });
+  try {
+    if (!sessionStorage.getItem(CLAVE)) setTimeout(mostrarPopup, 8000);
+  } catch(e) { setTimeout(mostrarPopup, 8000); }
+})();
 </script>
 
 <!-- ════════ EXIT POPUP ════════ -->
@@ -1970,6 +2180,29 @@ function toggleFaq(btn) {
       Quiero el 30% OFF →
     </a>
     <button class="exit-popup-skip" id="popup-skip">No me interesa, seguir navegando</button>
+  </div>
+</div>
+
+<!-- Botón flotante Comprar ahora -->
+<a href="#productos" id="btn-flotante-comprar" aria-label="Comprar ahora">Comprar ahora</a>
+
+<!-- Popup mayorista -->
+<div id="popup-mayorista" role="dialog" aria-modal="true" aria-label="Oferta mayorista Harkana">
+  <div class="popup-overlay" onclick="cerrarPopup()"></div>
+  <div class="popup-contenido">
+    <button class="popup-cerrar" onclick="cerrarPopup()" aria-label="Cerrar">✕</button>
+    <div class="popup-badge">🏪 Para revendedores</div>
+    <h3>¿Querés vender Harkana<br>en tu negocio?</h3>
+    <p>Precio mayorista especial + <strong>30% OFF en el envío de tu primer pedido.</strong></p>
+    <p class="popup-sub">Kioscos, supermercados, dietéticas y distribuidores.<br>Trato directo con los dueños.</p>
+    <a href="https://wa.me/5493585099308?text=Hola%20Harkana!%20Vi%20la%20oferta%20mayorista.%20%C2%BFMe%20cont%C3%A1s%20m%C3%A1s%3F"
+       class="popup-btn"
+       onclick="cerrarPopup()"
+       target="_blank"
+       rel="noopener">
+      Consultar precio mayorista →
+    </a>
+    <p class="popup-nota">Sin compromiso · Respondemos por WhatsApp</p>
   </div>
 </div>
 
