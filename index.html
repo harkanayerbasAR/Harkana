@@ -27,14 +27,14 @@
 <meta property="og:type" content="website">
 <meta property="og:title" content="Harkana — Yerba Mate Orgánica Premium">
 <meta property="og:description" content="Yerba orgánica de Misiones. Sin agroquímicos. Sin polvillo. Apta celíacos. Envíos a todo Argentina.">
-<meta property="og:image" content="https://harkana.com.ar/CONTENIDO/FOTO_INICIO_1.JPEG">
+<meta property="og:image" content="https://harkana.com.ar/CONTENIDO/FOTO_INICIO_2.JPEG">
 <meta property="og:url" content="https://harkana.com.ar">
 <meta property="og:locale" content="es_AR">
 <meta property="og:site_name" content="Harkana Yerba Orgánica">
 <meta name="twitter:card" content="summary_large_image">
 <meta name="twitter:title" content="Harkana — Yerba Mate Orgánica Premium">
 <meta name="twitter:description" content="Yerba orgánica de Misiones. Sin agroquímicos. Sin polvillo. Apta celíacos.">
-<meta name="twitter:image" content="https://harkana.com.ar/CONTENIDO/FOTO_INICIO_1.JPEG">
+<meta name="twitter:image" content="https://harkana.com.ar/CONTENIDO/FOTO_INICIO_2.JPEG">
 <script type="application/ld+json">
 {
   "@context": "https://schema.org",
@@ -72,9 +72,10 @@
   "brand": { "@type": "Brand", "name": "Harkana" },
   "image": "https://harkana.com.ar/CONTENIDO/IMG_9965.JPEG",
   "offers": [
+    { "@type": "Offer", "name": "Bolsa 250g", "price": "4000", "priceCurrency": "ARS", "availability": "https://schema.org/InStock" },
     { "@type": "Offer", "name": "Bolsa 500g Kraft Artesanal", "price": "5000", "priceCurrency": "ARS", "availability": "https://schema.org/InStock" },
     { "@type": "Offer", "name": "Bolsa 1kg", "price": "8000", "priceCurrency": "ARS", "availability": "https://schema.org/InStock" },
-    { "@type": "Offer", "name": "Bolsa 3kg", "price": "22000", "priceCurrency": "ARS", "availability": "https://schema.org/InStock" }
+    { "@type": "Offer", "name": "Bolsa 3kg", "price": "23500", "priceCurrency": "ARS", "availability": "https://schema.org/InStock" }
   ]
 }
 </script>
@@ -93,7 +94,7 @@ fbq('track', 'PageView');
 <noscript><img height="1" width="1" style="display:none"
 src="https://www.facebook.com/tr?id=932342069675366&ev=PageView&noscript=1"
 /></noscript>
-<link rel="preload" as="image" href="FOTO_INICIO_1.JPEG">
+<link rel="preload" as="image" href="CONTENIDO/FOTO_INICIO_2.JPEG">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;0,500;0,600;1,300;1,400&family=Inter:wght@300;400;500;600&display=swap" rel="stylesheet">
@@ -130,7 +131,7 @@ a { text-decoration:none; color:inherit; }
 .reveal-right.visible { opacity:1; transform:translateX(0); }
 .delay-1 { transition-delay:.1s; } .delay-2 { transition-delay:.2s; }
 .delay-3 { transition-delay:.3s; } .delay-4 { transition-delay:.4s; }
-.delay-5 { transition-delay:.5s; }
+.delay-5 { transition-delay:.5s; } .delay-6 { transition-delay:.6s; }
 
 /* ── TOP BANNER ── */
 #top-banner {
@@ -406,20 +407,6 @@ h2.section-title em { font-style:italic; color:var(--verde-claro); }
 }
 .test-real-name { font-size:.72rem; font-weight:600; letter-spacing:1.5px; text-transform:uppercase; color:var(--verde-claro); }
 
-/* ── TESTIMONIOS ── */
-#testimonios { background:var(--crema-oscura); padding:100px 0; }
-.testimonios-grid { display:grid; grid-template-columns:repeat(3,1fr); gap:24px; margin-top:56px; }
-.testimonio-card { background:#fff; border-radius:12px; padding:32px; box-shadow:0 4px 20px rgba(0,0,0,.06); position:relative; }
-.testimonio-card::before { content:'"'; position:absolute; top:20px; right:24px; font-family:var(--font-serif); font-size:5rem; color:var(--kraft-claro); line-height:1; }
-.testimonio-stars { color:var(--kraft); font-size:1rem; letter-spacing:2px; margin-bottom:16px; }
-.testimonio-text { font-family:var(--font-serif); font-size:1.1rem; font-weight:300; line-height:1.7; color:#333; margin-bottom:20px; font-style:italic; }
-.testimonio-author { display:flex; align-items:center; gap:12px; }
-.testimonio-avatar { width:40px; height:40px; border-radius:50%; background:var(--verde-claro); display:flex; align-items:center; justify-content:center; color:#fff; font-weight:600; font-size:.9rem; flex-shrink:0; }
-.testimonio-name { font-size:.85rem; font-weight:600; color:var(--carbon); }
-.testimonio-place { font-size:.72rem; color:var(--gris); letter-spacing:1px; }
-.testimonios-cta { text-align:center; margin-top:40px; }
-.testimonios-cta p { font-size:.9rem; color:var(--gris); margin-bottom:16px; }
-
 /* ── GALERÍA ── */
 #galeria { background:var(--carbon); padding:120px 0; }
 #galeria .section-title { color:#fff; }
@@ -573,7 +560,6 @@ footer { background:var(--carbon); padding:80px 0 40px; }
 @media (max-width:1100px) {
   .productos-grid { grid-template-columns:repeat(2,1fr); }
   .ventajas-grid { grid-template-columns:repeat(2,1fr); }
-  .testimonios-grid { grid-template-columns:repeat(2,1fr); }
   .tl-slides { height:260px; }
   .tl-slide-photo { width:160px; }
   .tl-strip-label { display:none; }
@@ -603,7 +589,6 @@ footer { background:var(--carbon); padding:80px 0 40px; }
   .container { padding:0 20px; }
   .productos-grid { grid-template-columns:1fr; }
   .ventajas-grid { grid-template-columns:1fr; }
-  .testimonios-grid { grid-template-columns:1fr; }
   .historia-stats { grid-template-columns:1fr 1fr; }
   .footer-grid { grid-template-columns:1fr; gap:32px; }
   .mayoristas-actions { flex-direction:column; align-items:center; }
@@ -891,7 +876,7 @@ footer { background:var(--carbon); padding:80px 0 40px; }
 <!-- LIGHTBOX -->
 <div class="lightbox" id="lightbox">
   <button class="lightbox-close" onclick="closeLightbox()">✕</button>
-  <img src="" alt="" id="lightboxImg">
+  <img src="" alt="Imagen ampliada de Harkana" id="lightboxImg">
 </div>
 
 <!-- WHATSAPP FLOTANTE -->
@@ -906,10 +891,10 @@ footer { background:var(--carbon); padding:80px 0 40px; }
 
 <!-- ════════ TOP BANNER ════════ -->
 <div id="top-banner" role="banner" aria-label="Oferta mayorista">
-  <a href="https://wa.me/5493585099308?text=Hola%20Harkana!%20Vi%20el%2030%25%20OFF%20mayorista.%20%C2%BFMe%20cont%C3%A1s%20m%C3%A1s%3F"
+  <a href="https://wa.me/5493585099308?text=Hola%20Harkana!%20Vi%20el%2030%25%20OFF%20en%20el%20env%C3%ADo%20de%20mi%20primer%20pedido%20mayorista.%20%C2%BFMe%20cont%C3%A1s%20m%C3%A1s%3F"
      target="_blank" class="banner-text" data-action="whatsapp-mayorista"
      onclick="if(typeof fbq!=='undefined')fbq('track','Lead');if(typeof gtag!=='undefined')gtag('event','click_banner_mayorista');">
-    🌿 30% OFF en tu primer pedido mayorista &nbsp;·&nbsp; Producción artesanal &nbsp;·&nbsp; Envíos a todo el país
+    🌿 Hasta 30% OFF en el <strong>ENVÍO</strong> de tu primer pedido &nbsp;·&nbsp; Producción artesanal &nbsp;·&nbsp; Envíos a todo el país
   </a>
   <button id="banner-close" aria-label="Cerrar banner">✕</button>
 </div>
@@ -975,7 +960,7 @@ footer { background:var(--carbon); padding:80px 0 40px; }
   </div>
   <div class="hero-visual">
     <div class="hero-img-wrap">
-      <img src="CONTENIDO/FOTO_INICIO_1.JPEG" alt="Bolsas de Harkana Yerba Orgánica kraft artesanal cerradas con hilo">
+      <img src="CONTENIDO/FOTO_INICIO_2.JPEG" alt="Bolsas de Harkana Yerba Orgánica kraft artesanal cerradas con hilo">
     </div>
   </div>
 </section>
@@ -1004,7 +989,7 @@ footer { background:var(--carbon); padding:80px 0 40px; }
     <span style="font-size:1.2rem;">✓</span> Calidad garantizada en cada bolsa
   </div>
   <div style="background:var(--kraft);color:var(--carbon);font-size:.72rem;font-weight:700;letter-spacing:1px;padding:8px 18px;border-radius:30px;text-transform:uppercase;">
-    💰 Precio mayorista especial · 🚚 30% OFF en el envío del primer pedido
+    💰 Consultá precios mayoristas · 🚚 Hasta 30% OFF en el <strong>ENVÍO</strong> de tu primer pedido
   </div>
 </div>
 
@@ -1063,7 +1048,7 @@ footer { background:var(--carbon); padding:80px 0 40px; }
         </ul>
         <div class="historia-stats">
           <div class="stat reveal delay-1"><div class="stat-num">2019</div><div class="stat-label">Año de fundación</div></div>
-          <div class="stat reveal delay-2"><div class="stat-num">4</div><div class="stat-label">Presentaciones</div></div>
+          <div class="stat reveal delay-2"><div class="stat-num">5</div><div class="stat-label">Presentaciones</div></div>
           <div class="stat reveal delay-3"><div class="stat-num">100%</div><div class="stat-label">Orgánica certificada</div></div>
           <div class="stat reveal delay-4"><div class="stat-num">∞</div><div class="stat-label">Stock permanente</div></div>
         </div>
@@ -1146,7 +1131,7 @@ footer { background:var(--carbon); padding:80px 0 40px; }
           <div class="tl-slide-info">
             <span class="tl-slide-year">Hoy</span>
             <p class="tl-slide-title">3kg y línea completa</p>
-            <p class="tl-slide-desc">Se suma la bolsa de 3kg. Harkana hoy tiene 3 presentaciones, con vistas de sumar una bolsa de 10kg para distribuidores.</p>
+            <p class="tl-slide-desc">Se suma la bolsa de 3kg. Harkana hoy tiene 5 presentaciones, con vistas de sumar una bolsa de 10kg para mayoristas.</p>
             <span class="tl-slide-badge">Versión actual</span>
           </div>
         </div>
@@ -1203,11 +1188,41 @@ footer { background:var(--carbon); padding:80px 0 40px; }
       <p class="section-label reveal">Línea de productos</p>
       <h2 class="section-title reveal delay-1">Elegí tu formato<br><em>y comprá ahora.</em></h2>
       <p class="section-desc reveal delay-2">
-        Yerba orgánica de Misiones en tres formatos. Seleccioná la cantidad, confirmás por WhatsApp y coordinamos el envío.
+        Yerba orgánica de Misiones en cinco formatos. Seleccioná la cantidad, confirmás por WhatsApp y coordinamos el envío.
       </p>
-      <p class="envio-nota reveal delay-3">📦 Enviamos a todo el país · <strong>El costo de envío se coordina al momento del pedido</strong> · Pedidos desde 50 kg → precio mayorista especial</p>
+      <p class="envio-nota reveal delay-3">📦 Enviamos a todo el país · <strong>El costo de envío se coordina al momento del pedido</strong> · Pedidos desde 25 kg → consultá precio mayorista</p>
     </div>
     <div class="productos-grid">
+
+      <!-- 250g -->
+      <div class="producto-card reveal delay-1">
+        <div class="producto-photo">
+          <img src="CONTENIDO/250gr frente-web.jpg" alt="Bolsa Harkana Yerba Orgánica 250g formato de prueba" width="800" height="1067" loading="lazy">
+          <span class="producto-tag">Para probar</span>
+        </div>
+        <div class="producto-body">
+          <div class="producto-price">$4.000</div>
+          <div class="producto-price-sub">Precio por unidad · ARS</div>
+          <div class="producto-size">250 g — Formato de prueba</div>
+          <p class="producto-desc">¿Todavía no probaste Harkana? Este es el formato ideal para conocerla sin comprometerte. Yerba mate orgánica, un solo ingrediente, la misma calidad que el resto de la línea.</p>
+          <p style="font-size:.72rem;color:#777;margin:0 0 14px;line-height:1.5;">Online: mínimo 2 unidades, o sumalo a cualquier pedido. En nuestros puntos de venta físicos lo conseguís por unidad.</p>
+          <div class="producto-features">
+            <span class="feature-pill">Pura</span><span class="feature-pill">Sin aditivos</span><span class="feature-pill">Artesanal</span>
+          </div>
+          <p style="font-size:.72rem;color:var(--verde-claro);margin:10px 0 4px;"><a href="https://wa.me/5493585099308?text=Hola,%20quiero%20saber%20los%20precios%20mayoristas%20de%20Harkana" target="_blank" style="color:var(--verde-claro);text-decoration:underline;">¿Comprás cantidad? Consultá precios mayoristas</a></p>
+          <div class="producto-compra">
+            <span class="qty-label">Cantidad de bolsas:</span>
+            <div class="qty-selector">
+              <button class="qty-btn" onclick="cambiarCantidad('qty-250g',-1,0.25)" type="button">−</button>
+              <input type="number" id="qty-250g" value="1" min="1" max="999" class="qty-input" oninput="actualizarInfo('qty-250g',0.25)">
+              <button class="qty-btn" onclick="cambiarCantidad('qty-250g',1,0.25)" type="button">+</button>
+            </div>
+            <div class="qty-info" id="info-250g">1 bolsa · 0.25 kg · <span class="tipo-pedido tipo-minor">Mínimo 2 unidades online</span></div>
+            <button class="producto-cta wsp" data-action="comprar" onclick="comprarWsp('qty-250g','250g',4000,0.25)" type="button">Comprar ahora →</button>
+            <a href="https://wa.me/5493585099308?text=Hola,%20quiero%20pedir%20Harkana%20de%20250g" target="_blank" class="producto-cta" data-action="whatsapp-compra" style="margin-top:6px;background:var(--verde);display:block;text-align:center;color:#fff;padding:10px;border-radius:6px;font-size:.74rem;letter-spacing:1.5px;text-transform:uppercase;" onclick="if(typeof fbq!=='undefined')fbq('track','Contact');if(typeof gtag!=='undefined')gtag('event','click_whatsapp',{button_location:'productos'});">Pedir por WhatsApp</a>
+          </div>
+        </div>
+      </div>
 
       <!-- 500g -->
       <div class="producto-card reveal delay-1">
@@ -1217,7 +1232,7 @@ footer { background:var(--carbon); padding:80px 0 40px; }
         </div>
         <div class="producto-body">
           <div class="producto-price">$5.000</div>
-          <div class="producto-price-sub">Precio minorista · ARS</div>
+          <div class="producto-price-sub">Precio por unidad · ARS</div>
           <div class="producto-size">500 g — Bolsa Kraft Artesanal</div>
           <p class="producto-desc">¿Cansado de la yerba que amarga, tapa la bombilla y te deja el estómago pesado? Harkana es suave, limpia y natural desde el primer mate.</p>
           <ul style="list-style:none;padding:0;margin:0 0 14px;display:flex;flex-direction:column;gap:5px;">
@@ -1227,8 +1242,9 @@ footer { background:var(--carbon); padding:80px 0 40px; }
             <li style="font-size:.78rem;color:#555;display:flex;gap:6px;"><span style="color:var(--verde-claro);">✓</span> Producción artesanal en lotes pequeños</li>
           </ul>
           <div class="producto-features">
-            <span class="feature-pill">Orgánica</span><span class="feature-pill">Sin TACC</span><span class="feature-pill">Artesanal</span><span class="feature-pill">Sin polvillo</span>
+            <span class="feature-pill">Orgánica</span><span class="feature-pill">Artesanal</span><span class="feature-pill">Sin polvillo</span>
           </div>
+          <p style="font-size:.72rem;color:var(--verde-claro);margin:0 0 14px;"><a href="https://wa.me/5493585099308?text=Hola,%20quiero%20saber%20los%20precios%20mayoristas%20de%20Harkana" target="_blank" style="color:var(--verde-claro);text-decoration:underline;">¿Comprás cantidad? Consultá precios mayoristas</a></p>
           <div class="producto-compra">
             <span class="qty-label">Cantidad de bolsas:</span>
             <div class="qty-selector">
@@ -1238,7 +1254,7 @@ footer { background:var(--carbon); padding:80px 0 40px; }
             </div>
             <div class="qty-info" id="info-500g">1 bolsa · 0.5 kg · <span class="tipo-pedido tipo-minor">Pedido minorista</span></div>
             <button class="producto-cta wsp" data-action="comprar" onclick="comprarWsp('qty-500g','500g Kraft',5000,0.5)" type="button">Comprar ahora →</button>
-            <a href="https://wa.me/5493585099308?text=Hola%20Harkana!%20%F0%9F%8C%BF%20Quiero%20comprar%20yerba%20org%C3%A1nica.%20%C2%BFMe%20confirm%C3%A1s%20disponibilidad%20y%20env%C3%ADo%3F" target="_blank" class="producto-cta" data-action="whatsapp-compra" style="margin-top:6px;background:var(--verde);display:block;text-align:center;color:#fff;padding:10px;border-radius:6px;font-size:.74rem;letter-spacing:1.5px;text-transform:uppercase;" onclick="if(typeof fbq!=='undefined')fbq('track','Contact');if(typeof gtag!=='undefined')gtag('event','click_whatsapp',{button_location:'productos'});">Pedir por WhatsApp</a>
+            <a href="https://wa.me/5493585099308?text=Hola%20Harkana!%20Quiero%20la%20bolsa%20de%20500g.%20%C2%BFMe%20confirm%C3%A1s%20disponibilidad%20y%20env%C3%ADo%3F" target="_blank" class="producto-cta" data-action="whatsapp-compra" style="margin-top:6px;background:var(--verde);display:block;text-align:center;color:#fff;padding:10px;border-radius:6px;font-size:.74rem;letter-spacing:1.5px;text-transform:uppercase;" onclick="if(typeof fbq!=='undefined')fbq('track','Contact');if(typeof gtag!=='undefined')gtag('event','click_whatsapp',{button_location:'productos'});">Pedir por WhatsApp</a>
           </div>
         </div>
       </div>
@@ -1251,7 +1267,7 @@ footer { background:var(--carbon); padding:80px 0 40px; }
         </div>
         <div class="producto-body">
           <div class="producto-price">$8.000</div>
-          <div class="producto-price-sub">Precio minorista · ARS</div>
+          <div class="producto-price-sub">Precio por unidad · ARS</div>
           <div class="producto-size">1 kg — Bolsa Estándar</div>
           <p class="producto-desc">Tomás mate todos los días y querés abastecerte sin preocuparte. El formato 1kg te da el doble de rendimiento al mejor precio por gramo.</p>
           <ul style="list-style:none;padding:0;margin:0 0 14px;display:flex;flex-direction:column;gap:5px;">
@@ -1261,8 +1277,9 @@ footer { background:var(--carbon); padding:80px 0 40px; }
             <li style="font-size:.78rem;color:#555;display:flex;gap:6px;"><span style="color:var(--verde-claro);">✓</span> Producción artesanal en lotes pequeños</li>
           </ul>
           <div class="producto-features">
-            <span class="feature-pill">Orgánica</span><span class="feature-pill">Sin TACC</span><span class="feature-pill">Más rendidor</span>
+            <span class="feature-pill">Orgánica</span><span class="feature-pill">Más rendidor</span>
           </div>
+          <p style="font-size:.72rem;color:var(--verde-claro);margin:0 0 14px;"><a href="https://wa.me/5493585099308?text=Hola,%20quiero%20saber%20los%20precios%20mayoristas%20de%20Harkana" target="_blank" style="color:var(--verde-claro);text-decoration:underline;">¿Comprás cantidad? Consultá precios mayoristas</a></p>
           <div class="producto-compra">
             <span class="qty-label">Cantidad de bolsas:</span>
             <div class="qty-selector">
@@ -1272,7 +1289,7 @@ footer { background:var(--carbon); padding:80px 0 40px; }
             </div>
             <div class="qty-info" id="info-1kg">1 bolsa · 1 kg · <span class="tipo-pedido tipo-minor">Pedido minorista</span></div>
             <button class="producto-cta wsp" data-action="comprar" onclick="comprarWsp('qty-1kg','1kg',8000,1)" type="button">Comprar ahora →</button>
-            <a href="https://wa.me/5493585099308?text=Hola%20Harkana!%20%F0%9F%8C%BF%20Quiero%20comprar%20yerba%20org%C3%A1nica.%20%C2%BFMe%20confirm%C3%A1s%20disponibilidad%20y%20env%C3%ADo%3F" target="_blank" class="producto-cta" data-action="whatsapp-compra" style="margin-top:6px;background:var(--verde);display:block;text-align:center;color:#fff;padding:10px;border-radius:6px;font-size:.74rem;letter-spacing:1.5px;text-transform:uppercase;" onclick="if(typeof fbq!=='undefined')fbq('track','Contact');if(typeof gtag!=='undefined')gtag('event','click_whatsapp',{button_location:'productos'});">Pedir por WhatsApp</a>
+            <a href="https://wa.me/5493585099308?text=Hola%20Harkana!%20Quiero%20la%20bolsa%20de%201kg.%20%C2%BFMe%20confirm%C3%A1s%20disponibilidad%20y%20env%C3%ADo%3F" target="_blank" class="producto-cta" data-action="whatsapp-compra" style="margin-top:6px;background:var(--verde);display:block;text-align:center;color:#fff;padding:10px;border-radius:6px;font-size:.74rem;letter-spacing:1.5px;text-transform:uppercase;" onclick="if(typeof fbq!=='undefined')fbq('track','Contact');if(typeof gtag!=='undefined')gtag('event','click_whatsapp',{button_location:'productos'});">Pedir por WhatsApp</a>
           </div>
         </div>
       </div>
@@ -1281,22 +1298,23 @@ footer { background:var(--carbon); padding:80px 0 40px; }
       <div class="producto-card reveal delay-3">
         <div class="producto-photo">
           <img src="CONTENIDO/IMG_9883.JPEG" alt="Bolsa Harkana Yerba Orgánica 3kg mayorista" loading="lazy">
-          <span class="producto-tag">Mayorista</span>
+          <span class="producto-tag">Ahorro</span>
         </div>
         <div class="producto-body">
-          <div class="producto-price">$22.000</div>
-          <div class="producto-price-sub">Precio mayorista · ARS</div>
-          <div class="producto-size">3 kg — Para familias y revendedores</div>
-          <p class="producto-desc">El formato ideal para quien nunca quiere quedarse sin yerba, o quiere probar la reventa. El mejor precio por kilo de toda la línea.</p>
+          <div class="producto-price">$23.500</div>
+          <div class="producto-price-sub">Precio por unidad · ARS</div>
+          <div class="producto-size">3 kg — Para casas donde siempre hay mate</div>
+          <p class="producto-desc">Familia, amigos que caen sin avisar, la oficina: cuando el mate no para, el kilo se termina rápido. Tres kilos te duran meses, al mejor precio por kilo. Ya no comprás para probar: comprás para no quedarte sin.</p>
           <ul style="list-style:none;padding:0;margin:0 0 14px;display:flex;flex-direction:column;gap:5px;">
             <li style="font-size:.78rem;color:#555;display:flex;gap:6px;"><span style="color:var(--verde-claro);">✓</span> Mejor precio/kg de toda la línea</li>
             <li style="font-size:.78rem;color:#555;display:flex;gap:6px;"><span style="color:var(--verde-claro);">✓</span> Ideal para familias numerosas</li>
-            <li style="font-size:.78rem;color:#555;display:flex;gap:6px;"><span style="color:var(--verde-claro);">✓</span> Perfecto para probar la reventa</li>
+            <li style="font-size:.78rem;color:#555;display:flex;gap:6px;"><span style="color:var(--verde-claro);">✓</span> Te dura meses sin quedarte sin</li>
             <li style="font-size:.78rem;color:#555;display:flex;gap:6px;"><span style="color:var(--verde-claro);">✓</span> Producción artesanal en lotes pequeños</li>
           </ul>
           <div class="producto-features">
-            <span class="feature-pill">Orgánica</span><span class="feature-pill">Sin TACC</span><span class="feature-pill">Mejor precio/kg</span>
+            <span class="feature-pill">Orgánica</span><span class="feature-pill">Mejor precio/kg</span>
           </div>
+          <p style="font-size:.72rem;color:var(--verde-claro);margin:0 0 14px;"><a href="https://wa.me/5493585099308?text=Hola,%20quiero%20saber%20los%20precios%20mayoristas%20de%20Harkana" target="_blank" style="color:var(--verde-claro);text-decoration:underline;">¿Comprás cantidad? Consultá precios mayoristas</a></p>
           <div class="producto-compra">
             <span class="qty-label">Cantidad de bolsas:</span>
             <div class="qty-selector">
@@ -1304,9 +1322,9 @@ footer { background:var(--carbon); padding:80px 0 40px; }
               <input type="number" id="qty-3kg" value="1" min="1" max="999" class="qty-input" oninput="actualizarInfo('qty-3kg',3)">
               <button class="qty-btn" onclick="cambiarCantidad('qty-3kg',1,3)" type="button">+</button>
             </div>
-            <div class="qty-info" id="info-3kg">1 bolsa · 3 kg · <span class="tipo-pedido tipo-minor">Pedido minorista</span></div>
-            <button class="producto-cta wsp" data-action="comprar" onclick="comprarWsp('qty-3kg','3kg',22000,3)" type="button">Comprar ahora →</button>
-            <a href="https://wa.me/5493585099308?text=Hola%20Harkana!%20%F0%9F%8C%BF%20Quiero%20comprar%20yerba%20org%C3%A1nica.%20%C2%BFMe%20confirm%C3%A1s%20disponibilidad%20y%20env%C3%ADo%3F" target="_blank" class="producto-cta" data-action="whatsapp-compra" style="margin-top:6px;background:var(--verde);display:block;text-align:center;color:#fff;padding:10px;border-radius:6px;font-size:.74rem;letter-spacing:1.5px;text-transform:uppercase;" onclick="if(typeof fbq!=='undefined')fbq('track','Contact');if(typeof gtag!=='undefined')gtag('event','click_whatsapp',{button_location:'productos'});">Pedir por WhatsApp</a>
+            <div class="qty-info" id="info-3kg">1 bolsa · 3 kg · <span class="tipo-pedido tipo-mayor">Mejor precio por kilo</span></div>
+            <button class="producto-cta wsp" data-action="comprar" onclick="comprarWsp('qty-3kg','3kg',23500,3)" type="button">Comprar ahora →</button>
+            <a href="https://wa.me/5493585099308?text=Hola%20Harkana!%20Quiero%20la%20bolsa%20de%203kg.%20%C2%BFMe%20confirm%C3%A1s%20disponibilidad%20y%20env%C3%ADo%3F" target="_blank" class="producto-cta" data-action="whatsapp-compra" style="margin-top:6px;background:var(--verde);display:block;text-align:center;color:#fff;padding:10px;border-radius:6px;font-size:.74rem;letter-spacing:1.5px;text-transform:uppercase;" onclick="if(typeof fbq!=='undefined')fbq('track','Contact');if(typeof gtag!=='undefined')gtag('event','click_whatsapp',{button_location:'productos'});">Pedir por WhatsApp</a>
           </div>
         </div>
       </div>
@@ -1322,11 +1340,11 @@ footer { background:var(--carbon); padding:80px 0 40px; }
         </div>
         <div class="producto-body">
           <div class="producto-price">Consultar</div>
-          <div class="producto-price-sub">Precio distribuidores · ARS</div>
+          <div class="producto-price-sub">Precio por unidad · ARS</div>
           <div class="producto-size">10 kg — Para fraccionar y revender</div>
-          <p class="producto-desc">Para distribuidores que quieren fraccionar y revender Harkana con alto margen. A partir de 50kg consultá precio especial mayorista.</p>
+          <p class="producto-desc">Para mayoristas que quieren fraccionar y revender Harkana con alto margen. A partir de 25kg consultá precio especial mayorista.</p>
           <ul style="list-style:none;padding:0;margin:0 0 14px;display:flex;flex-direction:column;gap:5px;">
-            <li style="font-size:.78rem;color:#555;display:flex;gap:6px;"><span style="color:var(--verde-claro);">✓</span> Precio mayorista real sin lista</li>
+            <li style="font-size:.78rem;color:#555;display:flex;gap:6px;"><span style="color:var(--verde-claro);">✓</span> Consultá precios mayoristas por WhatsApp</li>
             <li style="font-size:.78rem;color:#555;display:flex;gap:6px;"><span style="color:var(--verde-claro);">✓</span> Stock para grandes volúmenes</li>
             <li style="font-size:.78rem;color:#555;display:flex;gap:6px;"><span style="color:var(--verde-claro);">✓</span> Trato directo con los dueños</li>
           </ul>
@@ -1338,6 +1356,7 @@ footer { background:var(--carbon); padding:80px 0 40px; }
       </div>
 
     </div>
+    <p style="text-align:center;font-size:0.75rem;color:var(--gris);margin-top:32px;">Precios vigentes a agosto 2026 · Sujetos a modificación sin previo aviso</p>
   </div>
 </section>
 
@@ -1345,42 +1364,41 @@ footer { background:var(--carbon); padding:80px 0 40px; }
 <section id="packs" style="background:var(--crema);padding:80px 0;">
   <div class="container">
     <p class="section-label reveal" style="justify-content:center;margin-bottom:12px;">Packs ahorro</p>
-    <h2 class="section-title reveal delay-1" style="text-align:center;">Comprá más,<br><em>pagá menos.</em></h2>
-    <p class="section-desc reveal delay-2" style="text-align:center;margin:0 auto 48px;">Elaborada en pequeñas cantidades para garantizar calidad. Cuanto más comprás, mejor es el precio.</p>
+    <h2 class="section-title reveal delay-1" style="text-align:center;">Comprá más,<br><em>pagá menos en el envío.</em></h2>
+    <p class="section-desc reveal delay-2" style="text-align:center;margin:0 auto 48px;">Armá los kilos con las presentaciones que quieras — 250g, 500g, 1kg o 3kg, como prefieras.</p>
     <div style="display:grid;grid-template-columns:repeat(3,1fr);gap:24px;margin-bottom:40px;" class="reveal delay-2">
 
       <div style="background:#fff;border-radius:10px;padding:32px 24px;text-align:center;border:1px solid var(--crema-oscura);box-shadow:0 4px 20px rgba(0,0,0,.05);">
         <div style="font-size:2rem;margin-bottom:8px;">📦</div>
         <div style="font-size:.72rem;letter-spacing:2px;text-transform:uppercase;color:var(--gris);margin-bottom:8px;">Pack ahorro</div>
-        <div style="font-family:var(--font-serif);font-size:2.4rem;color:var(--verde);font-weight:400;margin-bottom:4px;">3 bolsas</div>
-        <div style="display:inline-block;background:#e8f4e8;color:#2d7a27;font-weight:700;font-size:.8rem;padding:4px 14px;border-radius:20px;margin-bottom:16px;">10% OFF</div>
-        <p style="font-size:.85rem;color:var(--gris);line-height:1.6;margin-bottom:20px;">Ideal para tener yerba de sobra sin preocuparte. Combiná formatos.</p>
-        <a href="https://wa.me/5493585099308?text=Hola%20Harkana!%20Quiero%20el%20pack%20ahorro.%20%C2%BFQu%C3%A9%20opciones%20tienen%3F" target="_blank" data-action="whatsapp-pack" style="display:block;background:var(--verde);color:#fff;padding:12px;border-radius:6px;font-size:.74rem;font-weight:600;letter-spacing:1.5px;text-transform:uppercase;text-align:center;transition:background .3s;" onclick="if(typeof fbq!=='undefined')fbq('track','InitiateCheckout',{content_name:'Pack Ahorro'});if(typeof gtag!=='undefined')gtag('event','click_pack_ahorro',{pack:'3_bolsas'});">Quiero este pack</a>
+        <div style="font-family:var(--font-serif);font-size:2.4rem;color:var(--verde);font-weight:400;margin-bottom:4px;">10 KG</div>
+        <div style="display:inline-block;background:#e8f4e8;color:#2d7a27;font-weight:700;font-size:.8rem;padding:4px 14px;border-radius:20px;margin-bottom:16px;">10% OFF en el ENVÍO de tu primer pedido</div>
+        <p style="font-size:.85rem;color:var(--gris);line-height:1.6;margin-bottom:20px;">Armá los kilos con las presentaciones que quieras.</p>
+        <a href="https://wa.me/5493585099308?text=Hola,%20quiero%20el%20Pack%20Ahorro%20de%2010kg%20de%20Harkana" target="_blank" data-action="whatsapp-pack" style="display:block;background:var(--verde);color:#fff;padding:12px;border-radius:6px;font-size:.74rem;font-weight:600;letter-spacing:1.5px;text-transform:uppercase;text-align:center;transition:background .3s;" onclick="if(typeof fbq!=='undefined')fbq('track','InitiateCheckout',{content_name:'Pack Ahorro'});if(typeof gtag!=='undefined')gtag('event','click_pack_ahorro',{pack:'10kg'});">Quiero el Pack Ahorro</a>
       </div>
 
       <div style="background:var(--verde);border-radius:10px;padding:32px 24px;text-align:center;position:relative;box-shadow:0 12px 40px rgba(14,35,16,.25);">
         <div style="position:absolute;top:-12px;left:50%;transform:translateX(-50%);background:var(--kraft);color:var(--carbon);font-size:.62rem;font-weight:700;letter-spacing:1.5px;text-transform:uppercase;padding:4px 14px;border-radius:20px;">Más elegido</div>
         <div style="font-size:2rem;margin-bottom:8px;">📦📦</div>
         <div style="font-size:.72rem;letter-spacing:2px;text-transform:uppercase;color:rgba(255,255,255,.5);margin-bottom:8px;">Pack premium</div>
-        <div style="font-family:var(--font-serif);font-size:2.4rem;color:#fff;font-weight:400;margin-bottom:4px;">6 bolsas</div>
-        <div style="display:inline-block;background:var(--kraft);color:var(--carbon);font-weight:700;font-size:.8rem;padding:4px 14px;border-radius:20px;margin-bottom:16px;">20% OFF</div>
-        <p style="font-size:.85rem;color:rgba(255,255,255,.6);line-height:1.6;margin-bottom:20px;">Para los que saben que van a seguir tomando Harkana. El mejor precio al por menor.</p>
-        <a href="https://wa.me/5493585099308?text=Hola%20Harkana!%20Quiero%20el%20pack%20ahorro.%20%C2%BFQu%C3%A9%20opciones%20tienen%3F" target="_blank" data-action="whatsapp-pack" style="display:block;background:var(--kraft);color:var(--carbon);padding:12px;border-radius:6px;font-size:.74rem;font-weight:700;letter-spacing:1.5px;text-transform:uppercase;text-align:center;" onclick="if(typeof fbq!=='undefined')fbq('track','InitiateCheckout',{content_name:'Pack Ahorro'});if(typeof gtag!=='undefined')gtag('event','click_pack_ahorro',{pack:'6_bolsas'});">Quiero este pack</a>
+        <div style="font-family:var(--font-serif);font-size:2.4rem;color:#fff;font-weight:400;margin-bottom:4px;">15 KG</div>
+        <div style="display:inline-block;background:var(--kraft);color:var(--carbon);font-weight:700;font-size:.8rem;padding:4px 14px;border-radius:20px;margin-bottom:16px;">20% OFF en el ENVÍO de tu primer pedido</div>
+        <p style="font-size:.85rem;color:rgba(255,255,255,.6);line-height:1.6;margin-bottom:20px;">Armá los kilos con las presentaciones que quieras.</p>
+        <a href="https://wa.me/5493585099308?text=Hola,%20quiero%20el%20Pack%20Premium%20de%2015kg%20de%20Harkana" target="_blank" data-action="whatsapp-pack" style="display:block;background:var(--kraft);color:var(--carbon);padding:12px;border-radius:6px;font-size:.74rem;font-weight:700;letter-spacing:1.5px;text-transform:uppercase;text-align:center;" onclick="if(typeof fbq!=='undefined')fbq('track','InitiateCheckout',{content_name:'Pack Premium'});if(typeof gtag!=='undefined')gtag('event','click_pack_ahorro',{pack:'15kg'});">Quiero el Pack Premium</a>
       </div>
 
       <div style="background:#fff;border-radius:10px;padding:32px 24px;text-align:center;border:2px solid var(--kraft);box-shadow:0 4px 20px rgba(0,0,0,.05);">
         <div style="font-size:2rem;margin-bottom:8px;">🏪</div>
-        <div style="font-size:.72rem;letter-spacing:2px;text-transform:uppercase;color:var(--gris);margin-bottom:8px;">Para tu negocio</div>
-        <div style="font-family:var(--font-serif);font-size:2.4rem;color:var(--verde);font-weight:400;margin-bottom:4px;">Mayorista</div>
-        <div style="display:inline-block;background:#fff3dc;color:#8a6200;font-weight:700;font-size:.8rem;padding:4px 14px;border-radius:20px;margin-bottom:16px;">30% OFF en el envío</div>
-        <p style="font-size:.85rem;color:var(--gris);line-height:1.6;margin-bottom:20px;">A partir de 50kg. Precio especial para revendedores, kioscos y distribuidores.</p>
-        <a href="https://wa.me/5493585099308?text=Hola%20Harkana!%20Quiero%20info%20sobre%20precios%20mayoristas%20y%20condiciones%20de%20reventa." target="_blank" data-action="whatsapp-mayorista" style="display:block;background:var(--kraft);color:var(--carbon);padding:12px;border-radius:6px;font-size:.74rem;font-weight:700;letter-spacing:1.5px;text-transform:uppercase;text-align:center;" onclick="if(typeof fbq!=='undefined')fbq('track','Lead');if(typeof gtag!=='undefined')gtag('event','consulta_mayorista',{button_location:'packs'});">Consultar precio</a>
+        <div style="font-size:.72rem;letter-spacing:2px;text-transform:uppercase;color:var(--gris);margin-bottom:8px;">Pack mayorista</div>
+        <div style="font-family:var(--font-serif);font-size:2.4rem;color:var(--verde);font-weight:400;margin-bottom:4px;">DESDE 25 KG</div>
+        <div style="display:inline-block;background:#fff3dc;color:#8a6200;font-weight:700;font-size:.8rem;padding:4px 14px;border-radius:20px;margin-bottom:16px;">30% OFF en el ENVÍO de tu primer pedido</div>
+        <p style="font-size:.85rem;color:var(--gris);line-height:1.6;margin-bottom:20px;">Armá los kilos con las presentaciones que quieras. Precio mayorista se consulta por WhatsApp.</p>
+        <a href="https://wa.me/5493585099308?text=Hola,%20quiero%20el%20Pack%20Mayorista%20de%20Harkana,%20desde%2025kg" target="_blank" data-action="whatsapp-mayorista" style="display:block;background:var(--kraft);color:var(--carbon);padding:12px;border-radius:6px;font-size:.74rem;font-weight:700;letter-spacing:1.5px;text-transform:uppercase;text-align:center;" onclick="if(typeof fbq!=='undefined')fbq('track','Lead');if(typeof gtag!=='undefined')gtag('event','consulta_mayorista',{button_location:'packs'});">Quiero precios mayoristas</a>
       </div>
 
     </div>
     <div style="text-align:center;" class="reveal delay-3">
-      <a href="https://wa.me/5493585099308?text=Hola%20Harkana!%20Quiero%20el%20pack%20ahorro.%20%C2%BFQu%C3%A9%20opciones%20tienen%3F" target="_blank" class="btn-primary" data-action="whatsapp-pack" style="display:inline-flex;margin-right:12px;" onclick="if(typeof fbq!=='undefined')fbq('track','InitiateCheckout',{content_name:'Pack Ahorro'});if(typeof gtag!=='undefined')gtag('event','click_pack_ahorro',{button_location:'packs_cta'});">Quiero el pack ahorro →</a>
-      <a href="https://wa.me/5493585099308?text=Hola%20Harkana!%20Quiero%20el%20pack%20ahorro.%20%C2%BFQu%C3%A9%20opciones%20tienen%3F" target="_blank" class="btn-secondary" data-action="whatsapp-pack" style="display:inline-flex;border-color:var(--verde);color:var(--verde);" onclick="if(typeof fbq!=='undefined')fbq('track','Contact');if(typeof gtag!=='undefined')gtag('event','click_whatsapp',{button_location:'packs'});">Hablar por WhatsApp</a>
+      <a href="https://wa.me/5493585099308?text=Hola%20Harkana!%20%F0%9F%8C%BF%20Quiero%20m%C3%A1s%20info%20sobre%20la%20yerba%20org%C3%A1nica." target="_blank" class="btn-secondary" data-action="whatsapp-pack" style="display:inline-flex;border-color:var(--verde);color:var(--verde);" onclick="if(typeof fbq!=='undefined')fbq('track','Contact');if(typeof gtag!=='undefined')gtag('event','click_whatsapp',{button_location:'packs'});">Hablar por WhatsApp</a>
     </div>
   </div>
 </section>
@@ -1495,60 +1513,6 @@ footer { background:var(--carbon); padding:80px 0 40px; }
   </div>
 </section>
 
-<!-- ════════ TESTIMONIOS ════════ -->
-<section id="testimonios">
-  <div class="container">
-    <p class="section-label reveal">Lo que dicen</p>
-    <h2 class="section-title reveal delay-1">Clientes que<br><em>ya probaron.</em></h2>
-    <div class="testimonios-grid">
-
-      <div class="testimonio-card reveal delay-1">
-        <div class="testimonio-stars">★★★★★</div>
-        <p class="testimonio-text">"Nunca tomé una yerba tan suave y limpia. Se nota que no tiene polvillo desde el primer mate. No vuelvo a otra."</p>
-        <div class="testimonio-author">
-          <div class="testimonio-avatar">M</div>
-          <div>
-            <div class="testimonio-name">Marcela G.</div>
-            <div class="testimonio-place">Río Cuarto, Córdoba</div>
-          </div>
-        </div>
-      </div>
-
-      <div class="testimonio-card reveal delay-2">
-        <div class="testimonio-stars">★★★★★</div>
-        <p class="testimonio-text">"Soy celíaca y encontrar una yerba sin TACC que además sea buena de verdad es difícil. Harkana es la primera que me convence al 100%."</p>
-        <div class="testimonio-author">
-          <div class="testimonio-avatar">L</div>
-          <div>
-            <div class="testimonio-name">Laura P.</div>
-            <div class="testimonio-place">Buenos Aires</div>
-          </div>
-        </div>
-      </div>
-
-      <div class="testimonio-card reveal delay-3">
-        <div class="testimonio-stars">★★★★★</div>
-        <p class="testimonio-text">"La empecé a vender en mi kiosco y la gente la pide específicamente. El packaging artesanal llama la atención y el producto fideliza."</p>
-        <div class="testimonio-author">
-          <div class="testimonio-avatar">D</div>
-          <div>
-            <div class="testimonio-name">Diego F.</div>
-            <div class="testimonio-place">Revendedor, Alejandro Roca</div>
-          </div>
-        </div>
-      </div>
-
-    </div>
-    <div class="testimonios-cta reveal">
-      <p>¿Ya probaste Harkana? Contanos tu experiencia.</p>
-      <a href="https://wa.me/5493585099308?text=Hola!%20Quiero%20dejar%20mi%20opini%C3%B3n%20sobre%20Harkana" target="_blank" class="btn-wsp" style="display:inline-flex;margin:0 auto;" onclick="if(typeof fbq!=='undefined')fbq('track','Contact');if(typeof gtag!=='undefined')gtag('event','click_whatsapp',{button_location:'testimonios'});">
-        <svg width="18" height="18" fill="white" viewBox="0 0 24 24"><path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347zm-5.421 7.403h-.004a9.87 9.87 0 01-5.031-1.378l-.361-.214-3.741.982.998-3.648-.235-.374a9.86 9.86 0 01-1.51-5.26c.001-5.45 4.436-9.884 9.888-9.884 2.64 0 5.122 1.03 6.988 2.898a9.825 9.825 0 012.893 6.994c-.003 5.45-4.437 9.884-9.885 9.884zm8.413-18.297A11.815 11.815 0 0012.05 0C5.495 0 .16 5.335.157 11.892c0 2.096.547 4.142 1.588 5.945L.057 24l6.305-1.654a11.882 11.882 0 005.683 1.448h.005c6.554 0 11.89-5.335 11.893-11.893a11.821 11.821 0 00-3.48-8.413z"/></svg>
-        Dejar mi opinión
-      </a>
-    </div>
-  </div>
-</section>
-
 <!-- ════════ GALERÍA ════════ -->
 <section id="galeria">
   <div class="container">
@@ -1625,6 +1589,7 @@ footer { background:var(--carbon); padding:80px 0 40px; }
                 <a href="https://maps.app.goo.gl/WqtBf3cRsDAaoMum8" target="_blank" class="punto-link">Shop Puma</a>
                 <a href="https://maps.app.goo.gl/scFuer2FzG8Jg64G9" target="_blank" class="punto-link">Germán Dos Estación de Servicio</a>
                 <a href="https://maps.app.goo.gl/MiBycRu1KsvGoSbY7" target="_blank" class="punto-link">Regionales Don Valente</a>
+                <a href="https://www.google.com/maps/search/?api=1&query=Verduler%C3%ADa+Los+Tres+Hermanos+Alejandro+Roca+C%C3%B3rdoba" target="_blank" class="punto-link">Verdulería Los Tres Hermanos</a>
               </div>
             </div>
           </div>
@@ -1643,8 +1608,6 @@ footer { background:var(--carbon); padding:80px 0 40px; }
               <div class="punto-ciudad">Río Cuarto, Córdoba</div>
               <div class="punto-detalle" style="display:flex;flex-direction:column;gap:4px;margin-top:4px;">
                 <a href="https://maps.app.goo.gl/A7QcQK2VgYtZPbxx7" target="_blank" class="punto-link">Autoservicio Nacho</a>
-                <a href="https://maps.app.goo.gl/sZRuB9argA7VzEdV7" target="_blank" class="punto-link">Transcord</a>
-                <a href="https://maps.app.goo.gl/67AJNbVG8aiK1yFb8" target="_blank" class="punto-link">Minimercado Faty</a>
               </div>
             </div>
           </div>
@@ -1654,11 +1617,20 @@ footer { background:var(--carbon); padding:80px 0 40px; }
               <div class="punto-ciudad">Garín, Buenos Aires</div>
               <div class="punto-detalle" style="display:flex;flex-direction:column;gap:4px;margin-top:4px;">
                 <a href="https://maps.app.goo.gl/opVn29UUVBdLhD8W7" target="_blank" class="punto-link">Distribuidor zona norte GBA</a>
-                <span style="font-size:.72rem;color:var(--gris);">Consultas: +54 9 11 4166 4801</span>
+                <span style="font-size:.72rem;color:var(--gris);">Consultas: <a href="https://wa.me/5491141664801?text=Hola%2C%20quiero%20consultar%20por%20Harkana%20en%20Gar%C3%ADn" target="_blank" class="punto-link">+54 9 11 4166 4801</a></span>
               </div>
             </div>
           </div>
           <div class="punto-item reveal delay-5">
+            <div class="punto-num">📍</div>
+            <div>
+              <div class="punto-ciudad">Villa Mercedes, San Luis</div>
+              <div class="punto-detalle" style="display:flex;flex-direction:column;gap:4px;margin-top:4px;">
+                <span style="font-size:.72rem;color:var(--gris);">Distribuidor · Consultas <a href="https://wa.me/5492657391313?text=Hola%2C%20quiero%20consultar%20por%20Harkana%20en%20Villa%20Mercedes" target="_blank" class="punto-link">+54 9 2657 39-1313</a></span>
+              </div>
+            </div>
+          </div>
+          <div class="punto-item reveal delay-6">
             <div class="punto-num">🌐</div>
             <div>
               <div class="punto-ciudad">Todo Argentina · Online</div>
@@ -1671,7 +1643,7 @@ footer { background:var(--carbon); padding:80px 0 40px; }
         <div class="donde-img"><img src="CONTENIDO/foto 6- reemplazo foto gondola.jpeg" alt="Harkana Yerba Orgánica en góndola de supermercado — puntos de venta en Córdoba y Buenos Aires" loading="lazy"></div>
         <div class="donde-cta-box">
           <h3>¿Querés vender Harkana?</h3>
-          <p>Producto diferenciado, packaging único, stock permanente y trato directo con los dueños. Ideal para supermercados, kioscos, estaciones de servicio y distribuidores.</p>
+          <p>Producto diferenciado, packaging único, stock permanente y trato directo con los dueños. Ideal para supermercados, kioscos, estaciones de servicio y mayoristas.</p>
           <a href="https://wa.me/5493585099308?text=Hola%20Harkana!%20Quiero%20info%20sobre%20precios%20mayoristas%20y%20condiciones%20de%20reventa." target="_blank" class="btn-wsp" data-action="whatsapp-mayorista" onclick="if(typeof fbq!=='undefined')fbq('track','Lead');if(typeof gtag!=='undefined')gtag('event','consulta_mayorista',{button_location:'donde'});">
             <svg width="18" height="18" fill="white" viewBox="0 0 24 24"><path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347zm-5.421 7.403h-.004a9.87 9.87 0 01-5.031-1.378l-.361-.214-3.741.982.998-3.648-.235-.374a9.86 9.86 0 01-1.51-5.26c.001-5.45 4.436-9.884 9.888-9.884 2.64 0 5.122 1.03 6.988 2.898a9.825 9.825 0 012.893 6.994c-.003 5.45-4.437 9.884-9.885 9.884zm8.413-18.297A11.815 11.815 0 0012.05 0C5.495 0 .16 5.335.157 11.892c0 2.096.547 4.142 1.588 5.945L.057 24l6.305-1.654a11.882 11.882 0 005.683 1.448h.005c6.554 0 11.89-5.335 11.893-11.893a11.821 11.821 0 00-3.48-8.413z"/></svg>
             Escribir por WhatsApp
@@ -1697,19 +1669,20 @@ footer { background:var(--carbon); padding:80px 0 40px; }
         <div class="mayor-feat"><span>💬</span><p>Trato directo<br>con los dueños</p></div>
       </div>
       <div class="reveal delay-3" style="text-align:center;margin-bottom:28px;">
-        <span class="badge-descuento">💰 Precio mayorista especial — consultá sin compromiso &nbsp;·&nbsp; 🚚 + 30% OFF en el envío de tu primer pedido</span>
+        <span class="badge-descuento">💰 Precio mayorista especial — consultá sin compromiso &nbsp;·&nbsp; 🚚 30% OFF en el <strong>ENVÍO</strong> de tu primer pedido</span>
       </div>
       <div class="mayorista-form reveal delay-4">
         <label class="form-label" for="mayor-prod">Presentación que te interesa</label>
         <select id="mayor-prod">
+          <option value="bolsas de 250g Kraft">250g — Bolsa Kraft Artesanal</option>
           <option value="bolsas de 500g Kraft">500g — Bolsa Kraft Artesanal</option>
           <option value="bolsas de 1kg">1kg — Bolsa Estándar</option>
-          <option value="bolsas de 3kg" selected>3kg — Pack Mayorista</option>
-          <option value="bolsas de 10kg (distribuidores)">10kg — Distribuidores (próximamente)</option>
+          <option value="bolsas de 3kg" selected>3kg — Ahorro familiar</option>
+          <option value="bolsas de 10kg (mayoristas)">10kg — Mayoristas (próximamente)</option>
         </select>
         <label class="form-label" for="mayor-qty">Cantidad de bolsas que necesitás</label>
         <input type="number" id="mayor-qty" min="1" value="10" placeholder="Ej: 20">
-        <p style="font-size:.68rem;color:rgba(255,255,255,.4);margin-bottom:12px;">A partir de 50kg → consultá precio especial mayorista</p>
+        <p style="font-size:.68rem;color:rgba(255,255,255,.4);margin-bottom:12px;">A partir de 25kg → consultá precio especial mayorista</p>
         <button class="btn-primary" data-action="whatsapp-mayorista" onclick="mayoristasWsp()" type="button" style="width:100%;justify-content:center;border:none;cursor:pointer;margin-bottom:10px;">
           Quiero precios mayoristas →
         </button>
@@ -1747,10 +1720,6 @@ footer { background:var(--carbon); padding:80px 0 40px; }
           <a href="mailto:harkanayerbas@gmail.com" class="channel">
             <div class="channel-icon" style="background:#fef6e8;">✉️</div>
             <div><div class="channel-label">Email</div><div class="channel-value">harkanayerbas@gmail.com</div></div>
-          </a>
-          <a href="https://harkanayerbas.mitiendanube.com" target="_blank" class="channel">
-            <div class="channel-icon" style="background:#f0f9f0;">🛒</div>
-            <div><div class="channel-label">Tienda Online</div><div class="channel-value">harkanayerbas.mitiendanube.com</div></div>
           </a>
         </div>
       </div>
@@ -1810,9 +1779,14 @@ footer { background:var(--carbon); padding:80px 0 40px; }
         <div class="faq-respuesta"><p>Aceptamos transferencia bancaria, Mercado Pago y efectivo en mano si retirás en Alejandro Roca. Todo se coordina por WhatsApp al confirmar el pedido.</p></div>
       </div>
 
-      <div class="faq-item" style="border-bottom:none;">
+      <div class="faq-item">
         <button class="faq-pregunta" onclick="toggleFaq(this)" aria-expanded="false">¿Puedo ser revendedor?<span class="faq-icono">+</span></button>
-        <div class="faq-respuesta"><p>Sí, tenemos precio mayorista a partir de cierto volumen. Contamos con supermercados, kioscos y distribuidores en Córdoba y Buenos Aires. Además, en tu primer pedido mayorista tenés 30% OFF en el envío. Escribinos por WhatsApp y te mandamos la lista de precios sin compromiso.</p></div>
+        <div class="faq-respuesta"><p>Sí, tenemos precio mayorista a partir de 25kg. Contamos con supermercados, kioscos y mayoristas en Córdoba y Buenos Aires. Además, tenés 30% OFF en el <strong>ENVÍO</strong> de tu primer pedido mayorista. Escribinos por WhatsApp y te mandamos la lista de precios sin compromiso.</p></div>
+      </div>
+
+      <div class="faq-item" style="border-bottom:none;">
+        <button class="faq-pregunta" onclick="toggleFaq(this)" aria-expanded="false">¿Puedo comprar una sola bolsa de 250g?<span class="faq-icono">+</span></button>
+        <div class="faq-respuesta"><p>El 250g está pensado como formato de prueba y para puntos de venta. Online el mínimo es de 2 unidades, o podés sumarlo a cualquier pedido. En nuestros puntos de venta físicos lo conseguís por unidad.</p></div>
       </div>
 
     </div>
@@ -1871,11 +1845,11 @@ footer { background:var(--carbon); padding:80px 0 40px; }
       <div class="footer-col">
         <h4>Productos</h4>
         <ul class="footer-links">
+          <li><a href="#productos">Bolsa 250g — $4.000</a></li>
           <li><a href="#productos">Bolsa 500g Kraft — $5.000</a></li>
           <li><a href="#productos">Bolsa 1kg</a></li>
-          <li><a href="#productos">Bolsa 3kg Mayorista</a></li>
+          <li><a href="#productos">Bolsa 3kg</a></li>
           <li><a href="#productos">Pack 10kg (próximo)</a></li>
-          <li><a href="https://harkanayerbas.mitiendanube.com" target="_blank">Tienda Online</a></li>
         </ul>
       </div>
       <div class="footer-col">
@@ -1891,7 +1865,7 @@ footer { background:var(--carbon); padding:80px 0 40px; }
       </div>
     </div>
     <div class="footer-bottom">
-      <p class="footer-copy">© 2025 Harkana Yerba Orgánica · Alejandro Roca, Córdoba, Argentina</p>
+      <p class="footer-copy">© 2026 Harkana Yerba Orgánica · Alejandro Roca, Córdoba, Argentina</p>
       <div class="footer-legal">
         <a href="https://www.argentina.gob.ar/produccion/defensadelconsumidor" target="_blank">Defensa del Consumidor</a>
         <a href="#contacto">Contacto</a>
@@ -1997,7 +1971,7 @@ function handleForm(e) {
 }
 
 // ── CANTIDAD / COMPRA ──
-const UMBRAL_MAYORISTA_KG = 50;
+const UMBRAL_MAYORISTA_KG = 25;
 
 function actualizarInfo(id, kgPorUnidad) {
   const qty = parseInt(document.getElementById(id).value) || 1;
@@ -2008,7 +1982,13 @@ function actualizarInfo(id, kgPorUnidad) {
   if (!el) return;
   const bolsas = qty === 1 ? '1 bolsa' : qty + ' bolsas';
   const kgStr = totalKg % 1 === 0 ? totalKg : totalKg;
-  el.innerHTML = `${bolsas} · ${kgStr} kg · <span class="tipo-pedido ${esMayor ? 'tipo-mayor' : 'tipo-minor'}">${esMayor ? '⭐ Pedido mayorista' : 'Pedido minorista'}</span>`;
+  if (id === 'qty-250g') {
+    el.innerHTML = `${bolsas} · ${kgStr} kg · <span class="tipo-pedido tipo-minor">Mínimo 2 unidades online</span>`;
+  } else if (id === 'qty-3kg') {
+    el.innerHTML = `${bolsas} · ${kgStr} kg · <span class="tipo-pedido tipo-mayor">Mejor precio por kilo</span>`;
+  } else {
+    el.innerHTML = `${bolsas} · ${kgStr} kg · <span class="tipo-pedido ${esMayor ? 'tipo-mayor' : 'tipo-minor'}">${esMayor ? '⭐ Pedido mayorista' : 'Pedido minorista'}</span>`;
+  }
 }
 
 function cambiarCantidad(id, delta, kgPorUnidad) {
@@ -2030,7 +2010,7 @@ function comprarWsp(idQty, nombreProd, precio, kgPorUnidad) {
   let msg;
   if (esMayor) {
     msg = encodeURIComponent(
-      `Hola Harkana! 🌿 Me comunico por un pedido MAYORISTA. Quiero ${bolsas} de yerba ${nombreProd} ($${precioFmt} c/u) — ${totalKg} kg en total. ¿Me aplican el 30% de descuento en el envío por ser mi primer pedido mayorista? ¿Me coordinan forma de pago y entrega? ¡Gracias!`
+      `Hola Harkana! 🌿 Me comunico por un pedido MAYORISTA. Quiero ${bolsas} de yerba ${nombreProd} ($${precioFmt} c/u) — ${totalKg} kg en total. ¿Me aplican el 30% OFF en el ENVÍO por ser mi primer pedido mayorista? ¿Me coordinan forma de pago y entrega? ¡Gracias!`
     );
   } else {
     msg = encodeURIComponent(
@@ -2049,7 +2029,7 @@ function mayoristasWsp() {
   if (typeof fbq !== 'undefined') fbq('track', 'Lead');
   if (typeof gtag !== 'undefined') gtag('event', 'consulta_mayorista');
   const msg = encodeURIComponent(
-    `Hola Harkana! Quiero info sobre precios mayoristas y condiciones de reventa. Me interesa ${unidades} de ${prod}. ¿Podrían informarme precio mayorista, condiciones y el 30% OFF en el envío del primer pedido? ¡Gracias!`
+    `Hola Harkana! Quiero info sobre precios mayoristas y condiciones de reventa. Me interesa ${unidades} de ${prod}. ¿Podrían informarme precio mayorista, condiciones y el 30% OFF en el ENVÍO de mi primer pedido mayorista? ¡Gracias!`
   );
   window.open('https://wa.me/5493585099308?text=' + msg, '_blank');
 }
@@ -2171,9 +2151,9 @@ function toggleFaq(btn) {
   <div class="exit-popup-box">
     <button class="exit-popup-close" id="popup-close-btn" aria-label="Cerrar">✕</button>
     <div class="exit-popup-tag">🌿 Oferta especial</div>
-    <h2 class="exit-popup-title">30% OFF en el envío<br>de tu <em>primer pedido</em><br>mayorista.</h2>
-    <p class="exit-popup-text">Precio mayorista real, trato directo con los dueños y 30% de descuento en el envío. Consultá sin compromiso.</p>
-    <a href="https://wa.me/5493585099308?text=Hola%20Harkana!%20Vi%20el%2030%25%20OFF%20mayorista.%20%C2%BFMe%20cont%C3%A1s%20m%C3%A1s%3F"
+    <h2 class="exit-popup-title">30% OFF en el <strong>ENVÍO</strong><br>de tu <em>primer pedido mayorista</em>.</h2>
+    <p class="exit-popup-text">Precio mayorista real, trato directo con los dueños y 30% OFF en el <strong>ENVÍO</strong> de tu primer pedido mayorista. Consultá sin compromiso.</p>
+    <a href="https://wa.me/5493585099308?text=Hola%20Harkana!%20Vi%20el%2030%25%20OFF%20en%20el%20env%C3%ADo%20de%20mi%20primer%20pedido%20mayorista.%20%C2%BFMe%20cont%C3%A1s%20m%C3%A1s%3F"
        target="_blank" class="exit-popup-btn" data-action="whatsapp-mayorista"
        onclick="if(typeof fbq!=='undefined')fbq('track','Lead');if(typeof gtag!=='undefined')gtag('event','exit_popup_click');">
       <svg width="20" height="20" fill="white" viewBox="0 0 24 24"><path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347zm-5.421 7.403h-.004a9.87 9.87 0 01-5.031-1.378l-.361-.214-3.741.982.998-3.648-.235-.374a9.86 9.86 0 01-1.51-5.26c.001-5.45 4.436-9.884 9.888-9.884 2.64 0 5.122 1.03 6.988 2.898a9.825 9.825 0 012.893 6.994c-.003 5.45-4.437 9.884-9.885 9.884zm8.413-18.297A11.815 11.815 0 0012.05 0C5.495 0 .16 5.335.157 11.892c0 2.096.547 4.142 1.588 5.945L.057 24l6.305-1.654a11.882 11.882 0 005.683 1.448h.005c6.554 0 11.89-5.335 11.893-11.893a11.821 11.821 0 00-3.48-8.413z"/></svg>
@@ -2193,16 +2173,16 @@ function toggleFaq(btn) {
     <button class="popup-cerrar" onclick="cerrarPopup()" aria-label="Cerrar">✕</button>
     <div class="popup-badge">🏪 Para revendedores</div>
     <h3>¿Querés vender Harkana<br>en tu negocio?</h3>
-    <p>Precio mayorista especial + <strong>30% OFF en el envío de tu primer pedido.</strong></p>
-    <p class="popup-sub">Kioscos, supermercados, dietéticas y distribuidores.<br>Trato directo con los dueños.</p>
-    <a href="https://wa.me/5493585099308?text=Hola%20Harkana!%20Vi%20la%20oferta%20mayorista.%20%C2%BFMe%20cont%C3%A1s%20m%C3%A1s%3F"
+    <p>Precio mayorista especial + <strong>30% OFF en el ENVÍO de tu primer pedido mayorista.</strong></p>
+    <p class="popup-sub">Kioscos, supermercados, dietéticas y mayoristas.<br>Trato directo con los dueños.</p>
+    <a href="https://wa.me/5493585099308?text=Hola%20Harkana!%20Vi%20el%2030%25%20OFF%20en%20el%20env%C3%ADo%20de%20mi%20primer%20pedido%20mayorista.%20%C2%BFMe%20cont%C3%A1s%20m%C3%A1s%3F"
        class="popup-btn"
        onclick="cerrarPopup()"
        target="_blank"
        rel="noopener">
       Consultar precio mayorista →
     </a>
-    <p class="popup-nota">Sin compromiso · Respondemos por WhatsApp</p>
+    <p class="popup-nota">Respondemos por WhatsApp</p>
   </div>
 </div>
 
