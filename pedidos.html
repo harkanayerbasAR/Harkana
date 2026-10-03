@@ -1,0 +1,156 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Pedí tu Harkana</title>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:opsz,wght@12..96,600;12..96,700&family=Figtree:wght@400;500;600;700&display=swap">
+<style>
+:root{--bg:#F2F5EC;--surface:#FFFFFF;--ink:#1B2A1E;--muted:#5C6A5E;--line:#D5DCCD;--accent:#2C6A38;--accent-ink:#FFFFFF;--accent-soft:#E1EDDD;--warn:#9A5B00;--warn-soft:#FBEBCF;--danger:#A8321F;
+--display:"Bricolage Grotesque","Trebuchet MS",system-ui,sans-serif;--body:"Figtree",system-ui,-apple-system,"Segoe UI",sans-serif}
+@media (prefers-color-scheme:dark){:root{--bg:#111712;--surface:#1A221B;--ink:#E6EDE2;--muted:#9BA99C;--line:#2C372D;--accent:#7FC78B;--accent-ink:#0D150E;--accent-soft:#22352A;--warn:#E3AC52;--warn-soft:#3A2D14;--danger:#F08A76;color-scheme:dark}}
+*{box-sizing:border-box}
+body{margin:0;background:var(--bg);color:var(--ink);font-family:var(--body);font-size:16px;line-height:1.45}
+.wrap{max-width:520px;margin:0 auto;padding:24px 16px 48px;display:flex;flex-direction:column;gap:18px}
+.logo{width:72px;height:72px;object-fit:contain;border-radius:12px}
+h1{font-family:var(--display);font-size:1.9rem;font-weight:700;margin:0;letter-spacing:-.01em;text-wrap:balance}
+h2{font-family:var(--display);font-size:1.15rem;font-weight:600;margin:0}
+.sub{color:var(--muted);margin:0}
+.card{background:var(--surface);border:1px solid var(--line);border-radius:14px;padding:16px;display:flex;flex-direction:column;gap:14px}
+label,.lbl{font-size:.78rem;font-weight:700;letter-spacing:.06em;text-transform:uppercase;color:var(--muted)}
+.field{display:flex;flex-direction:column;gap:6px;min-width:0}
+input[type=text],input[type=tel],input[type=password],textarea{font:500 1rem var(--body);color:var(--ink);background:var(--bg);border:1px solid var(--line);border-radius:10px;padding:12px;width:100%;min-width:0}
+textarea{resize:vertical;min-height:46px}
+button:focus-visible,input:focus-visible,textarea:focus-visible,a:focus-visible{outline:2px solid var(--accent);outline-offset:2px}
+.primary{display:block;width:100%;text-align:center;text-decoration:none;font:700 1.08rem var(--body);background:var(--accent);color:var(--accent-ink);border:0;border-radius:12px;padding:16px;cursor:pointer}
+.primary:disabled{opacity:.5}
+.msg{font-size:.92rem;font-weight:600;color:var(--danger);min-height:1.3em}
+.note{background:var(--warn-soft);border-radius:12px;padding:12px 14px;font-size:.92rem}
+[hidden]{display:none!important}
+
+.qrow{display:flex;align-items:center;justify-content:space-between;gap:12px;padding:8px 0;border-bottom:1px solid var(--line)}
+.qrow:last-child{border-bottom:0}
+.qname{font-weight:700;font-size:1.1rem}
+.qname small{display:block;font-weight:500;font-size:.82rem;color:var(--muted)}
+.step{display:flex;align-items:center;gap:8px}
+.step button{width:46px;height:46px;border-radius:50%;border:1px solid var(--line);background:var(--bg);color:var(--ink);font:700 1.3rem var(--body);cursor:pointer}
+.step input{width:64px;text-align:center;font:700 1.15rem var(--body);font-variant-numeric:tabular-nums;color:var(--ink);background:var(--bg);border:1px solid var(--line);border-radius:10px;padding:10px 4px}
+.total{display:flex;justify-content:space-between;align-items:baseline;font-weight:600}
+.total b{font-family:var(--display);font-size:1.7rem;font-variant-numeric:tabular-nums}
+.wa{display:block;text-align:center;text-decoration:none;font:700 1rem var(--body);color:var(--accent);border:2px solid var(--accent);border-radius:12px;padding:14px}
+</style>
+</head>
+<body>
+<div class="wrap">
+  <img class="logo" src="CONTENIDO/logo%20oficial%20harkana.jpeg" alt="Harkana" onerror="this.hidden=true">
+  <div>
+    <h1 id="titulo">Pedí tu Harkana</h1>
+    <p class="sub">Elegí cuántos paquetes querés y enviá. Te confirmamos la entrega.</p>
+  </div>
+
+  <div class="card" id="form">
+    <div id="datos" hidden>
+      <div class="field"><label for="comercio">Nombre del comercio</label><input type="text" id="comercio" maxlength="60" placeholder="Ej.: Almacén Don Pepe"></div>
+      <div class="field" style="margin-top:14px"><label for="localidad">Localidad</label><input type="text" id="localidad" maxlength="40" placeholder="Ej.: Río Cuarto"></div>
+      <div class="field" style="margin-top:14px"><label for="telefono">Teléfono</label><input type="tel" id="telefono" maxlength="20" placeholder="Para confirmarte el pedido"></div>
+    </div>
+    <div class="field"><span class="lbl">¿Cuántos paquetes querés?</span><div id="qty"></div></div>
+    <div class="total"><span>Total</span><b id="totalKg">0 kg</b></div>
+    <div class="field"><label for="nota">Aclaración (opcional)</label><textarea id="nota" rows="1" maxlength="200" placeholder="Ej.: entregar por la mañana"></textarea></div>
+    <button class="primary" id="enviar" type="button">Enviar pedido</button>
+    <div class="msg" id="msg" role="status"></div>
+    <a class="wa" id="wa" href="#" target="_blank" rel="noopener" hidden>Enviarlo por WhatsApp</a>
+  </div>
+
+  <div class="card" id="listo" hidden>
+    <h2>Pedido enviado</h2>
+    <p class="sub" id="resumen"></p>
+    <button class="primary" id="otro" type="button">Hacer otro pedido</button>
+  </div>
+</div>
+
+<script>
+(function(){
+  /* ====== CONFIGURACIÓN ====== */
+  var API="https://script.google.com/macros/s/AKfycbxsephoJR9xpN11_GrSo15Esxfweiw-aocfFsQXGKjnmzY7LLUZIUtTSXNuac5fCTJiqA/exec";          // dirección que te da Google al implementar el script
+  var WHATSAPP="5493585099308";         // número que recibe pedidos si falla el envío
+  /* =========================== */
+
+  var PRES=[{k:"q250",n:"1/4 kg",d:"250 g",kg:.25},{k:"q500",n:"1/2 kg",d:"500 g",kg:.5},{k:"q1",n:"1 kg",d:"paquete de kilo",kg:1},{k:"q3",n:"3 kg",d:"bolsa de 3 kg",kg:3}];
+  var $=function(id){return document.getElementById(id);};
+  var el=function(t,c,x){var e=document.createElement(t);if(c)e.className=c;if(x!=null)e.textContent=x;return e;};
+  var fmtKg=function(n){return (Math.round(n*100)/100).toLocaleString("es-AR")+" kg";};
+  var guardar=function(k,v){try{localStorage.setItem(k,v);}catch(e){}};
+  var leer=function(k){try{return localStorage.getItem(k)||"";}catch(e){return "";}};
+  var listo=API.indexOf("http")===0;
+
+  PRES.forEach(function(x){
+    var row=el("div","qrow"), nm=el("span","qname",x.n); nm.appendChild(el("small",null,x.d)); row.appendChild(nm);
+    var st=el("div","step");
+    var m=el("button",null,"−"); m.type="button"; m.setAttribute("aria-label","Restar "+x.n);
+    var i=document.createElement("input"); i.type="number"; i.min="0"; i.max="999"; i.inputMode="numeric"; i.value="0"; i.id="in-"+x.k; i.setAttribute("aria-label","Paquetes de "+x.n);
+    var p=el("button",null,"+"); p.type="button"; p.setAttribute("aria-label","Sumar "+x.n);
+    m.onclick=function(){i.value=Math.max(0,(parseInt(i.value)||0)-1);upd();};
+    p.onclick=function(){i.value=Math.min(999,(parseInt(i.value)||0)+1);upd();};
+    i.oninput=upd; i.onfocus=function(){i.select();};
+    st.appendChild(m);st.appendChild(i);st.appendChild(p); row.appendChild(st); $("qty").appendChild(row);
+  });
+
+  /* --- quién es: código del link propio, o datos a mano --- */
+  var codigo=(new URLSearchParams(location.search).get("c")||leer("hk_codigo")||"").trim().toUpperCase();
+  var nombreFijo="";
+  function pedirDatos(){ $("datos").hidden=false; $("comercio").value=leer("hk_comercio"); $("localidad").value=leer("hk_localidad"); $("telefono").value=leer("hk_telefono"); }
+  if(codigo&&listo){
+    fetch(API+"?c="+encodeURIComponent(codigo)).then(function(r){return r.json();}).then(function(d){
+      if(d&&d.ok){nombreFijo=d.nombre;guardar("hk_codigo",codigo);$("titulo").textContent="Hola, "+d.nombre;}
+      else{codigo="";pedirDatos();}
+    }).catch(function(){ /* sin conexión: el servidor reconoce el código al enviar */ nombreFijo=leer("hk_nombre");if(!nombreFijo)pedirDatos(); });
+  }else{codigo=listo?codigo:"";pedirDatos();}
+
+  function estado(){
+    var q={},kg=0;
+    PRES.forEach(function(x){q[x.k]=Math.max(0,Math.min(999,parseInt($("in-"+x.k).value)||0));kg+=q[x.k]*x.kg;});
+    var com=nombreFijo||$("comercio").value.trim();
+    return {q:q,kg:kg,com:com,loc:$("localidad").value.trim(),tel:$("telefono").value.trim(),nota:$("nota").value.trim()};
+  }
+  function texto(s){
+    var l=["*Pedido Harkana*","Comercio: "+s.com]; if(s.loc)l.push("Localidad: "+s.loc);
+    PRES.forEach(function(x){if(s.q[x.k]>0)l.push(x.n+": "+s.q[x.k]);});
+    l.push("Total: "+fmtKg(s.kg)); if(s.nota)l.push("Nota: "+s.nota); return l.join("\n");
+  }
+  function upd(){ $("totalKg").textContent=fmtKg(estado().kg); }
+
+  function porWhatsApp(s,motivo){
+    $("msg").textContent=motivo;
+    $("wa").href="https://wa.me/"+WHATSAPP+"?text="+encodeURIComponent(texto(s));
+    $("wa").hidden=false;
+  }
+
+  $("enviar").onclick=function(){
+    var s=estado(); $("wa").hidden=true;
+    if(!s.com){$("msg").textContent="Escribí el nombre de tu comercio.";return;}
+    if(s.kg<=0){$("msg").textContent="Sumá al menos un paquete.";return;}
+    if(!nombreFijo&&!s.tel){$("msg").textContent="Dejanos un teléfono para confirmarte el pedido.";return;}
+    if(!listo){porWhatsApp(s,"Enviá tu pedido por WhatsApp:");return;}
+    $("enviar").disabled=true; $("msg").textContent=""; $("enviar").textContent="Enviando…";
+    var cuerpo={accion:"pedido",codigo:codigo,comercio:s.com,localidad:s.loc,telefono:s.tel,nota:s.nota};
+    PRES.forEach(function(x){cuerpo[x.k]=s.q[x.k];});
+    fetch(API,{method:"POST",body:JSON.stringify(cuerpo)}).then(function(r){return r.json();}).then(function(d){
+      if(!d||!d.ok) throw new Error("rechazado");
+      if(!nombreFijo){guardar("hk_comercio",s.com);guardar("hk_localidad",s.loc);guardar("hk_telefono",s.tel);} else guardar("hk_nombre",nombreFijo);
+      $("resumen").textContent=d.comercio+": "+fmtKg(d.kg)+". Ya nos llegó, te confirmamos la entrega.";
+      $("form").hidden=true; $("listo").hidden=false; window.scrollTo(0,0);
+    }).catch(function(){
+      porWhatsApp(s,"No pudimos enviarlo desde acá. Mandalo por WhatsApp con este botón:");
+    }).then(function(){ $("enviar").disabled=false; $("enviar").textContent="Enviar pedido"; });
+  };
+
+  $("otro").onclick=function(){
+    PRES.forEach(function(x){$("in-"+x.k).value="0";}); $("nota").value=""; upd();
+    $("listo").hidden=true; $("form").hidden=false;
+  };
+  upd();
+})();
+</script>
+</body>
+</html>
