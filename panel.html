@@ -43,8 +43,12 @@ button:focus-visible,input:focus-visible,textarea:focus-visible,a:focus-visible{
 .size{border-top:1px solid var(--line);padding-top:8px;min-width:0}
 summary{font-weight:700;cursor:pointer}
 .prod{gap:12px}
-.prod .big b{font-size:clamp(2.1rem,10vw,3rem)}
-.prod.neg .big b{color:var(--danger)}
+.prodtop{display:flex;align-items:center;justify-content:space-between;gap:12px}
+.prodtxt{min-width:0;display:flex;flex-direction:column;gap:2px}
+.prodlbl{font-weight:700}
+.prodnum{font-family:var(--display);font-size:1.55rem;font-variant-numeric:tabular-nums;white-space:nowrap;border:1px solid var(--line);border-radius:10px;padding:8px 12px;background:var(--bg)}
+.prod.neg .prodnum{color:var(--danger);border-color:var(--danger)}
+.aviso{background:var(--accent-soft);color:var(--ink);font-weight:600;border-radius:10px;padding:10px 12px}
 .prod details{display:flex;flex-direction:column;gap:12px;border-top:1px solid var(--line);padding-top:12px}
 .prod details[open] summary{margin-bottom:12px}
 .prod details .field{margin-bottom:12px}
@@ -93,9 +97,13 @@ summary{font-weight:700;cursor:pointer}
     <div class="sizes" id="sizes"></div>
     <div class="card prod" id="prodBox">
       <div class="prodtop">
-        <div class="big"><b id="saldo">$0</b><span id="saldoLbl">a favor por producción</span></div>
-        <div class="foot" id="prodMes"></div>
+        <div class="prodtxt">
+          <span class="prodlbl" id="saldoLbl">a favor por producción</span>
+          <div class="foot" id="prodMes"></div>
+        </div>
+        <b class="prodnum" id="saldo">$0</b>
       </div>
+      <div class="aviso" id="aviso" role="status" hidden></div>
       <details id="retForm">
         <summary>Cargar retiro</summary>
         <div class="field"><label for="rmonto">Monto retirado ($)</label><input type="text" id="rmonto" inputmode="numeric" placeholder="Ej.: 30000"></div>
@@ -163,7 +171,7 @@ summary{font-weight:700;cursor:pointer}
     $("prodBox").hidden=!pr;
     if(pr){
       $("saldo").textContent=plata(pr.saldo);
-      $("saldoLbl").textContent=pr.saldo<0?"retirado de más":(admin?"a favor de "+pr.socio+" por producción":"a tu favor por producción");
+      $("saldoLbl").textContent=pr.saldo<0?(admin?pr.socio+" retiró de más":"Retiraste de más"):(admin?"A favor de "+pr.socio+" por producción":"A tu favor por producción");
       $("prodBox").className="card prod"+(pr.saldo<0?" neg":"");
       $("prodMes").textContent="Este mes: ganado "+plata(pr.ganadoMes)+" · retirado "+plata(pr.retiradoMes);
       var M=$("pmov"); M.textContent="";
@@ -192,7 +200,7 @@ summary{font-weight:700;cursor:pointer}
       if(p.pago) c.appendChild(el("div","gana","Al entregar suma "+plata(p.pago)+" de producción"));
       if(!p.conocido) c.appendChild(el("div","warn","Pidió sin link propio. Confirmá antes de entregar."));
       var b=el("button","primary","Entregado"); b.type="button";
-      b.onclick=function(){cambiar(p.id,"entregado",b);};
+      b.onclick=function(){cambiar(p.id,"entregado",b,p);};
       c.appendChild(b); P.appendChild(c);
     });
     var E=$("entr"); E.textContent=""; $("tEntr").hidden=!d.entregados.length;
@@ -200,8 +208,9 @@ summary{font-weight:700;cursor:pointer}
       var c=el("div","ped done"), top=el("div","ped-top");
       top.appendChild(el("div","ped-name",p.comercio)); top.appendChild(el("div","ped-kg",num(p.kg)+" kg")); c.appendChild(top);
       c.appendChild(el("div","meta",detalle(p)+" · entregado "+p.entregado));
+      if(p.pago) c.appendChild(el("div","gana","Sumó "+plata(p.pago)+" de producción"));
       var b=el("button","ghost","Deshacer"); b.type="button";
-      b.onclick=function(){cambiar(p.id,"pendiente",b);};
+      b.onclick=function(){cambiar(p.id,"pendiente",b,p);};
       c.appendChild(b); E.appendChild(c);
     });
     var h=new Date(); $("act").textContent="Actualizado "+String(h.getHours()).padStart(2,"0")+":"+String(h.getMinutes()).padStart(2,"0");
@@ -218,9 +227,19 @@ summary{font-weight:700;cursor:pointer}
       else $("act").textContent="Sin conexión. Tocá Actualizar.";
     });
   }
-  function cambiar(id,estado,boton){
+  function cambiar(id,estado,boton,ped){
     boton.disabled=true; boton.textContent="Guardando…";
-    api({accion:"estado",id:id,estado:estado}).then(function(d){ if(!d||!d.ok) throw new Error(); pintar(d); })
+    api({accion:"estado",id:id,estado:estado}).then(function(d){
+      if(!d||!d.ok) throw new Error(); pintar(d);
+      var a=$("aviso"), s=d.produccion;
+      if(ped&&ped.pago&&s){
+        var de=rol==="admin"?" a favor de "+s.socio:" a tu favor";
+        a.textContent=estado==="entregado"
+          ?"Entregado a "+ped.comercio+": se sumaron "+plata(ped.pago)+de+". Saldo: "+plata(s.saldo)+"."
+          :"Entrega deshecha de "+ped.comercio+": se restaron "+plata(ped.pago)+". Saldo: "+plata(s.saldo)+".";
+        a.hidden=false; a.scrollIntoView({block:"nearest",behavior:"smooth"});
+      }
+    })
       .catch(function(){ boton.disabled=false; boton.textContent="No se pudo, tocá de nuevo"; });
   }
   function salir(m){
