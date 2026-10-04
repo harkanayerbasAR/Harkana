@@ -42,6 +42,15 @@ button:focus-visible,input:focus-visible,textarea:focus-visible,a:focus-visible{
 .sizes{display:grid;grid-template-columns:repeat(4,1fr);gap:8px}
 .size{border-top:1px solid var(--line);padding-top:8px;min-width:0}
 summary{font-weight:700;cursor:pointer}
+.prod{gap:12px}
+.prod .big b{font-size:clamp(2.1rem,10vw,3rem)}
+.prod.neg .big b{color:var(--danger)}
+.prod details{display:flex;flex-direction:column;gap:12px;border-top:1px solid var(--line);padding-top:12px}
+.prod details[open] summary{margin-bottom:12px}
+.prod details .field{margin-bottom:12px}
+.gana{font-size:.86rem;font-weight:600;color:var(--accent)}
+.mov{display:flex;justify-content:space-between;gap:10px;padding:5px 0;border-top:1px solid var(--line)}
+.mov span:last-child{font-variant-numeric:tabular-nums;white-space:nowrap;font-weight:600}
 .size b{display:block;font-family:var(--display);font-size:1.4rem;font-variant-numeric:tabular-nums}
 .size span{font-size:.8rem}
 #panel{display:flex;flex-direction:column;gap:16px}
@@ -82,6 +91,27 @@ summary{font-weight:700;cursor:pointer}
       </div>
     </div>
     <div class="sizes" id="sizes"></div>
+    <div class="card prod" id="prodBox">
+      <div class="prodtop">
+        <div class="big"><b id="saldo">$0</b><span id="saldoLbl">a favor por producción</span></div>
+        <div class="foot" id="prodMes"></div>
+      </div>
+      <details id="retForm">
+        <summary>Cargar retiro</summary>
+        <div class="field"><label for="rmonto">Monto retirado ($)</label><input type="text" id="rmonto" inputmode="numeric" placeholder="Ej.: 30000"></div>
+        <div class="field"><label for="rnota">Nota (opcional)</label><input type="text" id="rnota" maxlength="120" placeholder="Ej.: efectivo de la caja"></div>
+        <button class="primary" id="rguardar" type="button">Guardar retiro</button>
+        <div class="msg" id="rmsg" role="status"></div>
+      </details>
+      <details id="ajForm" hidden>
+        <summary>Corregir saldo (solo dueño)</summary>
+        <div class="field"><label for="amonto">Ajuste ($)</label><input type="text" id="amonto" inputmode="text" placeholder="Ej.: 5000 suma · -5000 resta"></div>
+        <div class="field"><label for="anota">Motivo</label><input type="text" id="anota" maxlength="120" placeholder="Ej.: retiro mal cargado"></div>
+        <button class="primary" id="aguardar" type="button">Guardar ajuste</button>
+        <div class="msg" id="amsg" role="status"></div>
+      </details>
+      <div class="meta" id="pmov"></div>
+    </div>
     <div class="bar">
       <span class="sub" id="act">Actualizando…</span>
       <button class="ghost" id="refrescar" type="button">Actualizar</button>
@@ -111,6 +141,8 @@ summary{font-weight:700;cursor:pointer}
   var $=function(id){return document.getElementById(id);};
   var el=function(t,c,x){var e=document.createElement(t);if(c)e.className=c;if(x!=null)e.textContent=x;return e;};
   var num=function(n){return (Math.round(n*100)/100).toLocaleString("es-AR");};
+  var plata=function(n){n=Math.round(n||0);return (n<0?"-$":"$")+Math.abs(n).toLocaleString("es-AR");};
+  var rol="";
   var clave=""; try{clave=localStorage.getItem("hk_clave")||"";}catch(e){}
   var timer=null;
 
@@ -124,6 +156,24 @@ summary{font-weight:700;cursor:pointer}
     $("kg").textContent=num(d.totales.kg);
     var S=$("sizes"); S.textContent="";
     PRES.forEach(function(x){var b=el("div","size");b.appendChild(el("b",null,String(d.totales[x[0]])));b.appendChild(el("span",null,"de "+x[1]));S.appendChild(b);});
+    if(d.rol) rol=d.rol;
+    var admin=rol==="admin";
+    $("stockForm").hidden=!admin; $("ajForm").hidden=!admin;
+    var pr=d.produccion;
+    $("prodBox").hidden=!pr;
+    if(pr){
+      $("saldo").textContent=plata(pr.saldo);
+      $("saldoLbl").textContent=pr.saldo<0?"retirado de más":(admin?"a favor de "+pr.socio+" por producción":"a tu favor por producción");
+      $("prodBox").className="card prod"+(pr.saldo<0?" neg":"");
+      $("prodMes").textContent="Este mes: ganado "+plata(pr.ganadoMes)+" · retirado "+plata(pr.retiradoMes);
+      var M=$("pmov"); M.textContent="";
+      pr.movimientos.forEach(function(m){
+        var r=el("div","mov");
+        r.appendChild(el("span",null,m.fecha.slice(0,5)+" · "+m.tipo+(m.nota?" · "+m.nota:"")));
+        r.appendChild(el("span",null,m.tipo==="retiro"?plata(-m.monto):(m.monto>0?"+":"")+plata(m.monto)));
+        M.appendChild(r);
+      });
+    }
     var k=d.stock||{};
     if(k.cargado){
       $("stk").textContent=num(k.restante);
@@ -139,6 +189,7 @@ summary{font-weight:700;cursor:pointer}
       c.appendChild(el("div",null,detalle(p)));
       c.appendChild(el("div","meta","Pidió el "+p.fecha+(p.localidad?" · "+p.localidad:"")+(p.telefono?" · "+p.telefono:"")));
       if(p.nota) c.appendChild(el("div","meta","Nota: "+p.nota));
+      if(p.pago) c.appendChild(el("div","gana","Al entregar suma "+plata(p.pago)+" de producción"));
       if(!p.conocido) c.appendChild(el("div","warn","Pidió sin link propio. Confirmá antes de entregar."));
       var b=el("button","primary","Entregado"); b.type="button";
       b.onclick=function(){cambiar(p.id,"entregado",b);};
@@ -194,6 +245,18 @@ summary{font-weight:700;cursor:pointer}
     }).catch(function(){ $("smsg").textContent="No se pudo guardar. Probá de nuevo."; })
       .then(function(){ $("sguardar").disabled=false; });
   };
+  function mov(accion,idMonto,idNota,idMsg,idBtn,soloPositivo){
+    var txt=$(idMonto).value.replace(/[$\s.]/g,"").replace(",",".");
+    var monto=Math.round(parseFloat(txt));
+    if(!monto||(soloPositivo&&monto<0)){$(idMsg).textContent=soloPositivo?"Escribí el monto retirado, solo números.":"Escribí el monto. Con signo menos para restar.";return;}
+    $(idBtn).disabled=true; $(idMsg).textContent="Guardando…";
+    api({accion:accion,monto:monto,nota:$(idNota).value}).then(function(d){
+      if(!d||!d.ok) throw new Error(); $(idMonto).value=""; $(idNota).value=""; $(idMsg).textContent=""; pintar(d);
+    }).catch(function(){ $(idMsg).textContent="No se pudo guardar. Probá de nuevo."; })
+      .then(function(){ $(idBtn).disabled=false; });
+  }
+  $("rguardar").onclick=function(){mov("retiro","rmonto","rnota","rmsg","rguardar",true);};
+  $("aguardar").onclick=function(){mov("ajuste","amonto","anota","amsg","aguardar",false);};
   $("entrar").onclick=entrar;
   $("clave").addEventListener("keydown",function(e){if(e.key==="Enter")entrar();});
   $("refrescar").onclick=function(){$("act").textContent="Actualizando…";cargar();};
