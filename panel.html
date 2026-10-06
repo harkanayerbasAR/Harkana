@@ -1,0 +1,355 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<meta name="robots" content="noindex,nofollow">
+<title>Pedidos Harkana</title>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:opsz,wght@12..96,600;12..96,700&family=Figtree:wght@400;500;600;700&display=swap">
+<style>
+:root{--bg:#F2F5EC;--surface:#FFFFFF;--ink:#1B2A1E;--muted:#5C6A5E;--line:#D5DCCD;--accent:#2C6A38;--accent-ink:#FFFFFF;--accent-soft:#E1EDDD;--warn:#9A5B00;--warn-soft:#FBEBCF;--danger:#A8321F;
+--display:"Bricolage Grotesque","Trebuchet MS",system-ui,sans-serif;--body:"Figtree",system-ui,-apple-system,"Segoe UI",sans-serif}
+@media (prefers-color-scheme:dark){:root{--bg:#111712;--surface:#1A221B;--ink:#E6EDE2;--muted:#9BA99C;--line:#2C372D;--accent:#7FC78B;--accent-ink:#0D150E;--accent-soft:#22352A;--warn:#E3AC52;--warn-soft:#3A2D14;--danger:#F08A76;color-scheme:dark}}
+*{box-sizing:border-box}
+body{margin:0;background:var(--bg);color:var(--ink);font-family:var(--body);font-size:16px;line-height:1.45}
+.wrap{max-width:520px;margin:0 auto;padding:24px 16px 48px;display:flex;flex-direction:column;gap:18px}
+.logo{width:72px;height:72px;object-fit:contain;border-radius:12px}
+h1{font-family:var(--display);font-size:1.9rem;font-weight:700;margin:0;letter-spacing:-.01em;text-wrap:balance}
+h2{font-family:var(--display);font-size:1.15rem;font-weight:600;margin:0}
+.sub{color:var(--muted);margin:0}
+.card{background:var(--surface);border:1px solid var(--line);border-radius:14px;padding:16px;display:flex;flex-direction:column;gap:14px}
+label,.lbl{font-size:.78rem;font-weight:700;letter-spacing:.06em;text-transform:uppercase;color:var(--muted)}
+.field{display:flex;flex-direction:column;gap:6px;min-width:0}
+input[type=text],input[type=tel],input[type=password],textarea{font:500 1rem var(--body);color:var(--ink);background:var(--bg);border:1px solid var(--line);border-radius:10px;padding:12px;width:100%;min-width:0}
+textarea{resize:vertical;min-height:46px}
+button:focus-visible,input:focus-visible,textarea:focus-visible,a:focus-visible{outline:2px solid var(--accent);outline-offset:2px}
+.primary{display:block;width:100%;text-align:center;text-decoration:none;font:700 1.08rem var(--body);background:var(--accent);color:var(--accent-ink);border:0;border-radius:12px;padding:16px;cursor:pointer}
+.primary:disabled{opacity:.5}
+.msg{font-size:.92rem;font-weight:600;color:var(--danger);min-height:1.3em}
+.note{background:var(--warn-soft);border-radius:12px;padding:12px 14px;font-size:.92rem}
+[hidden]{display:none!important}
+
+.wrap{max-width:560px}
+.top,.bar{display:flex;align-items:center;justify-content:space-between;gap:12px}
+.ghost{font:600 .9rem var(--body);padding:9px 14px;border-radius:9px;border:1px solid var(--line);background:var(--surface);color:var(--ink);cursor:pointer}
+.nums{display:grid;grid-template-columns:1fr 1fr;gap:10px}
+.hero{background:var(--accent);color:var(--accent-ink);border-radius:16px;padding:16px;display:flex;flex-direction:column;gap:8px;min-width:0}
+.hero.stock{background:var(--surface);color:var(--ink);border:1px solid var(--line)}
+.hero.stock.bajo{border-color:var(--danger)} .hero.stock.bajo b{color:var(--danger)}
+.big b{display:block;font-family:var(--display);font-size:clamp(2.3rem,11vw,3.6rem);line-height:1;font-variant-numeric:tabular-nums}
+.big span{font-weight:600;font-size:.92rem}
+.foot{font-size:.8rem;color:var(--muted)}
+.sizes{display:grid;grid-template-columns:repeat(4,1fr);gap:8px}
+.size{border-top:1px solid var(--line);padding-top:8px;min-width:0}
+summary{font-weight:700;cursor:pointer}
+.prod{gap:12px}
+.prodtop{display:flex;align-items:center;justify-content:space-between;gap:12px}
+.prodtxt{min-width:0;display:flex;flex-direction:column;gap:2px}
+.prodlbl{font-weight:700}
+.prodnum{font-family:var(--display);font-size:1.55rem;font-variant-numeric:tabular-nums;white-space:nowrap;border:1px solid var(--line);border-radius:10px;padding:8px 12px;background:var(--bg)}
+.prod.neg .prodnum{color:var(--danger);border-color:var(--danger)}
+.aviso{background:var(--accent-soft);color:var(--ink);font-weight:600;border-radius:10px;padding:10px 12px}
+.prod details{display:flex;flex-direction:column;gap:12px;border-top:1px solid var(--line);padding-top:12px}
+.prod details[open] summary{margin-bottom:12px}
+.prod details .field{margin-bottom:12px}
+.gana{font-size:.86rem;font-weight:600;color:var(--accent)}
+.locs{display:flex;flex-wrap:wrap;gap:8px}
+.locs button{font:600 .9rem var(--body);padding:8px 13px;border-radius:999px;border:1px solid var(--line);background:var(--surface);color:var(--ink);cursor:pointer}
+.locs button[aria-pressed="true"]{background:var(--ink);color:var(--bg);border-color:var(--ink)}
+.locs b{font-variant-numeric:tabular-nums}
+.tools{display:flex;flex-wrap:wrap;gap:8px}
+.tools .del{color:var(--danger)}
+.edit{display:grid;grid-template-columns:repeat(4,1fr);gap:8px}
+.edit label{font-size:.72rem;display:flex;flex-direction:column;gap:4px;text-transform:none;letter-spacing:0}
+.edit input{font:700 1rem var(--body);text-align:center;color:var(--ink);background:var(--bg);border:1px solid var(--line);border-radius:8px;padding:9px 2px;width:100%;min-width:0}
+.wa{display:inline-block;text-decoration:none;font:700 .95rem var(--body);background:var(--accent);color:var(--accent-ink);border-radius:10px;padding:11px 14px;align-self:flex-start}
+.mov{display:flex;justify-content:space-between;gap:10px;padding:5px 0;border-top:1px solid var(--line)}
+.mov span:last-child{font-variant-numeric:tabular-nums;white-space:nowrap;font-weight:600}
+.size b{display:block;font-family:var(--display);font-size:1.4rem;font-variant-numeric:tabular-nums}
+.size span{font-size:.8rem}
+#panel{display:flex;flex-direction:column;gap:16px}
+.list{display:flex;flex-direction:column;gap:10px}
+.ped{background:var(--surface);border:1px solid var(--line);border-radius:14px;padding:14px;display:flex;flex-direction:column;gap:8px}
+.ped.done{opacity:.85}
+.ped .ghost{align-self:flex-start}
+.ped-top{display:flex;justify-content:space-between;gap:10px;align-items:flex-start}
+.ped-name{font-weight:700;font-size:1.1rem;overflow-wrap:anywhere;min-width:0}
+.ped-kg{font-family:var(--display);font-weight:700;font-size:1.2rem;white-space:nowrap;font-variant-numeric:tabular-nums}
+.meta{color:var(--muted);font-size:.88rem;overflow-wrap:anywhere}
+.warn{background:var(--warn-soft);color:var(--warn);font-weight:600;font-size:.88rem;border-radius:9px;padding:8px 10px}
+.empty{border:1px dashed var(--line);border-radius:14px;padding:22px 16px;color:var(--muted);text-align:center}
+.link{color:var(--accent);font-weight:600}
+</style>
+</head>
+<body>
+<div class="wrap">
+  <div class="top">
+    <h1>Pedidos Harkana</h1>
+    <button class="ghost" id="salir" type="button" hidden>Salir</button>
+  </div>
+
+  <div class="card" id="login">
+    <div class="field"><label for="clave">Clave</label><input type="password" id="clave" autocomplete="current-password"></div>
+    <button class="primary" id="entrar" type="button">Entrar</button>
+    <div class="msg" id="lmsg" role="status"></div>
+  </div>
+
+  <div id="panel" hidden>
+    <div class="nums">
+      <div class="hero">
+        <div class="big"><b id="kg">0</b><span>kg pendientes de entrega</span></div>
+      </div>
+      <div class="hero stock" id="stockBox">
+        <div class="big"><b id="stk">—</b><span>kg de stock restante</span></div>
+        <div class="foot" id="stkPie">Cargá tu stock actual para empezar.</div>
+      </div>
+    </div>
+    <div class="sizes" id="sizes"></div>
+    <div class="card prod" id="prodBox">
+      <div class="prodtop">
+        <div class="prodtxt">
+          <span class="prodlbl" id="saldoLbl">a favor por producción</span>
+          <div class="foot" id="prodMes"></div>
+        </div>
+        <b class="prodnum" id="saldo">$0</b>
+      </div>
+      <div class="aviso" id="aviso" role="status" hidden></div>
+      <details id="retForm">
+        <summary>Cargar retiro</summary>
+        <div class="field"><label for="rmonto">Monto retirado ($)</label><input type="text" id="rmonto" inputmode="numeric" placeholder="Ej.: 30000"></div>
+        <div class="field"><label for="rnota">Nota (opcional)</label><input type="text" id="rnota" maxlength="120" placeholder="Ej.: efectivo de la caja"></div>
+        <button class="primary" id="rguardar" type="button">Guardar retiro</button>
+        <div class="msg" id="rmsg" role="status"></div>
+      </details>
+      <details id="ajForm" hidden>
+        <summary>Corregir saldo (solo dueño)</summary>
+        <div class="field"><label for="amonto">Ajuste ($)</label><input type="text" id="amonto" inputmode="text" placeholder="Ej.: 5000 suma · -5000 resta"></div>
+        <div class="field"><label for="anota">Motivo</label><input type="text" id="anota" maxlength="120" placeholder="Ej.: retiro mal cargado"></div>
+        <button class="primary" id="aguardar" type="button">Guardar ajuste</button>
+        <div class="msg" id="amsg" role="status"></div>
+      </details>
+      <div class="meta" id="pmov"></div>
+    </div>
+    <div class="bar">
+      <span class="sub" id="act">Actualizando…</span>
+      <button class="ghost" id="refrescar" type="button">Actualizar</button>
+    </div>
+    <div class="locs" id="locs" hidden></div>
+    <div class="list" id="pend"></div>
+    <h2 id="tRec" hidden>Para recordarles que pidan</h2>
+    <div class="list" id="rec"></div>
+    <h2 id="tEntr" hidden>Últimos entregados</h2>
+    <div class="list" id="entr"></div>
+    <details class="card" id="stockForm">
+      <summary>Cargar compra de yerba o ajuste de stock</summary>
+      <div class="field"><label for="skg">Kilos</label><input type="text" id="skg" inputmode="decimal" placeholder="Ej.: 500 (compra) o -12 (ajuste)"></div>
+      <div class="field"><label for="snota">Nota (opcional)</label><input type="text" id="snota" maxlength="120" placeholder="Ej.: compra a Misiones, octubre"></div>
+      <button class="primary" id="sguardar" type="button">Guardar</button>
+      <div class="msg" id="smsg" role="status"></div>
+      <div class="meta" id="smov"></div>
+    </details>
+    <a class="link" href="pedidos">Cargar un pedido a mano</a>
+  </div>
+</div>
+
+<script>
+(function(){
+  /* ====== CONFIGURACIÓN ====== */
+  var API="https://script.google.com/macros/s/AKfycbxsephoJR9xpN11_GrSo15Esxfweiw-aocfFsQXGKjnmzY7LLUZIUtTSXNuac5fCTJiqA/exec";   // la misma dirección que en pedidos.html
+  /* =========================== */
+
+  var PRES=[["q250","1/4 kg"],["q500","1/2 kg"],["q1","1 kg"],["q3","3 kg"]];
+  var $=function(id){return document.getElementById(id);};
+  var el=function(t,c,x){var e=document.createElement(t);if(c)e.className=c;if(x!=null)e.textContent=x;return e;};
+  var num=function(n){return (Math.round(n*100)/100).toLocaleString("es-AR");};
+  var plata=function(n){n=Math.round(n||0);return (n<0?"-$":"$")+Math.abs(n).toLocaleString("es-AR");};
+  var rol="", filtroLoc="", ultimo=null, borrarId="", editarId="";
+  /* Agrupa "rio cuarto", "Río Cuarto" y "RIO CUARTO" como una sola localidad. */
+  var LOCS={"alejandro roca":"Alejandro Roca","rio cuarto":"Río Cuarto","reduccion":"Reducción","villa mercedes":"Villa Mercedes","garin":"Garín","las higueras":"Las Higueras"};
+  var locDe=function(p){
+    var s=(p.localidad||"").trim().toLowerCase().normalize("NFD").replace(/[\u0300-\u036f]/g,"").replace(/\s+/g," ");
+    if(!s) return "Sin localidad";
+    return LOCS[s]||s.replace(/(^|\s)\S/g,function(c){return c.toUpperCase();});
+  };
+  var clave=""; try{clave=localStorage.getItem("hk_clave")||"";}catch(e){}
+  var timer=null;
+
+  function api(cuerpo){
+    cuerpo.clave=clave;
+    return fetch(API,{method:"POST",body:JSON.stringify(cuerpo)}).then(function(r){return r.json();});
+  }
+  function detalle(p){return PRES.filter(function(x){return p[x[0]]>0;}).map(function(x){return p[x[0]]+" × "+x[1];}).join(" · ");}
+
+  function pintar(d){
+    $("kg").textContent=num(d.totales.kg);
+    var S=$("sizes"); S.textContent="";
+    PRES.forEach(function(x){var b=el("div","size");b.appendChild(el("b",null,String(d.totales[x[0]])));b.appendChild(el("span",null,"de "+x[1]));S.appendChild(b);});
+    if(d.rol) rol=d.rol;
+    var admin=rol==="admin";
+    $("stockForm").hidden=!admin; $("ajForm").hidden=!admin;
+    var pr=d.produccion;
+    $("prodBox").hidden=!pr;
+    if(pr){
+      $("saldo").textContent=plata(pr.saldo);
+      $("saldoLbl").textContent=pr.saldo<0?(admin?pr.socio+" retiró de más":"Retiraste de más"):(admin?"A favor de "+pr.socio+" por producción":"A tu favor por producción");
+      $("prodBox").className="card prod"+(pr.saldo<0?" neg":"");
+      $("prodMes").textContent="Este mes: ganado "+plata(pr.ganadoMes)+" · retirado "+plata(pr.retiradoMes);
+      var M=$("pmov"); M.textContent="";
+      pr.movimientos.forEach(function(m){
+        var r=el("div","mov");
+        r.appendChild(el("span",null,m.fecha.slice(0,5)+" · "+m.tipo+(m.nota?" · "+m.nota:"")));
+        r.appendChild(el("span",null,m.tipo==="retiro"?plata(-m.monto):(m.monto>0?"+":"")+plata(m.monto)));
+        M.appendChild(r);
+      });
+    }
+    var k=d.stock||{};
+    if(k.cargado){
+      $("stk").textContent=num(k.restante);
+      $("stkPie").textContent="En depósito: "+num(k.deposito)+" kg (incluye lo pendiente).";
+      $("stockBox").className="hero stock"+(k.restante<0?" bajo":"");
+      $("smov").textContent="Últimas cargas: "+k.movimientos.map(function(m){return m.fecha.slice(0,5)+" "+(m.kg>0?"+":"")+num(m.kg)+" kg";}).join(" · ");
+    }
+    ultimo=d;
+    /* --- kilos pendientes por localidad: tocar una filtra la lista --- */
+    var porLoc={}; d.pendientes.forEach(function(p){var k=locDe(p); porLoc[k]=(porLoc[k]||0)+p.kg;});
+    var nombres=Object.keys(porLoc).sort(function(x,y){return porLoc[y]-porLoc[x];});
+    if(filtroLoc&&!porLoc[filtroLoc]) filtroLoc="";
+    var L=$("locs"); L.textContent=""; L.hidden=nombres.length<2;
+    nombres.forEach(function(n){
+      var bt=el("button"); bt.type="button"; bt.setAttribute("aria-pressed",String(filtroLoc===n));
+      bt.appendChild(document.createTextNode(n+" · ")); bt.appendChild(el("b",null,num(porLoc[n])+" kg"));
+      bt.onclick=function(){filtroLoc=filtroLoc===n?"":n; pintar(ultimo);};
+      L.appendChild(bt);
+    });
+    var P=$("pend"); P.textContent="";
+    var lista=d.pendientes.filter(function(p){return !filtroLoc||locDe(p)===filtroLoc;});
+    if(!d.pendientes.length) P.appendChild(el("div","empty","No hay pedidos pendientes. Todo entregado."));
+    lista.forEach(function(p){
+      var c=el("div","ped"), top=el("div","ped-top");
+      top.appendChild(el("div","ped-name",p.comercio)); top.appendChild(el("div","ped-kg",num(p.kg)+" kg")); c.appendChild(top);
+      c.appendChild(el("div",null,detalle(p)));
+      c.appendChild(el("div","meta","Pidió el "+p.fecha+(p.localidad?" · "+p.localidad:"")+(p.telefono?" · "+p.telefono:"")));
+      if(p.nota) c.appendChild(el("div","meta","Nota: "+p.nota));
+      if(p.pago) c.appendChild(el("div","gana","Al entregar suma "+plata(p.pago)+" de producción"));
+      if(!p.conocido) c.appendChild(el("div","warn","Pidió sin link propio. Confirmá antes de entregar."));
+      var b=el("button","primary","Entregado"); b.type="button";
+      b.onclick=function(){cambiar(p.id,"entregado",b,p);};
+      c.appendChild(b);
+      if(admin){
+        if(editarId===p.id){
+          var ed=el("div","edit"), ins={};
+          PRES.forEach(function(x){var lb=el("label",null,x[1]); var i=document.createElement("input"); i.type="number"; i.min="0"; i.inputMode="numeric"; i.value=p[x[0]]; ins[x[0]]=i; lb.appendChild(i); ed.appendChild(lb);});
+          c.appendChild(ed);
+          var t2=el("div","tools"), g=el("button","ghost","Guardar cambios"), x2=el("button","ghost","Cancelar"); g.type=x2.type="button";
+          g.onclick=function(){var cu={accion:"editar",id:p.id}; PRES.forEach(function(x){cu[x[0]]=parseInt(ins[x[0]].value)||0;}); editarId=""; accion(cu,g);};
+          x2.onclick=function(){editarId=""; pintar(ultimo);};
+          t2.appendChild(g); t2.appendChild(x2); c.appendChild(t2);
+        }else{
+          var t=el("div","tools"), e1=el("button","ghost","Corregir cantidades"), d1=el("button","ghost del",borrarId===p.id?"Sí, borrar este pedido":"Borrar"); e1.type=d1.type="button";
+          e1.onclick=function(){editarId=p.id; borrarId=""; pintar(ultimo);};
+          d1.onclick=function(){ if(borrarId!==p.id){borrarId=p.id; editarId=""; pintar(ultimo); return;} borrarId=""; accion({accion:"borrar",id:p.id},d1); };
+          t.appendChild(e1); t.appendChild(d1);
+          if(borrarId===p.id){var n1=el("button","ghost","No borrar"); n1.type="button"; n1.onclick=function(){borrarId=""; pintar(ultimo);}; t.appendChild(n1);}
+          c.appendChild(t);
+        }
+      }
+      P.appendChild(c);
+    });
+    /* --- comercios que ya deberían haber vuelto a pedir --- */
+    var R=$("rec"); R.textContent=""; var rs=d.recordar||[]; $("tRec").hidden=!rs.length;
+    rs.forEach(function(r){
+      var c=el("div","ped"); c.appendChild(el("div","ped-name",r.nombre));
+      c.appendChild(el("div","meta","Último pedido hace "+r.dias+" días"+(r.cada?" · suele pedir cada "+r.cada+" días":"")));
+      var msj="¡Hola! ¿Cómo venís de yerba Harkana? Cuando quieras reponer, pedís desde acá: "+r.link;
+      var tel=r.telefono?(r.telefono.length===10?"549"+r.telefono:r.telefono):"";
+      var w=el("a","wa",tel?"Escribirle por WhatsApp":"Elegir contacto en WhatsApp"); w.target="_blank"; w.rel="noopener";
+      w.href="https://wa.me/"+tel+"?text="+encodeURIComponent(msj);
+      c.appendChild(w); R.appendChild(c);
+    });
+    var E=$("entr"); E.textContent=""; $("tEntr").hidden=!d.entregados.length;
+    d.entregados.forEach(function(p){
+      var c=el("div","ped done"), top=el("div","ped-top");
+      top.appendChild(el("div","ped-name",p.comercio)); top.appendChild(el("div","ped-kg",num(p.kg)+" kg")); c.appendChild(top);
+      c.appendChild(el("div","meta",detalle(p)+" · entregado "+p.entregado));
+      if(p.pago) c.appendChild(el("div","gana","Sumó "+plata(p.pago)+" de producción"));
+      var b=el("button","ghost","Deshacer"); b.type="button";
+      b.onclick=function(){cambiar(p.id,"pendiente",b,p);};
+      c.appendChild(b); E.appendChild(c);
+    });
+    var h=new Date(); $("act").textContent="Actualizado "+String(h.getHours()).padStart(2,"0")+":"+String(h.getMinutes()).padStart(2,"0");
+  }
+
+  function cargar(){
+    return api({accion:"lista"}).then(function(d){
+      if(d&&d.error==="clave"){salir("La clave no es correcta.");return;}
+      if(!d||!d.ok) throw new Error();
+      try{localStorage.setItem("hk_clave",clave);}catch(e){}
+      $("login").hidden=true; $("panel").hidden=false; $("salir").hidden=false; pintar(d);
+    }).catch(function(){
+      if($("panel").hidden) $("lmsg").textContent="No se pudo conectar. Revisá internet y probá de nuevo.";
+      else $("act").textContent="Sin conexión. Tocá Actualizar.";
+    });
+  }
+  function cambiar(id,estado,boton,ped){
+    boton.disabled=true; boton.textContent="Guardando…";
+    api({accion:"estado",id:id,estado:estado}).then(function(d){
+      if(!d||!d.ok) throw new Error(); pintar(d);
+      var a=$("aviso"), s=d.produccion;
+      if(ped&&ped.pago&&s){
+        var de=rol==="admin"?" a favor de "+s.socio:" a tu favor";
+        a.textContent=estado==="entregado"
+          ?"Entregado a "+ped.comercio+": se sumaron "+plata(ped.pago)+de+". Saldo: "+plata(s.saldo)+"."
+          :"Entrega deshecha de "+ped.comercio+": se restaron "+plata(ped.pago)+". Saldo: "+plata(s.saldo)+".";
+        a.hidden=false; a.scrollIntoView({block:"nearest",behavior:"smooth"});
+      }
+    })
+      .catch(function(){ boton.disabled=false; boton.textContent="No se pudo, tocá de nuevo"; });
+  }
+  function salir(m){
+    clave=""; try{localStorage.removeItem("hk_clave");}catch(e){}
+    clearInterval(timer); $("panel").hidden=true; $("salir").hidden=true; $("login").hidden=false; $("lmsg").textContent=m||"";
+  }
+  function entrar(){
+    if(API.indexOf("http")!==0){$("lmsg").textContent="Falta pegar la dirección del script en este archivo.";return;}
+    clave=$("clave").value.trim(); if(!clave){$("lmsg").textContent="Escribí la clave.";return;}
+    $("lmsg").textContent="Entrando…"; iniciar();
+  }
+  function iniciar(){
+    cargar(); clearInterval(timer);
+    timer=setInterval(function(){ if(!document.hidden&&!$("panel").hidden) cargar(); },60000);
+  }
+  $("sguardar").onclick=function(){
+    var kg=parseFloat($("skg").value.replace(",","."));
+    if(!kg){$("smsg").textContent="Escribí los kilos. Con signo menos para descontar.";return;}
+    $("sguardar").disabled=true; $("smsg").textContent="Guardando…";
+    api({accion:"stock",kg:kg,nota:$("snota").value}).then(function(d){
+      if(!d||!d.ok) throw new Error(); $("skg").value=""; $("snota").value=""; $("smsg").textContent=""; pintar(d);
+    }).catch(function(){ $("smsg").textContent="No se pudo guardar. Probá de nuevo."; })
+      .then(function(){ $("sguardar").disabled=false; });
+  };
+  function accion(cuerpo,boton){
+    boton.disabled=true; boton.textContent="Guardando…";
+    api(cuerpo).then(function(d){ if(!d||!d.ok) throw new Error(); pintar(d); })
+      .catch(function(){ boton.disabled=false; boton.textContent="No se pudo, tocá de nuevo"; });
+  }
+  function mov(accion,idMonto,idNota,idMsg,idBtn,soloPositivo){
+    var txt=$(idMonto).value.replace(/[$\s.]/g,"").replace(",",".");
+    var monto=Math.round(parseFloat(txt));
+    if(!monto||(soloPositivo&&monto<0)){$(idMsg).textContent=soloPositivo?"Escribí el monto retirado, solo números.":"Escribí el monto. Con signo menos para restar.";return;}
+    $(idBtn).disabled=true; $(idMsg).textContent="Guardando…";
+    api({accion:accion,monto:monto,nota:$(idNota).value}).then(function(d){
+      if(!d||!d.ok) throw new Error(); $(idMonto).value=""; $(idNota).value=""; $(idMsg).textContent=""; pintar(d);
+    }).catch(function(){ $(idMsg).textContent="No se pudo guardar. Probá de nuevo."; })
+      .then(function(){ $(idBtn).disabled=false; });
+  }
+  $("rguardar").onclick=function(){mov("retiro","rmonto","rnota","rmsg","rguardar",true);};
+  $("aguardar").onclick=function(){mov("ajuste","amonto","anota","amsg","aguardar",false);};
+  $("entrar").onclick=entrar;
+  $("clave").addEventListener("keydown",function(e){if(e.key==="Enter")entrar();});
+  $("refrescar").onclick=function(){$("act").textContent="Actualizando…";cargar();};
+  $("salir").onclick=function(){salir("");};
+  if(clave&&API.indexOf("http")===0) iniciar();
+})();
+</script>
+</body>
+</html>
