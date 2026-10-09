@@ -45,7 +45,7 @@ button:focus-visible{outline:4px solid var(--kraft);outline-offset:2px}
 .cons .menos{width:52px;height:52px;border:3px solid var(--ink);background:var(--paper);border-radius:12px;font-weight:900;font-size:1.6rem}
 .pie{display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-top:6px}
 .pie button{border:3px solid var(--ink);background:var(--paper);border-radius:12px;font-weight:800;font-size:1rem;padding:14px 6px}
-.pie .cerrar{background:var(--kraft);border-color:var(--ink)}
+.cerrarDia{margin-top:34px;align-self:center;font-size:.85rem;font-weight:600;color:#6b625a}
 .link{background:none;border:0;font-weight:800;text-decoration:underline;font-size:1rem;padding:6px}
 /* Pantallas que tapan todo: QR de la venta, cierre del día, clave */
 .capa{position:fixed;inset:0;background:var(--paper);z-index:10;overflow-y:auto;display:flex;flex-direction:column;align-items:center;padding:16px 14px 24px;gap:12px;text-align:center}
@@ -98,9 +98,9 @@ input.clave{width:min(100%,360px);font:800 1.4rem var(--f);border:4px solid var(
 
   <div class="pie">
     <button type="button" id="anular">Anular última venta</button>
-    <button type="button" class="cerrar" id="cerrar">CERRAR DÍA</button>
+    <button type="button" id="verQR" hidden>Ver QR de la última</button>
   </div>
-  <button class="link" id="verQR" type="button" hidden>Ver otra vez el QR de la última venta</button>
+  <button class="link cerrarDia" id="cerrar" type="button">Cerrar día</button>
 </div>
 
 <!-- QR de la venta -->
@@ -119,6 +119,16 @@ input.clave{width:min(100%,360px);font:800 1.4rem var(--f);border:4px solid var(
   <table class="res" id="resTabla"></table>
   <button class="grande" id="resOk" type="button">Confirmar y cargar al sistema</button>
   <button class="sec" id="resVolver" type="button">Volver a vender</button>
+</div>
+
+<!-- Clave de cierre: se pide cada vez que se cierra el día -->
+<div class="capa" id="capaCierre" hidden>
+  <h2>Cerrar el día</h2>
+  <p class="nota">Escribí la clave de cierre.</p>
+  <input class="clave" id="claveCierre" type="password" autocomplete="off" aria-label="Clave de cierre">
+  <button class="grande" id="cierreOk" type="button">Ver el cierre</button>
+  <button class="sec" id="cierreNo" type="button">Volver a vender</button>
+  <p class="msg" id="cierreMsg"></p>
 </div>
 
 <!-- Clave (una sola vez por celular) -->
@@ -302,16 +312,24 @@ var qrcode=function(){var t=function(t,r){var e=t,n=g[r],o=null,i=0,a=null,u=[],
     if(completo) h+="<tr><td>Quieren revender</td><td>"+r.revendedores+"</td></tr>";
     return h;
   }
-  var resumen=null;
-  $("cerrar").onclick=function(){
+  var resumen=null, claveCierre="";
+  /* Cerrar el día pide una clave aparte cada vez, para que nadie lo toque sin querer. */
+  $("cerrar").onclick=function(){ $("claveCierre").value=""; $("cierreMsg").textContent=""; $("capaCierre").hidden=false; setTimeout(function(){$("claveCierre").focus();},50); };
+  $("cierreNo").onclick=function(){ $("capaCierre").hidden=true; };
+  $("cierreOk").onclick=function(){
+    var c=$("claveCierre").value.trim(); if(!c){$("cierreMsg").textContent="Escribí la clave de cierre.";return;}
+    claveCierre=c; $("capaCierre").hidden=true; abrirCierre();
+  };
+  function abrirCierre(){
     $("resTit").textContent="Cierre · "+NOMBRE; $("resOk").hidden=true; $("resOk").disabled=false;
     $("resTabla").innerHTML=tabla(filasLocales(),false);
     $("resNota").textContent="Buscando muestras y compradores…";
     $("capaRes").hidden=false; window.scrollTo(0,0);
     if(!clave){pedirClave();return;}
     subir().then(function(){
-      return api({accion:"feriaResumen",clave:clave,origen:ORIGEN,consultas:est.consultas});
+      return api({accion:"feriaResumen",clave:clave,claveCierre:claveCierre,origen:ORIGEN,consultas:est.consultas});
     }).then(function(d){
+      if(d&&d.error==="clave_cierre"){ $("capaRes").hidden=true; $("cierreMsg").textContent="Clave de cierre incorrecta."; $("claveCierre").value=""; $("capaCierre").hidden=false; return; }
       if(!d||!d.ok)throw new Error("x");
       resumen=d; $("resTabla").innerHTML=tabla(d,true);
       var falta=est.ventas.filter(function(v){return !v.sync;}).length;
@@ -321,13 +339,13 @@ var qrcode=function(){var t=function(t,r){var e=t,n=g[r],o=null,i=0,a=null,u=[],
     }).catch(function(){
       $("resNota").textContent="Sin señal: esto es lo que hay en el celular. Para cargarlo al sistema necesitás conexión; las ventas quedan guardadas igual.";
     });
-  };
-  $("resVolver").onclick=function(){$("capaRes").hidden=true;};
+  }
+  $("resVolver").onclick=function(){$("capaRes").hidden=true; claveCierre="";};
   $("resOk").onclick=function(){
     $("resOk").disabled=true; $("resOk").textContent="Cargando…";
-    api({accion:"feriaCerrar",clave:clave,origen:ORIGEN,nombre:NOMBRE,localidad:LUGAR,ventas:paraSubir(),consultas:est.consultas}).then(function(d){
+    api({accion:"feriaCerrar",clave:clave,claveCierre:claveCierre,origen:ORIGEN,nombre:NOMBRE,localidad:LUGAR,ventas:paraSubir(),consultas:est.consultas}).then(function(d){
       $("resOk").textContent="Confirmar y cargar al sistema"; $("resOk").disabled=false;
-      if(!d||!d.ok){$("resNota").textContent=d&&d.error==="sin_ventas"?"No hay ventas para cargar.":"No se pudo cargar. Probá de nuevo.";return;}
+      if(!d||!d.ok){$("resNota").textContent=d&&d.error==="sin_ventas"?"No hay ventas para cargar.":d&&d.error==="clave_cierre"?"Clave de cierre incorrecta.":"No se pudo cargar. Probá de nuevo.";return;}
       est.ventas.forEach(function(v){v.sync=true;}); est.consSync=true; persistir(); pintarHoy();
       $("resTabla").innerHTML=tabla(d,true); $("resOk").hidden=true;
       $("resNota").textContent="Listo: quedó cargado el pedido “"+NOMBRE+"” como entregado ("+(Math.round(d.kg*100)/100).toLocaleString("es-AR")+" kg) y se descontó del stock. Te llegó el resumen por mail.";
