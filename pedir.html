@@ -76,8 +76,9 @@ button:focus-visible,input:focus-visible,textarea:focus-visible,a:focus-visible{
       <div class="field" style="margin-top:14px"><label for="telefono">Teléfono</label><input type="tel" id="telefono" maxlength="20" placeholder="Tu WhatsApp, para coordinar la entrega"></div>
     </div>
     <div class="field"><span class="lbl">¿Cuántos paquetes querés?</span><div id="qty"></div></div>
-    <div class="total"><span>Total</span><b id="totalKg">0 kg</b></div>
-      <div class="total" style="margin-top:-6px"><span id="totalSub" style="font-weight:500;font-size:.9rem">Envío a coordinar</span><b id="totalPlata">$0</b></div>
+    <div class="total"><span>Total kg</span><b id="totalKg">0 kg</b></div>
+      <div class="total" style="margin-top:-6px;border-top:0"><span>Total precio</span><b id="totalPlata">$0</b></div>
+      <div id="totalSub" style="text-align:right;font-size:.85rem;margin-top:-8px;opacity:.8">+ envío a coordinar</div>
     <div class="field"><label for="nota">Aclaración (opcional)</label><textarea id="nota" rows="1" maxlength="200" placeholder="Ej.: entregar por la mañana"></textarea></div>
     <div class="band"><button class="primary" id="enviar" type="button">Enviar pedido</button></div>
     <div class="foot">

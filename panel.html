@@ -79,6 +79,7 @@ summary{font-weight:700;cursor:pointer}
 .ped-name{font-weight:700;font-size:1.1rem;overflow-wrap:anywhere;min-width:0}
 .ped-kg{font-family:var(--display);font-weight:700;font-size:1.2rem;white-space:nowrap;font-variant-numeric:tabular-nums}
 .meta{color:var(--muted);font-size:.88rem;overflow-wrap:anywhere}
+.meta a.tel{color:#1a7f37;font-weight:700;text-decoration:underline;white-space:nowrap}
 .web{display:flex;flex-direction:column;gap:8px;background:var(--accent-soft,#E1EDDD);border:2px solid var(--accent,#2C6A38);border-radius:10px;padding:10px;font-size:.92rem}
 .web .wa{align-self:flex-start;background:#1f8f4e;color:#fff;font-weight:700;text-decoration:none;border-radius:9px;padding:9px 12px}
 .warn{background:var(--warn-soft);color:var(--warn);font-weight:600;font-size:.88rem;border-radius:9px;padding:8px 10px}
@@ -185,6 +186,16 @@ summary{font-weight:700;cursor:pointer}
   }
   function detalle(p){return PRES.filter(function(x){return p[x[0]]>0;}).map(function(x){return p[x[0]]+" × "+x[1];}).join(" · ");}
 
+  /* Celular argentino a 10 dígitos (igual que en el código de la planilla), para armar el link de WhatsApp. */
+  function celWa(v){
+    var s=String(v||"").replace(/\D/g,"");
+    if(s.indexOf("00")===0) s=s.slice(2);
+    if(s.length>10&&s.indexOf("54")===0) s=s.slice(2);
+    if(s.length>10&&s.charAt(0)==="9") s=s.slice(1);
+    if(s.charAt(0)==="0") s=s.slice(1);
+    if(s.length===12){ var pos=[3,4,2]; for(var i=0;i<pos.length;i++) if(s.substr(pos[i],2)==="15"){ s=s.slice(0,pos[i])+s.slice(pos[i]+2); break; } }
+    return s.length===10?s:"";
+  }
   function pintar(d){
     $("kg").textContent=num(d.totales.kg);
     var S=$("sizes"); S.textContent="";
@@ -233,7 +244,11 @@ summary{font-weight:700;cursor:pointer}
       var c=el("div","ped"), top=el("div","ped-top");
       top.appendChild(el("div","ped-name",p.comercio)); top.appendChild(el("div","ped-kg",num(p.kg)+" kg")); c.appendChild(top);
       c.appendChild(el("div",null,detalle(p)));
-      c.appendChild(el("div","meta","Pidió el "+p.fecha+(p.localidad?" · "+p.localidad:"")+(p.telefono?" · "+p.telefono:"")));
+      var mt=el("div","meta","Pidió el "+p.fecha+(p.localidad?" · "+p.localidad:""));
+      var kTel=celWa(p.telefono);
+      if(kTel){ mt.appendChild(document.createTextNode(" · ")); var at=document.createElement("a"); at.className="tel"; at.target="_blank"; at.rel="noopener"; at.href="https://wa.me/549"+kTel; at.textContent="💬 "+p.telefono; mt.appendChild(at); }
+      else if(p.telefono) mt.appendChild(document.createTextNode(" · "+p.telefono));
+      c.appendChild(mt);
       if(p.nota) c.appendChild(el("div","meta","Nota: "+p.nota));
       if(p.pago) c.appendChild(el("div","gana","Al entregar suma "+plata(p.pago)+" de producción"));
       var esWeb=/\(web\)\s*$/.test(p.comercio);
@@ -241,9 +256,8 @@ summary{font-weight:700;cursor:pointer}
         /* Compra hecha desde la web: hay que escribirle para coordinar pago y envío. */
         var wb=el("div","web");
         wb.appendChild(el("b",null,"🛒 COMPRA WEB · escribile para coordinar pago y envío"));
-        var dig=String(p.telefono||"").replace(/\D/g,"");
-        if(dig.length>=8){
-          var k=dig.replace(/^54/,"").replace(/^9/,"").replace(/^0/,""); if(k.length===12&&k.substr(3,2)==="15")k=k.slice(0,3)+k.slice(5); k=k.slice(-10);
+        var k=kTel;
+        if(k){
           var wa=document.createElement("a"); wa.className="wa"; wa.target="_blank"; wa.rel="noopener"; wa.textContent="Escribirle por WhatsApp";
           wa.href="https://wa.me/549"+k+"?text="+encodeURIComponent("¡Hola! Te escribimos de Harkana por tu compra en la web 🧉");
           wb.appendChild(wa);
