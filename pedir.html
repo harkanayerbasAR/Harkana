@@ -156,7 +156,10 @@ button:focus-visible,input:focus-visible,textarea:focus-visible,a:focus-visible{
     var s=estado(); $("wa").hidden=true;
     if(!s.com){$("msg").textContent="Escribí tu nombre y apellido.";return;}
     if(s.kg<=0){$("msg").textContent="Sumá al menos un paquete.";return;}
-    if(!s.tel){$("msg").textContent="Dejanos tu WhatsApp para coordinar la entrega.";return;}
+    if(!s.loc){$("msg").textContent="Escribí tu localidad, así sabemos cómo enviártelo.";$("localidad").focus();return;}
+    if(!s.tel){$("msg").textContent="Dejanos tu WhatsApp para coordinar la entrega.";$("telefono").focus();return;}
+    var dg=s.tel.replace(/\D/g,"").replace(/^0+/,"");
+    if(dg.length<10){$("msg").textContent="Revisá el WhatsApp: tiene que ir con característica, ej. 358 4123456.";$("telefono").focus();return;}
     if(!listo){porWhatsApp(s,"Enviá tu pedido por WhatsApp:");return;}
     $("enviar").disabled=true; $("msg").textContent=""; $("enviar").textContent="Enviando…";
     var cuerpo={accion:"pedido",codigo:codigo,comercio:s.com+(WEB?" (web)":" (particular)"),localidad:s.loc,telefono:s.tel,nota:(WEB?"Compra web. ":"")+s.nota};

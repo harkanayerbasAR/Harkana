@@ -75,6 +75,8 @@ summary{font-weight:700;cursor:pointer}
 .ped{background:var(--surface);border:1px solid var(--line);border-radius:14px;padding:14px;display:flex;flex-direction:column;gap:8px}
 .ped.done{opacity:.85}
 .ped .ghost{align-self:flex-start}
+.reparto{display:block;text-align:center;text-decoration:none;margin:0 0 10px}
+.compartir{font-size:.85rem;color:var(--muted);text-decoration:underline;align-self:flex-start}
 .ped-top{display:flex;justify-content:space-between;gap:10px;align-items:flex-start}
 .ped-name{font-weight:700;font-size:1.1rem;overflow-wrap:anywhere;min-width:0}
 .ped-kg{font-family:var(--display);font-weight:700;font-size:1.2rem;white-space:nowrap;font-variant-numeric:tabular-nums}
@@ -141,6 +143,7 @@ summary{font-weight:700;cursor:pointer}
       <button class="ghost" id="refrescar" type="button">Actualizar</button>
     </div>
     <div class="locs" id="locs" hidden></div>
+    <a class="ghost reparto" id="reparto" target="_blank" rel="noopener" hidden>📋 Pasar lista de reparto por WhatsApp</a>
     <div class="list" id="pend"></div>
     <h2 id="tRec" hidden>Para recordarles que pidan</h2>
     <div class="list" id="rec"></div>
@@ -239,6 +242,16 @@ summary{font-weight:700;cursor:pointer}
     });
     var P=$("pend"); P.textContent="";
     var lista=d.pendientes.filter(function(p){return !filtroLoc||locDe(p)===filtroLoc;});
+    /* Lista de reparto: se comparte por WhatsApp (elegís el grupo con Felipe o a quien sea). */
+    var Rp=$("reparto"); Rp.hidden=!lista.length;
+    if(lista.length){
+      var tk=lista.reduce(function(t,p){return t+p.kg;},0), tot={};
+      PRES.forEach(function(x){tot[x[0]]=lista.reduce(function(t,p){return t+(p[x[0]]||0);},0);});
+      var txt="🧉 Reparto Harkana"+(filtroLoc?" · "+filtroLoc:"")+"\n"+lista.length+" pedido"+(lista.length>1?"s":"")+" · "+num(tk)+" kg\nPreparar: "+PRES.filter(function(x){return tot[x[0]]>0;}).map(function(x){return tot[x[0]]+" × "+x[1];}).join(" · ")+"\n";
+      lista.forEach(function(p){ txt+="\n• "+p.comercio+(filtroLoc?"":" ("+locDe(p)+")")+": "+detalle(p)+(p.telefono?" · tel "+p.telefono:"")+(p.nota?" · "+p.nota:""); });
+      Rp.href="https://wa.me/?text="+encodeURIComponent(txt);
+      Rp.textContent="📋 Pasar lista de reparto por WhatsApp"+(filtroLoc?" ("+filtroLoc+")":"");
+    }
     if(!d.pendientes.length) P.appendChild(el("div","empty","No hay pedidos pendientes. Todo entregado."));
     lista.forEach(function(p){
       var c=el("div","ped"), top=el("div","ped-top");
@@ -246,7 +259,7 @@ summary{font-weight:700;cursor:pointer}
       c.appendChild(el("div",null,detalle(p)));
       var mt=el("div","meta","Pidió el "+p.fecha+(p.localidad?" · "+p.localidad:""));
       var kTel=celWa(p.telefono);
-      if(kTel){ mt.appendChild(document.createTextNode(" · ")); var at=document.createElement("a"); at.className="tel"; at.target="_blank"; at.rel="noopener"; at.href="https://wa.me/549"+kTel; at.textContent="💬 "+p.telefono; mt.appendChild(at); }
+      if(kTel){ mt.appendChild(document.createTextNode(" · ")); var at=document.createElement("a"); at.className="tel"; at.target="_blank"; at.rel="noopener"; at.href="https://wa.me/549"+kTel+"?text="+encodeURIComponent("¡Hola "+String(p.comercio).replace(/\s*\((web|particular)\)\s*$/,"").split(" ")[0]+"! Te escribimos de Harkana por tu pedido de "+detalle(p)+" 🧉"); at.textContent="💬 "+p.telefono; mt.appendChild(at); }
       else if(p.telefono) mt.appendChild(document.createTextNode(" · "+p.telefono));
       c.appendChild(mt);
       if(p.nota) c.appendChild(el("div","meta","Nota: "+p.nota));
@@ -264,6 +277,9 @@ summary{font-weight:700;cursor:pointer}
         }
         c.appendChild(wb);
       } else if(!p.conocido) c.appendChild(el("div","warn","Pidió sin link propio. Confirmá antes de entregar."));
+      var sh=el("a","compartir","Pasar este pedido por WhatsApp"); sh.target="_blank"; sh.rel="noopener";
+      sh.href="https://wa.me/?text="+encodeURIComponent("🧉 Pedido Harkana\n"+p.comercio+" ("+locDe(p)+")\n"+detalle(p)+" · "+num(p.kg)+" kg"+(p.telefono?"\nTel: "+p.telefono:"")+(p.nota?"\nNota: "+p.nota:""));
+      c.appendChild(sh);
       var b=el("button","primary","Entregado"); b.type="button";
       b.onclick=function(){cambiar(p.id,"entregado",b,p);};
       c.appendChild(b);

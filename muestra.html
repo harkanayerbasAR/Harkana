@@ -121,7 +121,7 @@ button:focus-visible,input:focus-visible,a:focus-visible{outline:3px solid var(-
   $("enviar").onclick=function(){
     var n=$("nombre").value.trim(), c=$("celular").value.replace(/\D/g,""), l=$("localidad").value.trim();
     if(n.length<3){$("msg").textContent="Escribí tu nombre y apellido.";return;}
-    if(c.length<8){$("msg").textContent="Revisá el celular: faltan números.";return;}
+    if(c.replace(/^0+/,"").length<10){$("msg").textContent="Revisá el celular: va con característica, ej. 358 4123456.";return;}
     if(!l){$("msg").textContent="Decinos de qué localidad sos.";return;}
     var cuerpo={accion:"contacto",tipo:REV?"revendedor":"muestra",nombre:n,celular:c,localidad:l,origen:ORIGEN};
     guardar("hk_m_nombre",n); guardar("hk_m_celular",$("celular").value.trim()); guardar("hk_m_localidad",l);

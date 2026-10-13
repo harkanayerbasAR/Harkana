@@ -139,7 +139,7 @@ button:focus-visible,input:focus-visible,a:focus-visible{outline:3px solid var(-
   var pideTodo=false;
   $("seguir").onclick=function(){
     var c=$("celular").value.replace(/\D/g,"");
-    if(c.length<8){$("msg2").textContent="Revisá el celular: faltan números.";return;}
+    if(c.replace(/^0+/,"").length<10){$("msg2").textContent="Revisá el celular: va con característica, ej. 358 4123456.";return;}
     if(!pideTodo){
       mandar(Object.assign({},cuerpoBase,{celular:c}),$("seguir"),"msg2",function(){
         pideTodo=true; $("extra").hidden=false; $("msg2").textContent="Es tu primera vez: completá estos dos datos."; $("nombre").focus();
