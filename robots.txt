@@ -1,3 +1,13 @@
 User-agent: *
 Allow: /
+# Herramientas internas de Harkana: no tienen que aparecer en Google
+Disallow: /panel
+Disallow: /feria
+Disallow: /pedidos
+Disallow: /compra
+Disallow: /calendario-contenido
+Disallow: /estrategia-lanzamiento
+Disallow: /generador-graficas
+Disallow: /herramienta-contenido
+Disallow: /studio-contenido
 Sitemap: https://harkana.com.ar/sitemap.xml

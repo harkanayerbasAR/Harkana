@@ -87,6 +87,66 @@ summary{font-weight:700;cursor:pointer}
 .warn{background:var(--warn-soft);color:var(--warn);font-weight:600;font-size:.88rem;border-radius:9px;padding:8px 10px}
 .empty{border:1px dashed var(--line);border-radius:14px;padding:22px 16px;color:var(--muted);text-align:center}
 .link{color:var(--accent);font-weight:600}
+.plata{display:flex;justify-content:space-between;align-items:baseline;gap:8px;font-weight:700}
+.plata b{font-family:var(--display);font-size:1.25rem;font-variant-numeric:tabular-nums}
+.plata small{font-weight:500;color:var(--muted)}
+.dos{display:grid;grid-template-columns:1fr;gap:8px}
+.dos .ghost{align-self:stretch;text-align:center;padding:12px}
+.estado-cobro{font-size:.88rem;font-weight:700}
+.estado-cobro.ok{color:var(--accent)} .estado-cobro.debe{color:var(--danger)}
+.deben{border-color:var(--danger)}
+.deben-tot{font-family:var(--display);font-size:1.6rem;color:var(--danger);font-variant-numeric:tabular-nums}
+.drow{display:flex;justify-content:space-between;align-items:center;gap:8px;border-top:1px solid var(--line);padding-top:8px;flex-wrap:wrap}
+.drow span{font-size:.9rem}
+/* Remito */
+.capa{position:fixed;inset:0;background:rgba(0,0,0,.55);z-index:20;overflow:auto;padding:16px}
+.capa-in{max-width:560px;margin:0 auto;display:flex;flex-direction:column;gap:12px}
+.remito{background:#fff;color:#1F1A15;border-radius:10px;font-family:var(--body);overflow:hidden;-webkit-print-color-adjust:exact;print-color-adjust:exact}
+.r-banda{height:10px;background:#D2A76E}
+.r-cuerpo{padding:18px 20px 16px}
+.r-cab{display:flex;justify-content:space-between;align-items:flex-start;gap:12px;padding-bottom:12px;border-bottom:1.5px solid #D2A76E}
+.r-cab img{width:118px;display:block}
+.r-cab .yo{font:600 .66rem var(--body);letter-spacing:.2em;margin-top:4px}
+.r-num{text-align:right}
+.r-num .tit{font:700 .72rem var(--body);letter-spacing:.2em;color:#8A6A3E}
+.r-num b{display:block;font-family:var(--display);font-size:1.35rem}
+.r-num span{font-size:.8rem;color:#54463A}
+.r-copia{display:inline-block;margin-top:4px;font:700 .64rem var(--body);letter-spacing:.12em;color:#8A6A3E;border:1px solid #D2A76E;border-radius:99px;padding:2px 8px}
+.r-cli{margin:12px 0 10px;font-size:.95rem}
+.r-cli small{display:block;font:700 .66rem var(--body);letter-spacing:.14em;color:#8A6A3E;margin-bottom:2px}
+.r-cli b{font-size:1.1rem}
+.remito table{width:100%;border-collapse:collapse;font-size:.9rem;font-variant-numeric:tabular-nums}
+.remito th{text-align:left;font-size:.66rem;letter-spacing:.08em;text-transform:uppercase;color:#5A4326;background:#F3E6D0;padding:7px 6px}
+.remito td{padding:7px 6px;border-bottom:1px solid #EFE4D2}
+.remito .n{text-align:right;white-space:nowrap}
+.remito td:first-child,.remito th:first-child{width:2.6em}
+.r-tot{display:flex;justify-content:space-between;align-items:center;font-weight:700;font-size:1.1rem;margin-top:10px;background:#F3E6D0;border-radius:8px;padding:9px 10px}
+.r-tot span:last-child{font-family:var(--display);font-size:1.3rem}
+.r-ahorro{text-align:right;font-size:.8rem;color:#5A4326;margin-top:4px}
+.r-firma{display:grid;grid-template-columns:1fr 1fr;gap:18px;margin-top:34px;font-size:.76rem;color:#54463A}
+.r-firma div{border-top:1px solid #1F1A15;padding-top:4px}
+.r-pie{margin-top:14px;padding-top:8px;border-top:1px solid #EFE4D2;font-size:.7rem;color:#54463A;display:flex;justify-content:space-between;gap:8px;flex-wrap:wrap}
+.r-falta{background:#FBEBCF;color:#9A5B00;font-weight:600;border-radius:8px;padding:8px 10px;margin-top:10px;font-size:.88rem}
+.r-bot{display:grid;grid-template-columns:1fr;gap:8px}
+.r-bot .off{opacity:.4;pointer-events:none}
+.r-bot .wa2{font-size:.88rem;color:#fff;text-align:center;text-decoration:underline}
+.r-edit,.r-opc{background:#fff;border-radius:10px;padding:12px 14px;display:flex;flex-direction:column;gap:10px;color:#1F1A15}
+.r-edit .tip{font-size:.85rem;color:#54463A}
+.r-edit label,.r-opc label{display:flex;gap:8px;align-items:center;font-size:.92rem;text-transform:none;letter-spacing:0;color:#1F1A15;font-weight:600}
+.r-opc input,.r-edit input[type=checkbox]{width:20px;height:20px}
+.remito td input{width:5.6em;font:600 .92rem var(--body);text-align:right;border:1px solid #C9B99E;border-radius:6px;padding:5px 6px;background:#FFFBF3;color:#1F1A15}
+.remito td input.pc{width:3.2em}
+.remito .dz{font-size:.74rem;color:#8A6A3E;font-weight:600;margin-top:2px}
+#impresion{display:none}
+@media print{
+  body{background:#fff}
+  .wrap,.capa{display:none!important}
+  #impresion{display:block}
+  #impresion .remito{border-radius:0;height:140mm;page-break-inside:avoid}
+  #impresion.solo .remito{height:auto}
+  #impresion .corte{border:0;border-top:1px dashed #999;margin:0}
+  @page{size:A4;margin:5mm}
+}
 </style>
 </head>
 <body>
@@ -145,6 +205,10 @@ summary{font-weight:700;cursor:pointer}
     <div class="locs" id="locs" hidden></div>
     <a class="ghost reparto" id="reparto" target="_blank" rel="noopener" hidden>📋 Pasar lista de reparto por WhatsApp</a>
     <div class="list" id="pend"></div>
+    <div class="card deben" id="debenBox" hidden>
+      <div class="plata"><h2>Te deben</h2><span class="deben-tot" id="debenTot">$0</span></div>
+      <div class="list" id="deben"></div>
+    </div>
     <h2 id="tRec" hidden>Para recordarles que pidan</h2>
     <div class="list" id="rec"></div>
     <h2 id="tEntr" hidden>Últimos entregados</h2>
@@ -160,6 +224,28 @@ summary{font-weight:700;cursor:pointer}
     <a class="link" href="pedidos">Cargar un pedido a mano</a>
   </div>
 </div>
+<div class="capa" id="capaRemito" hidden>
+  <div class="capa-in">
+    <div class="r-opc"><label><input type="checkbox" id="rConDesc"> Aplicar descuento (agrega la columna en el remito)</label></div>
+    <div id="remitoVista"></div>
+    <div class="r-edit" id="rEdit" hidden>
+      <div class="tip">Cambiaste el remito: el total ya está recalculado. Guardalo para imprimir o mandarlo.</div>
+      <label id="rFijarL" hidden><input type="checkbox" id="rFijar"> Usar estos precios siempre para este comercio</label>
+      <button class="primary" id="rGuardar" type="button">Guardar cambios</button>
+      <button class="ghost" id="rDeshacer" type="button">Volver a como estaba</button>
+      <div class="msg" id="rMsg" role="status"></div>
+    </div>
+    <div class="r-bot">
+      <button class="primary" id="rCompartir" type="button" style="background:#1f8f4e">Mandar remito por WhatsApp</button>
+      <button class="primary" id="rImprimir" type="button">Imprimir original y duplicado</button>
+      <button class="ghost" id="rSolo" type="button">Guardar PDF solo del original</button>
+      <a class="wa2" id="rWa" target="_blank" rel="noopener">o mandar el detalle como texto</a>
+      <div class="msg" id="rCmsg" role="status" style="color:#fff"></div>
+      <button class="ghost" id="rCerrar" type="button">Cerrar</button>
+    </div>
+  </div>
+</div>
+<div id="impresion"></div>
 
 <script>
 (function(){
@@ -199,6 +285,147 @@ summary{font-weight:700;cursor:pointer}
     if(s.length===12){ var pos=[3,4,2]; for(var i=0;i<pos.length;i++) if(s.substr(pos[i],2)==="15"){ s=s.slice(0,pos[i])+s.slice(pos[i]+2); break; } }
     return s.length===10?s:"";
   }
+  var OVAL="data:image/png;base64,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";
+  function lineaPlata(p){
+    var r=el("div","plata"), izq=el("span");
+    izq.appendChild(document.createTextNode("Total "));
+    if(p.lista==="público") izq.appendChild(el("small",null,"(precio al público)"));
+    if(p.lista==="pedido") izq.appendChild(el("small",null,"(precio especial)"));
+    r.appendChild(izq); r.appendChild(el("b",null,plata(p.total)));
+    var w=el("div"); w.appendChild(r);
+    if(p.falta) w.appendChild(el("div","warn","Falta el precio de algún tamaño para este comercio. Cargalo en la planilla (hoja Comercios) o corregí el total."));
+    return w;
+  }
+  var remitoActual=null, remitoPed=null, conDesc=false;
+  function nro(n){return String(n).padStart(4,"0");}
+  function valor(v){ return Math.round(parseFloat(String(v).replace(/[$\s.]/g,"").replace(",","."))||0); }
+  function pct(v){ var x=parseFloat(String(v).replace(",",".").replace("%",""))||0; return Math.max(0,Math.min(100,Math.round(x*10)/10)); }
+  /* Remito: copia = "ORIGINAL…"/"DUPLICADO…" o vacío; editable = vista con casilleros de precio y descuento. */
+  function armarRemito(r,copia,editable){
+    var R=el("div","remito"); R.appendChild(el("div","r-banda"));
+    var B=el("div","r-cuerpo"); R.appendChild(B);
+    var cab=el("div","r-cab"), izq=el("div"), im=document.createElement("img"); im.src=OVAL; im.alt="Harkana";
+    izq.appendChild(im); izq.appendChild(el("div","yo","YERBA ORGÁNICA")); cab.appendChild(izq);
+    var dr=el("div","r-num"); dr.appendChild(el("div","tit","REMITO")); dr.appendChild(el("b",null,"N° "+nro(r.numero))); dr.appendChild(el("span",null,"Fecha: "+r.fecha));
+    if(copia){ dr.appendChild(document.createElement("br")); dr.appendChild(el("span","r-copia",copia)); }
+    cab.appendChild(dr); B.appendChild(cab);
+    var cli=el("div","r-cli"); cli.appendChild(el("small",null,"CLIENTE")); cli.appendChild(el("b",null,r.comercio)); if(r.localidad) cli.appendChild(document.createTextNode(" · "+r.localidad)); B.appendChild(cli);
+    var conD=editable?conDesc:r.items.some(function(it){return it.desc>0;});
+    var t=document.createElement("table"), h=document.createElement("tr");
+    (conD?["Cant.","Producto","Precio","Desc.","Subtotal"]:["Cant.","Producto","Precio","Subtotal"]).forEach(function(x,i){h.appendChild(el("th",i>1?"n":null,x));}); t.appendChild(h);
+    var bruto=0;
+    r.items.forEach(function(it){
+      var tr=document.createElement("tr");
+      tr.appendChild(el("td",null,String(it.n))); tr.appendChild(el("td",null,it.ajuste?it.nombre:"Yerba "+it.nombre));
+      if(editable&&!it.ajuste){
+        var tdp=el("td","n"), ip=document.createElement("input"); ip.type="text"; ip.inputMode="numeric"; ip.value=it.unit?num(it.unit):""; ip.className="pu"; ip.dataset.k=it.k; ip.dataset.n=it.n; ip.setAttribute("aria-label","Precio de "+it.nombre);
+        ip.oninput=function(){recalcular();}; ip.onfocus=function(){ip.select();}; tdp.appendChild(ip); tr.appendChild(tdp);
+        if(conD){ var tdd=el("td","n"), idd=document.createElement("input"); idd.type="text"; idd.inputMode="decimal"; idd.className="pc"; idd.value=it.desc?String(it.desc).replace(".",","):"0"; idd.dataset.k=it.k; idd.setAttribute("aria-label","Descuento % de "+it.nombre);
+          idd.oninput=function(){recalcular();}; idd.onfocus=function(){idd.select();}; tdd.appendChild(idd); tdd.appendChild(document.createTextNode(" %")); var pz=el("div","dz",it.desc?"−"+plata(Math.round(it.n*it.unit*it.desc/100)):""); tdd.appendChild(pz); tr.appendChild(tdd); }
+      } else {
+        tr.appendChild(el("td","n",it.unit===""?"":(it.unit?plata(it.unit):"—")));
+        if(conD){ var tdx=el("td","n",it.desc?String(it.desc).replace(".",",")+" %":"—"); if(it.desc) tdx.appendChild(el("div","dz","−"+plata(Math.round(it.n*it.unit*it.desc/100)))); tr.appendChild(tdx); }
+      }
+      tr.appendChild(el("td","n st",plata(it.sub))); t.appendChild(tr);
+      if(!it.ajuste) bruto+=it.n*it.unit;
+    });
+    B.appendChild(t);
+    var tot=el("div","r-tot"); tot.appendChild(el("span",null,"TOTAL · "+num(r.kg)+" kg")); tot.appendChild(el("span","tt",plata(r.total))); B.appendChild(tot);
+    var ah=el("div","r-ahorro",""); B.appendChild(ah);
+    if(conD&&bruto>r.total) ah.textContent="Ahorro por descuento: "+plata(bruto-r.total);
+    if(r.falta&&!copia) B.appendChild(el("div","r-falta","Falta el precio de algún tamaño: el total puede estar incompleto."));
+    var f=el("div","r-firma"); f.appendChild(el("div",null,"Recibí conforme · Firma")); f.appendChild(el("div",null,"Aclaración")); B.appendChild(f);
+    var pie=el("div","r-pie"); pie.appendChild(el("span",null,"Harkana · Alejandro Roca, Córdoba · www.harkana.com.ar · Alias: Harkana")); pie.appendChild(el("span",null,"Documento no válido como factura")); B.appendChild(pie);
+    return R;
+  }
+  /* Valores actuales de los casilleros (precio y descuento por presentación). */
+  function leerVista(){
+    var pr={}, ds={}; PRES.forEach(function(x){ pr[x[0]]=remitoActual.unit[x[0]]||0; ds[x[0]]=0; });
+    var V=$("remitoVista");
+    V.querySelectorAll("input.pu").forEach(function(i){ pr[i.dataset.k]=valor(i.value); });
+    if(conDesc) V.querySelectorAll("input.pc").forEach(function(i){ ds[i.dataset.k]=pct(i.value); });
+    return {pr:pr,ds:ds};
+  }
+  function recalcular(){
+    var v=leerVista(), tot=0, bruto=0, cambio=false;
+    $("remitoVista").querySelectorAll("tr").forEach(function(tr){
+      var i=tr.querySelector("input.pu"); if(!i) return;
+      var k=i.dataset.k, n=Number(i.dataset.n), u=v.pr[k], d=v.ds[k], sub=Math.round(n*u*(1-d/100));
+      tr.querySelector(".st").textContent=plata(sub); tot+=sub; bruto+=n*u;
+      var dz=tr.querySelector(".dz"); if(dz) dz.textContent=d?"−"+plata(n*u-sub):"";
+      if(u!==remitoActual.unit[k]||d!==(remitoActual.desc[k]||0)) cambio=true;
+    });
+    $("remitoVista").querySelector(".tt").textContent=plata(tot);
+    $("remitoVista").querySelector(".r-ahorro").textContent=conDesc&&bruto>tot?"Ahorro por descuento: "+plata(bruto-tot):"";
+    $("rEdit").hidden=!cambio; $("rFijarL").hidden=!(rol==="admin"&&remitoActual.comercioFijo);
+    ["rImprimir","rWa","rSolo","rCompartir"].forEach(function(id){$(id).classList.toggle("off",cambio);});
+  }
+  function mostrarRemito(d,p,mantenerDesc){
+    remitoActual=d.remito; remitoPed=p; remitoActual.unit={}; remitoActual.desc={};
+    remitoActual.items.forEach(function(it){ if(!it.ajuste){ remitoActual.unit[it.k]=it.unit; remitoActual.desc[it.k]=it.desc||0; } });
+    remitoActual.conDesc=remitoActual.items.some(function(it){return it.desc>0;});
+    if(!mantenerDesc) conDesc=remitoActual.conDesc; $("rConDesc").checked=conDesc;
+    $("rEdit").hidden=true; $("rMsg").textContent=""; $("rCmsg").textContent=""; $("rFijar").checked=false;
+    ["rImprimir","rWa","rSolo","rCompartir"].forEach(function(id){$(id).classList.remove("off");});
+    var V=$("remitoVista"); V.textContent=""; V.appendChild(armarRemito(remitoActual,null,true));
+    if(mantenerDesc) recalcular();
+    var lin=remitoActual.items.map(function(it){return (it.ajuste?it.nombre+": ":it.n+" × "+it.nombre+" a "+plata(it.unit)+(it.desc?" (−"+String(it.desc).replace(".",",")+"%)":"")+" = ")+plata(it.sub);});
+    var msj="🧉 *Harkana · Remito N° "+nro(remitoActual.numero)+"*\nFecha: "+remitoActual.fecha+"\n"+remitoActual.comercio+(remitoActual.localidad?" ("+remitoActual.localidad+")":"")+"\n\n"+lin.join("\n")+"\n\n*Total: "+plata(remitoActual.total)+"* ("+num(remitoActual.kg)+" kg)\nAlias para transferir: Harkana\n¡Gracias!";
+    var k=celWa(p.telefono); $("rWa").href="https://wa.me/"+(k?"549"+k:"")+"?text="+encodeURIComponent(msj);
+  }
+  function verRemito(p,boton){
+    var txt=boton.textContent; boton.disabled=true; boton.textContent="Armando remito…";
+    api({accion:"remito",id:p.id}).then(function(d){
+      if(!d||!d.ok||!d.remito) throw new Error();
+      pintar(d); mostrarRemito(d,p);
+      $("capaRemito").hidden=false; $("capaRemito").scrollTop=0;
+    }).catch(function(){ boton.disabled=false; boton.textContent="No se pudo, tocá de nuevo"; return; }).then(function(){ if(boton.textContent==="Armando remito…"){ boton.disabled=false; boton.textContent=txt; } });
+  }
+  $("rConDesc").onchange=function(){
+    var v=leerVista(); conDesc=$("rConDesc").checked;
+    remitoActual.items.forEach(function(it){ if(!it.ajuste){ it.unit=v.pr[it.k]; it.desc=conDesc?(it.desc||0):0; } });
+    var V=$("remitoVista"); V.textContent=""; V.appendChild(armarRemito(remitoActual,null,true));
+    remitoActual.items.forEach(function(it){ if(!it.ajuste){ it.unit=remitoActual.unit[it.k]; it.desc=remitoActual.desc[it.k]; } });
+    var vv=V; vv.querySelectorAll("input.pu").forEach(function(i){ i.value=num(v.pr[i.dataset.k]); });
+    recalcular();
+  };
+  $("rCerrar").onclick=function(){$("capaRemito").hidden=true;};
+  $("rDeshacer").onclick=function(){ mostrarRemito({remito:remitoActual},remitoPed); };
+  $("rGuardar").onclick=function(){
+    var v=leerVista(), b=$("rGuardar"); b.disabled=true; b.textContent="Guardando…";
+    api({accion:"remito",id:remitoPed.id,precios:v.pr,descuentos:v.ds,fijar:$("rFijar").checked}).then(function(d){
+      if(!d||!d.ok||!d.remito) throw new Error(); pintar(d); mostrarRemito(d,remitoPed);
+    }).catch(function(){ $("rMsg").textContent="No se pudo guardar. Probá de nuevo."; }).then(function(){ b.disabled=false; b.textContent="Guardar cambios"; });
+  };
+  function preparar(solo){
+    var I=$("impresion"); I.textContent=""; I.className=solo?"solo":"";
+    I.appendChild(armarRemito(remitoActual,solo?"":"ORIGINAL · para el comercio"));
+    if(!solo){ I.appendChild(el("hr","corte")); I.appendChild(armarRemito(remitoActual,"DUPLICADO · para Harkana")); }
+  }
+  $("rImprimir").onclick=function(){ preparar(false); window.print(); };
+  $("rSolo").onclick=function(){ preparar(true); window.print(); };
+  /* Imagen del remito (solo el original) para mandar por WhatsApp. En el celular abre el menú de compartir. */
+  var h2c=null;
+  function cargarH2C(){
+    if(h2c) return h2c;
+    h2c=new Promise(function(ok,mal){ var sc=document.createElement("script"); sc.src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"; sc.onload=function(){ok(window.html2canvas);}; sc.onerror=function(){h2c=null;mal();}; document.head.appendChild(sc); });
+    return h2c;
+  }
+  $("rCompartir").onclick=function(){
+    var b=$("rCompartir"), m=$("rCmsg"); b.disabled=true; b.textContent="Preparando imagen…"; m.textContent="";
+    var caja=el("div"); caja.style.cssText="position:fixed;left:-10000px;top:0;width:520px;background:#fff";
+    caja.appendChild(armarRemito(remitoActual,"")); document.body.appendChild(caja);
+    var nombre="Remito-Harkana-"+nro(remitoActual.numero)+".png";
+    cargarH2C().then(function(f){ return f(caja.firstChild,{scale:2,backgroundColor:"#ffffff"}); })
+    .then(function(cv){ return new Promise(function(ok){ cv.toBlob(ok,"image/png"); }); })
+    .then(function(blob){
+      var file=new File([blob],nombre,{type:"image/png"});
+      if(navigator.canShare&&navigator.canShare({files:[file]})) return navigator.share({files:[file],title:"Remito Harkana N° "+nro(remitoActual.numero)});
+      var a=document.createElement("a"); a.href=URL.createObjectURL(blob); a.download=nombre; document.body.appendChild(a); a.click(); a.remove();
+      m.textContent="Se descargó la imagen del remito. Adjuntala en el chat de WhatsApp del comercio.";
+    }).catch(function(e){ if(e&&e.name==="AbortError") return; m.textContent="No se pudo armar la imagen. Usá \"Guardar PDF solo del original\" o mandá el detalle como texto."; })
+    .then(function(){ caja.remove(); b.disabled=false; b.textContent="Mandar remito por WhatsApp"; });
+  };
   function pintar(d){
     $("kg").textContent=num(d.totales.kg);
     var S=$("sizes"); S.textContent="";
@@ -257,6 +484,7 @@ summary{font-weight:700;cursor:pointer}
       var c=el("div","ped"), top=el("div","ped-top");
       top.appendChild(el("div","ped-name",p.comercio)); top.appendChild(el("div","ped-kg",num(p.kg)+" kg")); c.appendChild(top);
       c.appendChild(el("div",null,detalle(p)));
+      c.appendChild(lineaPlata(p));
       var mt=el("div","meta","Pidió el "+p.fecha+(p.localidad?" · "+p.localidad:""));
       var kTel=celWa(p.telefono);
       if(kTel){ mt.appendChild(document.createTextNode(" · ")); var at=document.createElement("a"); at.className="tel"; at.target="_blank"; at.rel="noopener"; at.href="https://wa.me/549"+kTel+"?text="+encodeURIComponent("¡Hola "+String(p.comercio).replace(/\s*\((web|particular)\)\s*$/,"").split(" ")[0]+"! Te escribimos de Harkana por tu pedido de "+detalle(p)+" 🧉"); at.textContent="💬 "+p.telefono; mt.appendChild(at); }
@@ -280,20 +508,27 @@ summary{font-weight:700;cursor:pointer}
       var sh=el("a","compartir","Pasar este pedido por WhatsApp"); sh.target="_blank"; sh.rel="noopener";
       sh.href="https://wa.me/?text="+encodeURIComponent("🧉 Pedido Harkana\n"+p.comercio+" ("+locDe(p)+")\n"+detalle(p)+" · "+num(p.kg)+" kg"+(p.telefono?"\nTel: "+p.telefono:"")+(p.nota?"\nNota: "+p.nota:""));
       c.appendChild(sh);
-      var b=el("button","primary","Entregado"); b.type="button";
-      b.onclick=function(){cambiar(p.id,"entregado",b,p);};
-      c.appendChild(b);
+      var bRem=el("button","ghost",p.remito?"📄 Remito N° "+p.remito:"📄 Hacer remito"); bRem.type="button";
+      bRem.onclick=function(){verRemito(p,bRem);};
+      c.appendChild(bRem);
+      var dos=el("div","dos");
+      var b=el("button","primary","Entregado y cobrado"); b.type="button";
+      b.onclick=function(){cambiar(p.id,"entregado",b,p,true);};
+      var b2=el("button","ghost","Entregado, cobro después"); b2.type="button";
+      b2.onclick=function(){cambiar(p.id,"entregado",b2,p,false);};
+      dos.appendChild(b); dos.appendChild(b2); c.appendChild(dos);
       if(admin){
         if(editarId===p.id){
           var ed=el("div","edit"), ins={};
           PRES.forEach(function(x){var lb=el("label",null,x[1]); var i=document.createElement("input"); i.type="number"; i.min="0"; i.inputMode="numeric"; i.value=p[x[0]]; ins[x[0]]=i; lb.appendChild(i); ed.appendChild(lb);});
           c.appendChild(ed);
+          var ft=el("div","field"), lt=el("label",null,"Total $ (vacío = según lista)"), it=document.createElement("input"); it.type="text"; it.inputMode="numeric"; it.placeholder=plata(p.total); lt.appendChild(it); ft.appendChild(lt); c.appendChild(ft);
           var t2=el("div","tools"), g=el("button","ghost","Guardar cambios"), x2=el("button","ghost","Cancelar"); g.type=x2.type="button";
-          g.onclick=function(){var cu={accion:"editar",id:p.id}; PRES.forEach(function(x){cu[x[0]]=parseInt(ins[x[0]].value)||0;}); editarId=""; accion(cu,g);};
+          g.onclick=function(){var cu={accion:"editar",id:p.id,total:it.value}; PRES.forEach(function(x){cu[x[0]]=parseInt(ins[x[0]].value)||0;}); editarId=""; accion(cu,g);};
           x2.onclick=function(){editarId=""; pintar(ultimo);};
           t2.appendChild(g); t2.appendChild(x2); c.appendChild(t2);
         }else{
-          var t=el("div","tools"), e1=el("button","ghost","Corregir cantidades"), d1=el("button","ghost del",borrarId===p.id?"Sí, borrar este pedido":"Borrar"); e1.type=d1.type="button";
+          var t=el("div","tools"), e1=el("button","ghost","Corregir cantidades o precio"), d1=el("button","ghost del",borrarId===p.id?"Sí, borrar este pedido":"Borrar"); e1.type=d1.type="button";
           e1.onclick=function(){editarId=p.id; borrarId=""; pintar(ultimo);};
           d1.onclick=function(){ if(borrarId!==p.id){borrarId=p.id; editarId=""; pintar(ultimo); return;} borrarId=""; accion({accion:"borrar",id:p.id},d1); };
           t.appendChild(e1); t.appendChild(d1);
@@ -302,6 +537,27 @@ summary{font-weight:700;cursor:pointer}
         }
       }
       P.appendChild(c);
+    });
+    /* --- lo que te deben: por comercio, con botón Cobrado y recordatorio por WhatsApp --- */
+    var DB=$("deben"); DB.textContent=""; var dbs=d.deben||[];
+    $("debenBox").hidden=!dbs.length;
+    $("debenTot").textContent=plata(dbs.reduce(function(t,g){return t+g.total;},0));
+    dbs.forEach(function(g){
+      var c=el("div","ped"), top=el("div","ped-top");
+      top.appendChild(el("div","ped-name",g.comercio)); top.appendChild(el("div","ped-kg",plata(g.total))); c.appendChild(top);
+      g.pedidos.forEach(function(x){
+        var r=el("div","drow"); r.appendChild(el("span",null,"Entregado "+String(x.entregado).slice(0,5)+(x.remito?" · remito N° "+x.remito:"")+" · "+plata(x.total)));
+        var bc=el("button","ghost","Cobrado"); bc.type="button"; bc.onclick=function(){accion({accion:"cobro",id:x.id,cobro:"cobrado"},bc);};
+        r.appendChild(bc);
+        if(admin){ var bn=el("button","ghost","No se cobra"); bn.type="button"; bn.onclick=function(){accion({accion:"cobro",id:x.id,cobro:"no se cobra"},bn);}; r.appendChild(bn); }
+        c.appendChild(r);
+      });
+      var k=celWa(g.telefono);
+      var msj="¡Hola! Te escribimos de Harkana 🧉 Te paso el saldo pendiente: "+plata(g.total)+
+        (g.pedidos.some(function(x){return x.remito;})?" (remito N° "+g.pedidos.filter(function(x){return x.remito;}).map(function(x){return x.remito;}).join(", ")+")":"")+". Podés transferir al alias Harkana. ¡Gracias!";
+      var w=el("a","compartir",k?"Recordarle por WhatsApp":"Recordarle por WhatsApp (elegir contacto)"); w.target="_blank"; w.rel="noopener";
+      w.href="https://wa.me/"+(k?"549"+k:"")+"?text="+encodeURIComponent(msj);
+      c.appendChild(w); DB.appendChild(c);
     });
     /* --- comercios que ya deberían haber vuelto a pedir --- */
     var R=$("rec"); R.textContent=""; var rs=d.recordar||[]; $("tRec").hidden=!rs.length;
@@ -319,10 +575,17 @@ summary{font-weight:700;cursor:pointer}
       var c=el("div","ped done"), top=el("div","ped-top");
       top.appendChild(el("div","ped-name",p.comercio)); top.appendChild(el("div","ped-kg",num(p.kg)+" kg")); c.appendChild(top);
       c.appendChild(el("div","meta",detalle(p)+" · entregado "+p.entregado));
+      if(p.cobro==="cobrado") c.appendChild(el("div","estado-cobro ok","✓ Cobrado "+plata(p.total)+(p.cobradoEl?" · "+p.cobradoEl.slice(0,5):"")));
+      else if(p.cobro==="no se cobra") c.appendChild(el("div","estado-cobro","Sin cargo (no se cobra)"));
+      else if(p.cobro==="debe") c.appendChild(el("div","estado-cobro debe","Debe "+plata(p.total)));
       if(p.pago) c.appendChild(el("div","gana","Sumó "+plata(p.pago)+" de producción"));
-      var b=el("button","ghost","Deshacer"); b.type="button";
+      var t=el("div","tools");
+      if(p.cobro==="debe"){ var bc=el("button","ghost","Cobrado"); bc.type="button"; bc.onclick=function(){accion({accion:"cobro",id:p.id,cobro:"cobrado"},bc);}; t.appendChild(bc); }
+      if(p.cobro==="cobrado"||p.cobro==="no se cobra"){ var bd=el("button","ghost","Deshacer cobro"); bd.type="button"; bd.onclick=function(){accion({accion:"cobro",id:p.id,cobro:""},bd);}; t.appendChild(bd); }
+      if(p.cobro!=="anterior"&&String(p.id).indexOf("F-")!==0){ var br=el("button","ghost","📄 Remito"); br.type="button"; br.onclick=function(){verRemito(p,br);}; t.appendChild(br); }
+      var b=el("button","ghost","Deshacer entrega"); b.type="button";
       b.onclick=function(){cambiar(p.id,"pendiente",b,p);};
-      c.appendChild(b); E.appendChild(c);
+      t.appendChild(b); c.appendChild(t); E.appendChild(c);
     });
     var h=new Date(); $("act").textContent="Actualizado "+String(h.getHours()).padStart(2,"0")+":"+String(h.getMinutes()).padStart(2,"0");
   }
@@ -338,9 +601,9 @@ summary{font-weight:700;cursor:pointer}
       else $("act").textContent="Sin conexión. Tocá Actualizar.";
     });
   }
-  function cambiar(id,estado,boton,ped){
+  function cambiar(id,estado,boton,ped,cobrado){
     boton.disabled=true; boton.textContent="Guardando…";
-    api({accion:"estado",id:id,estado:estado}).then(function(d){
+    api({accion:"estado",id:id,estado:estado,cobrado:!!cobrado}).then(function(d){
       if(!d||!d.ok) throw new Error(); pintar(d);
       var a=$("aviso"), s=d.produccion;
       if(ped&&ped.pago&&s){
