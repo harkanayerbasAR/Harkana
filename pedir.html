@@ -3,6 +3,9 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width,initial-scale=1">
+<link rel="apple-touch-icon" href="/icono-harkana-180.png">
+<link rel="icon" type="image/png" href="/icono-harkana-512.png">
+<meta name="apple-mobile-web-app-title" content="Pedí Harkana">
 <title>Pedí tu Harkana</title>
 <meta name="description" content="Pedí tu yerba orgánica Harkana.">
 <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:wght@500;600;700&family=Figtree:wght@400;500;600;700&display=swap">
@@ -52,6 +55,8 @@ button:focus-visible,input:focus-visible,textarea:focus-visible,a:focus-visible{
 .contact{text-align:center;color:var(--muted);font-size:.88rem;margin:0}
 [hidden]{display:none!important}
 </style>
+<script async src="https://www.googletagmanager.com/gtag/js?id=G-1C6MCCSFYM"></script>
+<script>window.dataLayer=window.dataLayer||[];function gtag(){dataLayer.push(arguments);}gtag('js',new Date());gtag('config','G-1C6MCCSFYM');</script>
 </head>
 <body>
 <div class="wrap">
@@ -72,6 +77,7 @@ button:focus-visible,input:focus-visible,textarea:focus-visible,a:focus-visible{
     </div>
     <div class="field"><span class="lbl">¿Cuántos paquetes querés?</span><div id="qty"></div></div>
     <div class="total"><span>Total</span><b id="totalKg">0 kg</b></div>
+      <div class="total" style="margin-top:-6px"><span id="totalSub" style="font-weight:500;font-size:.9rem">Envío a coordinar</span><b id="totalPlata">$0</b></div>
     <div class="field"><label for="nota">Aclaración (opcional)</label><textarea id="nota" rows="1" maxlength="200" placeholder="Ej.: entregar por la mañana"></textarea></div>
     <div class="band"><button class="primary" id="enviar" type="button">Enviar pedido</button></div>
     <div class="foot">
@@ -96,7 +102,9 @@ button:focus-visible,input:focus-visible,textarea:focus-visible,a:focus-visible{
   var WHATSAPP="5493585099308";         // número que recibe pedidos si falla el envío
   /* =========================== */
 
-  var PRES=[{k:"q250",n:"1/4 kg",d:"250 g",kg:.25},{k:"q500",n:"1/2 kg",d:"500 g",kg:.5},{k:"q1",n:"1 kg",d:"paquete de kilo",kg:1},{k:"q3",n:"3 kg",d:"bolsa de 3 kg",kg:3}];
+  var PRES=[{k:"q250",n:"1/4 kg",d:"250 g",kg:.25,p:3900},{k:"q500",n:"1/2 kg",d:"500 g",kg:.5,p:5500},{k:"q1",n:"1 kg",d:"1 kilo",kg:1,p:8000},{k:"q3",n:"3 kg",d:"3 kilos",kg:3,p:23000}];
+  /* Precios al público (los mismos de la web). El envío se coordina aparte y lo paga quien compra. */
+  var plata=function(n){return "$"+Math.round(n).toLocaleString("es-AR");};
   var $=function(id){return document.getElementById(id);};
   var el=function(t,c,x){var e=document.createElement(t);if(c)e.className=c;if(x!=null)e.textContent=x;return e;};
   var fmtKg=function(n){return (Math.round(n*100)/100).toLocaleString("es-AR")+" kg";};
@@ -105,7 +113,7 @@ button:focus-visible,input:focus-visible,textarea:focus-visible,a:focus-visible{
   var listo=API.indexOf("http")===0;
 
   PRES.forEach(function(x){
-    var row=el("div","qrow"), nm=el("span","qname",x.n); nm.appendChild(el("small",null,x.d)); row.appendChild(nm);
+    var row=el("div","qrow"), nm=el("span","qname",x.n); nm.appendChild(el("small",null,x.d+" · "+plata(x.p))); row.appendChild(nm);
     var st=el("div","step");
     var m=el("button",null,"−"); m.type="button"; m.setAttribute("aria-label","Restar "+x.n);
     var i=document.createElement("input"); i.type="number"; i.min="0"; i.max="999"; i.inputMode="numeric"; i.value="0"; i.id="in-"+x.k; i.setAttribute("aria-label","Paquetes de "+x.n);
@@ -119,6 +127,9 @@ button:focus-visible,input:focus-visible,textarea:focus-visible,a:focus-visible{
   /* --- quién es: código del link propio, o datos a mano --- */
   /* Página para consumidor final: no usa código de comercio. */
   var codigo="", nombreFijo="";
+  /* Si viene de la web (harkana.com.ar/pedir?o=web&q500=2), se marca como compra web y se cargan las cantidades elegidas. */
+  var qs=new URLSearchParams(location.search), WEB=(qs.get("o")||"")==="web";
+  PRES.forEach(function(x){var n=parseInt(qs.get(x.k),10);if(n>0)$("in-"+x.k).value=Math.min(999,n);});
   $("datos").hidden=false; $("comercio").value=leer("hk_p_nombre"); $("localidad").value=leer("hk_p_localidad"); $("telefono").value=leer("hk_p_telefono");
 
   function estado(){
@@ -130,9 +141,9 @@ button:focus-visible,input:focus-visible,textarea:focus-visible,a:focus-visible{
   function texto(s){
     var l=["*Pedido Harkana*","Cliente: "+s.com]; if(s.loc)l.push("Localidad: "+s.loc);
     PRES.forEach(function(x){if(s.q[x.k]>0)l.push(x.n+": "+s.q[x.k]);});
-    l.push("Total: "+fmtKg(s.kg)); if(s.nota)l.push("Nota: "+s.nota); return l.join("\n");
+    l.push("Total: "+fmtKg(s.kg)+" · "+plata(PRES.reduce(function(t,x){return t+s.q[x.k]*x.p;},0))+" + envío"); if(s.nota)l.push("Nota: "+s.nota); return l.join("\n");
   }
-  function upd(){ $("totalKg").textContent=fmtKg(estado().kg); }
+  function upd(){ var e=estado(); $("totalKg").textContent=fmtKg(e.kg); $("totalPlata").textContent=plata(PRES.reduce(function(t,x){return t+e.q[x.k]*x.p;},0)); }
 
   function porWhatsApp(s,motivo){
     $("msg").textContent=motivo;
@@ -147,10 +158,11 @@ button:focus-visible,input:focus-visible,textarea:focus-visible,a:focus-visible{
     if(!s.tel){$("msg").textContent="Dejanos tu WhatsApp para coordinar la entrega.";return;}
     if(!listo){porWhatsApp(s,"Enviá tu pedido por WhatsApp:");return;}
     $("enviar").disabled=true; $("msg").textContent=""; $("enviar").textContent="Enviando…";
-    var cuerpo={accion:"pedido",codigo:codigo,comercio:s.com+" (particular)",localidad:s.loc,telefono:s.tel,nota:s.nota};
+    var cuerpo={accion:"pedido",codigo:codigo,comercio:s.com+(WEB?" (web)":" (particular)"),localidad:s.loc,telefono:s.tel,nota:(WEB?"Compra web. ":"")+s.nota};
     PRES.forEach(function(x){cuerpo[x.k]=s.q[x.k];});
     fetch(API,{method:"POST",body:JSON.stringify(cuerpo)}).then(function(r){return r.json();}).then(function(d){
       if(!d||!d.ok) throw new Error("rechazado");
+      try{ gtag("event","pedido_enviado",{origen:WEB?"web":"directo",kg:d.kg,value:PRES.reduce(function(t,x){return t+s.q[x.k]*x.p;},0),currency:"ARS"}); }catch(e){}
       guardar("hk_p_nombre",s.com);guardar("hk_p_localidad",s.loc);guardar("hk_p_telefono",s.tel);
       $("resumen").textContent="Gracias, "+s.com+". Ya nos llegó tu pedido de "+fmtKg(d.kg)+". Te escribimos para coordinar el pago y la entrega.";
       $("form").hidden=true; $("listo").hidden=false; window.scrollTo(0,0);

@@ -3,6 +3,9 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width,initial-scale=1">
+<link rel="apple-touch-icon" href="/icono-harkana-180.png">
+<link rel="icon" type="image/png" href="/icono-harkana-512.png">
+<meta name="apple-mobile-web-app-title" content="Panel Harkana">
 <meta name="robots" content="noindex,nofollow">
 <title>Pedidos Harkana</title>
 <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:opsz,wght@12..96,600;12..96,700&family=Figtree:wght@400;500;600;700&display=swap">
@@ -76,6 +79,8 @@ summary{font-weight:700;cursor:pointer}
 .ped-name{font-weight:700;font-size:1.1rem;overflow-wrap:anywhere;min-width:0}
 .ped-kg{font-family:var(--display);font-weight:700;font-size:1.2rem;white-space:nowrap;font-variant-numeric:tabular-nums}
 .meta{color:var(--muted);font-size:.88rem;overflow-wrap:anywhere}
+.web{display:flex;flex-direction:column;gap:8px;background:var(--accent-soft,#E1EDDD);border:2px solid var(--accent,#2C6A38);border-radius:10px;padding:10px;font-size:.92rem}
+.web .wa{align-self:flex-start;background:#1f8f4e;color:#fff;font-weight:700;text-decoration:none;border-radius:9px;padding:9px 12px}
 .warn{background:var(--warn-soft);color:var(--warn);font-weight:600;font-size:.88rem;border-radius:9px;padding:8px 10px}
 .empty{border:1px dashed var(--line);border-radius:14px;padding:22px 16px;color:var(--muted);text-align:center}
 .link{color:var(--accent);font-weight:600}
@@ -231,7 +236,20 @@ summary{font-weight:700;cursor:pointer}
       c.appendChild(el("div","meta","Pidió el "+p.fecha+(p.localidad?" · "+p.localidad:"")+(p.telefono?" · "+p.telefono:"")));
       if(p.nota) c.appendChild(el("div","meta","Nota: "+p.nota));
       if(p.pago) c.appendChild(el("div","gana","Al entregar suma "+plata(p.pago)+" de producción"));
-      if(!p.conocido) c.appendChild(el("div","warn","Pidió sin link propio. Confirmá antes de entregar."));
+      var esWeb=/\(web\)\s*$/.test(p.comercio);
+      if(esWeb){
+        /* Compra hecha desde la web: hay que escribirle para coordinar pago y envío. */
+        var wb=el("div","web");
+        wb.appendChild(el("b",null,"🛒 COMPRA WEB · escribile para coordinar pago y envío"));
+        var dig=String(p.telefono||"").replace(/\D/g,"");
+        if(dig.length>=8){
+          var k=dig.replace(/^54/,"").replace(/^9/,"").replace(/^0/,""); if(k.length===12&&k.substr(3,2)==="15")k=k.slice(0,3)+k.slice(5); k=k.slice(-10);
+          var wa=document.createElement("a"); wa.className="wa"; wa.target="_blank"; wa.rel="noopener"; wa.textContent="Escribirle por WhatsApp";
+          wa.href="https://wa.me/549"+k+"?text="+encodeURIComponent("¡Hola! Te escribimos de Harkana por tu compra en la web 🧉");
+          wb.appendChild(wa);
+        }
+        c.appendChild(wb);
+      } else if(!p.conocido) c.appendChild(el("div","warn","Pidió sin link propio. Confirmá antes de entregar."));
       var b=el("button","primary","Entregado"); b.type="button";
       b.onclick=function(){cambiar(p.id,"entregado",b,p);};
       c.appendChild(b);

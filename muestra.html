@@ -44,6 +44,8 @@ button:focus-visible,input:focus-visible,a:focus-visible{outline:3px solid var(-
 .alt{display:block;text-align:center;color:var(--ink);font-weight:700;padding:6px}
 [hidden]{display:none!important}
 </style>
+<script async src="https://www.googletagmanager.com/gtag/js?id=G-1C6MCCSFYM"></script>
+<script>window.dataLayer=window.dataLayer||[];function gtag(){dataLayer.push(arguments);}gtag('js',new Date());gtag('config','G-1C6MCCSFYM');</script>
 </head>
 <body>
 <div class="wrap">
@@ -126,6 +128,7 @@ button:focus-visible,input:focus-visible,a:focus-visible{outline:3px solid var(-
     var txt=$("enviar").textContent; $("enviar").disabled=true; $("msg").textContent=""; $("enviar").textContent="Enviando…";
     enviar(cuerpo).then(function(d){
       if(!d||!d.ok){ var e=new Error("rechazado"); e.rechazado=true; throw e; }
+      try{ gtag("event",REV?"quiero_revender":"pidio_muestra",{origen:ORIGEN}); }catch(e){}
       mostrar(n,d,false);
     }).catch(function(e){
       if(e&&e.rechazado){ $("msg").textContent="Revisá los datos y probá de nuevo."; $("enviar").disabled=false; $("enviar").textContent=txt; return; }
