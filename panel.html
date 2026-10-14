@@ -793,7 +793,7 @@ button.prodnum[aria-expanded="true"]::after{content:" ˄"}
     rs.forEach(function(r){
       var c=el("div","ped"); c.appendChild(el("div","ped-name",r.nombre));
       c.appendChild(el("div","meta","Último pedido hace "+r.dias+" días"+(r.cada?" · suele pedir cada "+r.cada+" días":"")));
-      var msj="¡Hola! ¿Cómo venís de yerba Harkana? Cuando quieras reponer, pedís desde acá: "+r.link;
+      var msj="¡Hola "+r.nombre+"! ¿Cómo vienen de yerba Harkana? 🧉 Cuando quieran reponer, este es su link de pedidos (ya tiene sus datos y el botón para repetir el último pedido): "+r.link;
       var tel=r.telefono?(r.telefono.length===10?"549"+r.telefono:r.telefono):"";
       var w=el("a","wa",tel?"Escribirle por WhatsApp":"Elegir contacto en WhatsApp"); w.target="_blank"; w.rel="noopener";
       w.href="https://wa.me/"+tel+"?text="+encodeURIComponent(msj);
