@@ -646,7 +646,7 @@ button.prodnum[aria-expanded="true"]::after{content:" ˄"}
     PRES.forEach(function(x){var b=el("div","size");b.appendChild(el("b",null,String(d.totales[x[0]])));b.appendChild(el("span",null,"de "+x[1]));S.appendChild(b);});
     if(d.rol) rol=d.rol;
     var admin=rol==="admin";
-    $("stockForm").hidden=!admin; $("deudaForm").hidden=!admin;
+    $("stockForm").hidden=!admin; $("deudaForm").hidden=false;
     var DL=$("dLista"); DL.textContent=""; var vistos={};
     (d.comercios||[]).map(function(x){return x.nombre;}).concat((d.entregados||[]).map(function(x){return x.comercio;})).forEach(function(n){ if(vistos[n]) return; vistos[n]=1; var o=document.createElement("option"); o.value=n; DL.appendChild(o); }); $("ajForm").hidden=!admin;
     var pr=d.produccion;
