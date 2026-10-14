@@ -36,6 +36,11 @@ button:focus-visible,input:focus-visible,textarea:focus-visible,a:focus-visible{
 .top,.bar{display:flex;align-items:center;justify-content:space-between;gap:12px}
 .ghost{font:600 .9rem var(--body);padding:9px 14px;border-radius:9px;border:1px solid var(--line);background:var(--surface);color:var(--ink);cursor:pointer}
 .nums{display:grid;grid-template-columns:1fr 1fr;gap:10px}
+.hero.sincobrar{display:flex;grid-column:1/-1;flex-direction:row;align-items:center;justify-content:space-between;background:var(--surface);color:var(--ink);border:1px solid var(--line);font:inherit;text-align:left;cursor:pointer}
+.hero.sincobrar .sc-txt{display:flex;flex-direction:column;gap:2px}
+.hero.sincobrar b{font-family:var(--display);font-size:1.9rem;line-height:1;font-variant-numeric:tabular-nums}
+.hero.sincobrar.hay{border:2px solid var(--danger)} .hero.sincobrar.hay b{color:var(--danger)}
+.hero.sincobrar .sc-ver{font-weight:700;white-space:nowrap}
 .hero{background:var(--accent);color:var(--accent-ink);border-radius:16px;padding:16px;display:flex;flex-direction:column;gap:8px;min-width:0}
 .hero.stock{background:var(--surface);color:var(--ink);border:1px solid var(--line)}
 .hero.stock.bajo{border-color:var(--danger)} .hero.stock.bajo b{color:var(--danger)}
@@ -51,6 +56,10 @@ summary{font-weight:700;cursor:pointer}
 .prodlbl{font-weight:700}
 .prodnum{font-family:var(--display);font-size:1.55rem;font-variant-numeric:tabular-nums;white-space:nowrap;border:1px solid var(--line);border-radius:10px;padding:8px 12px;background:var(--bg)}
 .prod.neg .prodnum{color:var(--danger);border-color:var(--danger)}
+button.prodnum{color:var(--ink);cursor:pointer;text-decoration:underline;text-decoration-thickness:1px;text-underline-offset:4px}
+button.prodnum::after{content:" ›";text-decoration:none;font-size:1.1rem}
+button.prodnum[aria-expanded="true"]::after{content:" ˄"}
+.proddet{display:flex;flex-direction:column;gap:12px;border-top:1px solid var(--line);padding-top:12px}
 .aviso{background:var(--accent-soft);color:var(--ink);font-weight:600;border-radius:10px;padding:10px 12px}
 .prod details{display:flex;flex-direction:column;gap:12px;border-top:1px solid var(--line);padding-top:12px}
 .prod details[open] summary{margin-bottom:12px}
@@ -93,13 +102,19 @@ summary{font-weight:700;cursor:pointer}
 .dos{display:grid;grid-template-columns:1fr;gap:8px}
 .dos .ghost{align-self:stretch;text-align:center;padding:12px}
 .estado-cobro{font-size:.88rem;font-weight:700}
+.cobrar{display:flex;flex-direction:column;gap:8px;background:var(--accent-soft);border-radius:10px;padding:10px}
+.cobrar .fila{display:grid;grid-template-columns:1fr 1fr;gap:8px}
+.cobrar .ghost{text-align:center;padding:12px 6px;white-space:nowrap}
+.cobrar input{font:600 1rem var(--body);border:1px solid var(--line);border-radius:9px;padding:10px;width:100%;background:var(--surface);color:var(--ink)}
+.cobrar .lbl2{font-size:.85rem;font-weight:600}
+.mes{font-size:.88rem;color:var(--muted)}
 .estado-cobro.ok{color:var(--accent)} .estado-cobro.debe{color:var(--danger)}
 .deben{border-color:var(--danger)}
 .deben-tot{font-family:var(--display);font-size:1.6rem;color:var(--danger);font-variant-numeric:tabular-nums}
 .drow{display:flex;justify-content:space-between;align-items:center;gap:8px;border-top:1px solid var(--line);padding-top:8px;flex-wrap:wrap}
 .drow span{font-size:.9rem}
 /* Remito */
-.capa{position:fixed;inset:0;background:rgba(0,0,0,.55);z-index:20;overflow:auto;padding:16px}
+.capa{position:fixed;inset:0;background:rgba(0,0,0,.72);z-index:20;overflow:auto;padding:16px}
 .capa-in{max-width:560px;margin:0 auto;display:flex;flex-direction:column;gap:12px}
 .remito{background:#fff;color:#1F1A15;border-radius:10px;font-family:var(--body);overflow:hidden;-webkit-print-color-adjust:exact;print-color-adjust:exact}
 .r-banda{height:10px;background:#D2A76E}
@@ -127,9 +142,11 @@ summary{font-weight:700;cursor:pointer}
 .r-firma div{border-top:1px solid #1F1A15;padding-top:4px}
 .r-pie{margin-top:14px;padding-top:8px;border-top:1px solid #EFE4D2;font-size:.7rem;color:#54463A;display:flex;justify-content:space-between;gap:8px;flex-wrap:wrap}
 .r-falta{background:#FBEBCF;color:#9A5B00;font-weight:600;border-radius:8px;padding:8px 10px;margin-top:10px;font-size:.88rem}
-.r-bot{display:grid;grid-template-columns:1fr;gap:8px}
+.r-bot{display:grid;grid-template-columns:1fr;gap:8px;background:#fff;border-radius:10px;padding:12px}
 .r-bot .off{opacity:.4;pointer-events:none}
-.r-bot .wa2{font-size:.88rem;color:#fff;text-align:center;text-decoration:underline}
+.r-bot .wa2{font-size:.88rem;color:#1F1A15;text-align:center;text-decoration:underline}
+.r-bot #rCmsg{color:#9A5B00;text-align:center;font-weight:700}
+.r-bot #rCmsg.ok{color:#2C6A38}
 .r-edit,.r-opc{background:#fff;border-radius:10px;padding:12px 14px;display:flex;flex-direction:column;gap:10px;color:#1F1A15}
 .r-edit .tip{font-size:.85rem;color:#54463A}
 .r-edit label,.r-opc label{display:flex;gap:8px;align-items:center;font-size:.92rem;text-transform:none;letter-spacing:0;color:#1F1A15;font-weight:600}
@@ -171,17 +188,22 @@ summary{font-weight:700;cursor:pointer}
         <div class="big"><b id="stk">—</b><span>kg de stock restante</span></div>
         <div class="foot" id="stkPie">Cargá tu stock actual para empezar.</div>
       </div>
+      <button class="hero sincobrar" id="sinCobrar" type="button" aria-expanded="false">
+        <span class="sc-txt"><b id="scMonto">$0</b><span id="scLbl">entregado sin cobrar</span></span>
+        <span class="sc-ver" id="scVer">Ver ›</span>
+      </button>
     </div>
     <div class="sizes" id="sizes"></div>
     <div class="card prod" id="prodBox">
       <div class="prodtop">
         <div class="prodtxt">
           <span class="prodlbl" id="saldoLbl">a favor por producción</span>
-          <div class="foot" id="prodMes"></div>
         </div>
-        <b class="prodnum" id="saldo">$0</b>
+        <button class="prodnum" id="saldo" type="button" aria-expanded="false" aria-controls="prodDet">$0</button>
       </div>
       <div class="aviso" id="aviso" role="status" hidden></div>
+      <div id="prodDet" class="proddet" hidden>
+      <div class="foot" id="prodMes"></div>
       <details id="retForm">
         <summary>Cargar retiro</summary>
         <div class="field"><label for="rmonto">Monto retirado ($)</label><input type="text" id="rmonto" inputmode="numeric" placeholder="Ej.: 30000"></div>
@@ -197,6 +219,7 @@ summary{font-weight:700;cursor:pointer}
         <div class="msg" id="amsg" role="status"></div>
       </details>
       <div class="meta" id="pmov"></div>
+      </div>
     </div>
     <div class="bar">
       <span class="sub" id="act">Actualizando…</span>
@@ -209,6 +232,7 @@ summary{font-weight:700;cursor:pointer}
       <div class="plata"><h2>Te deben</h2><span class="deben-tot" id="debenTot">$0</span></div>
       <div class="list" id="deben"></div>
     </div>
+    <div class="mes" id="cobMes" hidden></div>
     <h2 id="tRec" hidden>Para recordarles que pidan</h2>
     <div class="list" id="rec"></div>
     <h2 id="tEntr" hidden>Últimos entregados</h2>
@@ -240,7 +264,7 @@ summary{font-weight:700;cursor:pointer}
       <button class="primary" id="rImprimir" type="button">Imprimir original y duplicado</button>
       <button class="ghost" id="rSolo" type="button">Guardar PDF solo del original</button>
       <a class="wa2" id="rWa" target="_blank" rel="noopener">o mandar el detalle como texto</a>
-      <div class="msg" id="rCmsg" role="status" style="color:#fff"></div>
+      <div class="msg" id="rCmsg" role="status"></div>
       <button class="ghost" id="rCerrar" type="button">Cerrar</button>
     </div>
   </div>
@@ -371,6 +395,9 @@ summary{font-weight:700;cursor:pointer}
     if(mantenerDesc) recalcular();
     var lin=remitoActual.items.map(function(it){return (it.ajuste?it.nombre+": ":it.n+" × "+it.nombre+" a "+plata(it.unit)+(it.desc?" (−"+String(it.desc).replace(".",",")+"%)":"")+" = ")+plata(it.sub);});
     var msj="🧉 *Harkana · Remito N° "+nro(remitoActual.numero)+"*\nFecha: "+remitoActual.fecha+"\n"+remitoActual.comercio+(remitoActual.localidad?" ("+remitoActual.localidad+")":"")+"\n\n"+lin.join("\n")+"\n\n*Total: "+plata(remitoActual.total)+"* ("+num(remitoActual.kg)+" kg)\nAlias para transferir: Harkana\n¡Gracias!";
+    var pa=(ultimo&&ultimo.pendientes||[]).concat(ultimo&&ultimo.entregados||[]).filter(function(x){return x.id===p.id;})[0];
+    $("rCmsg").textContent=pa&&pa.envio?"✓ Ya se mandó: "+pa.envio:"⚠ Todavía no se mandó al comercio";
+    $("rCmsg").className="msg"+(pa&&pa.envio?" ok":"");
     var k=celWa(p.telefono); $("rWa").href="https://wa.me/"+(k?"549"+k:"")+"?text="+encodeURIComponent(msj);
   }
   function verRemito(p,boton){
@@ -390,6 +417,8 @@ summary{font-weight:700;cursor:pointer}
     recalcular();
   };
   $("rCerrar").onclick=function(){$("capaRemito").hidden=true;};
+  $("saldo").onclick=function(){ var d=$("prodDet"); d.hidden=!d.hidden; $("saldo").setAttribute("aria-expanded",String(!d.hidden)); };
+  $("sinCobrar").onclick=function(){ if(!ultimo||!(ultimo.deben||[]).length) return; verDeben=!verDeben; pintar(ultimo); if(verDeben) $("debenBox").scrollIntoView({behavior:"smooth",block:"start"}); };
   $("rDeshacer").onclick=function(){ mostrarRemito({remito:remitoActual},remitoPed); };
   $("rGuardar").onclick=function(){
     var v=leerVista(), b=$("rGuardar"); b.disabled=true; b.textContent="Guardando…";
@@ -402,7 +431,8 @@ summary{font-weight:700;cursor:pointer}
     I.appendChild(armarRemito(remitoActual,solo?"":"ORIGINAL · para el comercio"));
     if(!solo){ I.appendChild(el("hr","corte")); I.appendChild(armarRemito(remitoActual,"DUPLICADO · para Harkana")); }
   }
-  $("rImprimir").onclick=function(){ preparar(false); window.print(); };
+  $("rImprimir").onclick=function(){ preparar(false); window.print(); marcarEnvio("impreso"); };
+  $("rWa").addEventListener("click",function(){ marcarEnvio("texto"); });
   $("rSolo").onclick=function(){ preparar(true); window.print(); };
   /* Imagen del remito (solo el original) para mandar por WhatsApp. En el celular abre el menú de compartir. */
   var h2c=null;
@@ -420,12 +450,38 @@ summary{font-weight:700;cursor:pointer}
     .then(function(cv){ return new Promise(function(ok){ cv.toBlob(ok,"image/png"); }); })
     .then(function(blob){
       var file=new File([blob],nombre,{type:"image/png"});
-      if(navigator.canShare&&navigator.canShare({files:[file]})) return navigator.share({files:[file],title:"Remito Harkana N° "+nro(remitoActual.numero)});
+      if(navigator.canShare&&navigator.canShare({files:[file]})) return navigator.share({files:[file],title:"Remito Harkana N° "+nro(remitoActual.numero)}).then(function(){ marcarEnvio("whatsapp"); });
       var a=document.createElement("a"); a.href=URL.createObjectURL(blob); a.download=nombre; document.body.appendChild(a); a.click(); a.remove();
       m.textContent="Se descargó la imagen del remito. Adjuntala en el chat de WhatsApp del comercio.";
     }).catch(function(e){ if(e&&e.name==="AbortError") return; m.textContent="No se pudo armar la imagen. Usá \"Guardar PDF solo del original\" o mandá el detalle como texto."; })
     .then(function(){ caja.remove(); b.disabled=false; b.textContent="Mandar remito por WhatsApp"; });
   };
+  var cobrandoId="", parcialId="", verDeben=false;
+  /* Caja de cobro: Efectivo / Transferencia por el total, o "Pagó una parte" con monto. alListo(monto, medio) hace el pedido. */
+  function cajaCobro(id,saldo,alListo,titulo){
+    var c=el("div","cobrar");
+    c.appendChild(el("div","lbl2",titulo+" "+plata(saldo)+". Si pagó menos, cambiá el monto: el resto queda como deuda."));
+    var lb=el("label",null,"Monto cobrado ($)"), inp=document.createElement("input"); inp.type="text"; inp.inputMode="numeric"; inp.value=num(saldo);
+    lb.style.textTransform="none"; lb.appendChild(inp); c.appendChild(lb);
+    inp.onfocus=function(){inp.select();};
+    c.appendChild(el("div","lbl2","¿Cómo pagó?"));
+    var f2=el("div","fila"), e2=el("button","ghost","💵 Efectivo"), t2=el("button","ghost","🏦 Transferencia"); e2.type=t2.type="button";
+    var ir=function(medio,b){ var m=Math.round(parseFloat(inp.value.replace(/[$\s.]/g,"").replace(",","."))||0); if(!(m>0)){inp.focus(); return;} if(m>saldo) m=saldo; alListo(m,medio,b); };
+    e2.onclick=function(){ir("efectivo",e2);}; t2.onclick=function(){ir("transferencia",t2);};
+    f2.appendChild(e2); f2.appendChild(t2); c.appendChild(f2);
+    var x=el("button","ghost","Cancelar"); x.type="button"; x.onclick=function(){cobrandoId=""; parcialId=""; pintar(ultimo);}; c.appendChild(x);
+    return c;
+  }
+  function estadoEnvio(p){
+    return p.envio?el("div","estado-cobro ok","✓ Remito N° "+p.remito+" enviado "+p.envio)
+                  :el("div","warn","⚠ Remito N° "+p.remito+" hecho pero SIN ENVIAR al comercio");
+  }
+  function marcarEnvio(via){
+    if(!remitoPed) return;
+    var id=remitoPed.id;
+    api({accion:"remitoEnviado",id:id,via:via}).then(function(d){ if(d&&d.ok){ pintar(d); $("rCmsg").textContent="✓ Quedó anotado que el remito se mandó."; $("rCmsg").className="msg ok"; } }).catch(function(){});
+  }
+  function detPagos(p){ return (p.pagos||[]).map(function(x){return x.medio+" "+plata(x.monto)+" el "+x.fecha.slice(0,5);}).join(" + "); }
   function pintar(d){
     $("kg").textContent=num(d.totales.kg);
     var S=$("sizes"); S.textContent="";
@@ -437,7 +493,7 @@ summary{font-weight:700;cursor:pointer}
     $("prodBox").hidden=!pr;
     if(pr){
       $("saldo").textContent=plata(pr.saldo);
-      $("saldoLbl").textContent=pr.saldo<0?(admin?pr.socio+" retiró de más":"Retiraste de más"):(admin?"A favor de "+pr.socio+" por producción":"A tu favor por producción");
+      $("saldoLbl").textContent=pr.saldo<0?(admin?pr.socio+" retiró de más":"Retiraste de más"):(admin?"A favor de "+pr.socio:"A tu favor");
       $("prodBox").className="card prod"+(pr.saldo<0?" neg":"");
       $("prodMes").textContent="Este mes: ganado "+plata(pr.ganadoMes)+" · retirado "+plata(pr.retiradoMes);
       var M=$("pmov"); M.textContent="";
@@ -511,12 +567,17 @@ summary{font-weight:700;cursor:pointer}
       var bRem=el("button","ghost",p.remito?"📄 Remito N° "+p.remito:"📄 Hacer remito"); bRem.type="button";
       bRem.onclick=function(){verRemito(p,bRem);};
       c.appendChild(bRem);
-      var dos=el("div","dos");
-      var b=el("button","primary","Entregado y cobrado"); b.type="button";
-      b.onclick=function(){cambiar(p.id,"entregado",b,p,true);};
-      var b2=el("button","ghost","Entregado, cobro después"); b2.type="button";
-      b2.onclick=function(){cambiar(p.id,"entregado",b2,p,false);};
-      dos.appendChild(b); dos.appendChild(b2); c.appendChild(dos);
+      if(p.remito) c.appendChild(estadoEnvio(p));
+      if(cobrandoId===p.id){
+        c.appendChild(cajaCobro(p.id,p.total,function(m,medio,bt){ cobrandoId=""; parcialId=""; cambiar(p.id,"entregado",bt,p,true,m,medio); },"Entregado. Total"));
+      } else {
+        var dos=el("div","dos");
+        var b=el("button","primary","Entregado y cobrado"); b.type="button";
+        b.onclick=function(){cobrandoId=p.id; parcialId=""; pintar(ultimo);};
+        var b2=el("button","ghost","Entregado, cobro después"); b2.type="button";
+        b2.onclick=function(){cambiar(p.id,"entregado",b2,p,false);};
+        dos.appendChild(b); dos.appendChild(b2); c.appendChild(dos);
+      }
       if(admin){
         if(editarId===p.id){
           var ed=el("div","edit"), ins={};
@@ -540,25 +601,33 @@ summary{font-weight:700;cursor:pointer}
     });
     /* --- lo que te deben: por comercio, con botón Cobrado y recordatorio por WhatsApp --- */
     var DB=$("deben"); DB.textContent=""; var dbs=d.deben||[];
-    $("debenBox").hidden=!dbs.length;
+    var scTot=dbs.reduce(function(t,g){return t+g.total;},0);
+    $("scMonto").textContent=plata(scTot);
+    $("scLbl").textContent=dbs.length?"entregado sin cobrar · "+dbs.length+(dbs.length>1?" comercios":" comercio"):"entregado sin cobrar · todo cobrado ✓";
+    $("sinCobrar").className="hero sincobrar"+(dbs.length?" hay":"");
+    $("scVer").hidden=!dbs.length;
+    if(!dbs.length) verDeben=false;
+    $("debenBox").hidden=!(dbs.length&&verDeben); $("sinCobrar").setAttribute("aria-expanded",String(!$("debenBox").hidden));
+    $("scVer").textContent=verDeben?"Ocultar ˄":"Ver ›";
     $("debenTot").textContent=plata(dbs.reduce(function(t,g){return t+g.total;},0));
     dbs.forEach(function(g){
       var c=el("div","ped"), top=el("div","ped-top");
       top.appendChild(el("div","ped-name",g.comercio)); top.appendChild(el("div","ped-kg",plata(g.total))); c.appendChild(top);
       g.pedidos.forEach(function(x){
-        var r=el("div","drow"); r.appendChild(el("span",null,"Entregado "+String(x.entregado).slice(0,5)+(x.remito?" · remito N° "+x.remito:"")+" · "+plata(x.total)));
-        var bc=el("button","ghost","Cobrado"); bc.type="button"; bc.onclick=function(){accion({accion:"cobro",id:x.id,cobro:"cobrado"},bc);};
-        r.appendChild(bc);
-        if(admin){ var bn=el("button","ghost","No se cobra"); bn.type="button"; bn.onclick=function(){accion({accion:"cobro",id:x.id,cobro:"no se cobra"},bn);}; r.appendChild(bn); }
+        var r=el("div","drow"); r.appendChild(el("span",null,"Entregado "+String(x.entregado).slice(0,5)+(x.remito?" · remito N° "+x.remito:"")+" · total "+plata(x.total)+(x.pagado?" · pagó "+plata(x.pagado):"")+" · debe "+plata(x.saldo)));
+        if(cobrandoId!=="d"+x.id){
+          var bc=el("button","ghost","Registrar pago"); bc.type="button"; bc.onclick=function(){cobrandoId="d"+x.id; parcialId=""; pintar(ultimo);};
+          r.appendChild(bc);
+          if(admin){ var bn=el("button","ghost","No se cobra"); bn.type="button"; bn.onclick=function(){accion({accion:"cobro",id:x.id,cobro:"no se cobra"},bn);}; r.appendChild(bn); }
+        }
         c.appendChild(r);
+        if(cobrandoId==="d"+x.id) c.appendChild(cajaCobro("d"+x.id,x.saldo,function(m,medio,bt){ cobrandoId=""; parcialId=""; accion({accion:"cobro",id:x.id,cobro:"cobrado",monto:m,medio:medio},bt); },"Debe"));
       });
-      var k=celWa(g.telefono);
-      var msj="¡Hola! Te escribimos de Harkana 🧉 Te paso el saldo pendiente: "+plata(g.total)+
-        (g.pedidos.some(function(x){return x.remito;})?" (remito N° "+g.pedidos.filter(function(x){return x.remito;}).map(function(x){return x.remito;}).join(", ")+")":"")+". Podés transferir al alias Harkana. ¡Gracias!";
-      var w=el("a","compartir",k?"Recordarle por WhatsApp":"Recordarle por WhatsApp (elegir contacto)"); w.target="_blank"; w.rel="noopener";
-      w.href="https://wa.me/"+(k?"549"+k:"")+"?text="+encodeURIComponent(msj);
-      c.appendChild(w); DB.appendChild(c);
+      DB.appendChild(c);
     });
+    var cm=d.cobradoMes||{}, cmTot=(cm.efectivo||0)+(cm.transferencia||0)+(cm["sin medio"]||0);
+    $("cobMes").hidden=!cmTot||!admin;
+    $("cobMes").textContent="Cobrado este mes a comercios: 💵 efectivo "+plata(cm.efectivo)+" · 🏦 transferencia "+plata(cm.transferencia)+(cm["sin medio"]?" · sin medio "+plata(cm["sin medio"]):"");
     /* --- comercios que ya deberían haber vuelto a pedir --- */
     var R=$("rec"); R.textContent=""; var rs=d.recordar||[]; $("tRec").hidden=!rs.length;
     rs.forEach(function(r){
@@ -575,17 +644,20 @@ summary{font-weight:700;cursor:pointer}
       var c=el("div","ped done"), top=el("div","ped-top");
       top.appendChild(el("div","ped-name",p.comercio)); top.appendChild(el("div","ped-kg",num(p.kg)+" kg")); c.appendChild(top);
       c.appendChild(el("div","meta",detalle(p)+" · entregado "+p.entregado));
-      if(p.cobro==="cobrado") c.appendChild(el("div","estado-cobro ok","✓ Cobrado "+plata(p.total)+(p.cobradoEl?" · "+p.cobradoEl.slice(0,5):"")));
+      if(p.cobro==="cobrado") c.appendChild(el("div","estado-cobro ok","✓ Cobrado "+plata(p.total)+(p.pagos&&p.pagos.length?" · "+detPagos(p):(p.cobradoEl?" · "+p.cobradoEl.slice(0,5):""))));
       else if(p.cobro==="no se cobra") c.appendChild(el("div","estado-cobro","Sin cargo (no se cobra)"));
-      else if(p.cobro==="debe") c.appendChild(el("div","estado-cobro debe","Debe "+plata(p.total)));
+      else if(p.cobro==="debe") c.appendChild(el("div","estado-cobro debe",p.pagado?"Pagó "+detPagos(p)+" · debe "+plata(p.saldo):"Debe "+plata(p.total)));
+      if(p.remito) c.appendChild(estadoEnvio(p));
       if(p.pago) c.appendChild(el("div","gana","Sumó "+plata(p.pago)+" de producción"));
       var t=el("div","tools");
-      if(p.cobro==="debe"){ var bc=el("button","ghost","Cobrado"); bc.type="button"; bc.onclick=function(){accion({accion:"cobro",id:p.id,cobro:"cobrado"},bc);}; t.appendChild(bc); }
+      if(p.cobro==="debe"&&cobrandoId!=="e"+p.id){ var bc=el("button","ghost","Registrar pago"); bc.type="button"; bc.onclick=function(){cobrandoId="e"+p.id; parcialId=""; pintar(ultimo);}; t.appendChild(bc); }
       if(p.cobro==="cobrado"||p.cobro==="no se cobra"){ var bd=el("button","ghost","Deshacer cobro"); bd.type="button"; bd.onclick=function(){accion({accion:"cobro",id:p.id,cobro:""},bd);}; t.appendChild(bd); }
       if(p.cobro!=="anterior"&&String(p.id).indexOf("F-")!==0){ var br=el("button","ghost","📄 Remito"); br.type="button"; br.onclick=function(){verRemito(p,br);}; t.appendChild(br); }
       var b=el("button","ghost","Deshacer entrega"); b.type="button";
       b.onclick=function(){cambiar(p.id,"pendiente",b,p);};
-      t.appendChild(b); c.appendChild(t); E.appendChild(c);
+      t.appendChild(b); c.appendChild(t);
+      if(cobrandoId==="e"+p.id) c.appendChild(cajaCobro("e"+p.id,p.saldo,function(m,medio,bt){ cobrandoId=""; parcialId=""; accion({accion:"cobro",id:p.id,cobro:"cobrado",monto:m,medio:medio},bt); },"Debe"));
+      E.appendChild(c);
     });
     var h=new Date(); $("act").textContent="Actualizado "+String(h.getHours()).padStart(2,"0")+":"+String(h.getMinutes()).padStart(2,"0");
   }
@@ -601,9 +673,9 @@ summary{font-weight:700;cursor:pointer}
       else $("act").textContent="Sin conexión. Tocá Actualizar.";
     });
   }
-  function cambiar(id,estado,boton,ped,cobrado){
+  function cambiar(id,estado,boton,ped,cobrado,monto,medio){
     boton.disabled=true; boton.textContent="Guardando…";
-    api({accion:"estado",id:id,estado:estado,cobrado:!!cobrado}).then(function(d){
+    api({accion:"estado",id:id,estado:estado,cobrado:!!cobrado,monto:monto,medio:medio}).then(function(d){
       if(!d||!d.ok) throw new Error(); pintar(d);
       var a=$("aviso"), s=d.produccion;
       if(ped&&ped.pago&&s){
