@@ -154,6 +154,33 @@ button.prodnum[aria-expanded="true"]::after{content:" ˄"}
 .remito td input{width:5.6em;font:600 .92rem var(--body);text-align:right;border:1px solid #C9B99E;border-radius:6px;padding:5px 6px;background:#FFFBF3;color:#1F1A15}
 .remito td input.pc{width:3.2em}
 .remito .dz{font-size:.74rem;color:#8A6A3E;font-weight:600;margin-top:2px}
+.capa-in.hist{background:var(--bg);border-radius:14px;padding:14px;color:var(--ink)}
+.hist h2{margin:0} .hist h3,.inf h3{font-family:var(--display);font-size:1rem;margin:14px 0 6px}
+.fechas{display:grid;grid-template-columns:1fr 1fr;gap:8px}
+.fechas label{display:flex;flex-direction:column;gap:4px;font-size:.75rem;min-width:0}
+.fechas input,#dFecha{min-width:0;-webkit-appearance:none;appearance:none}
+#deudaForm .field{margin-bottom:12px} #deudaForm summary{margin-bottom:10px} .msg.ok{color:var(--accent)}
+#dFecha{font:500 1rem var(--body);color:var(--ink);background:var(--bg);border:1px solid var(--line);border-radius:10px;padding:12px;width:100%}
+.fechas input,#hCom{font:500 1rem var(--body);padding:10px;border:1px solid var(--line);border-radius:10px;background:var(--surface);color:var(--ink);width:100%}
+.hk{display:grid;grid-template-columns:repeat(auto-fit,minmax(95px,1fr));gap:8px;margin:10px 0}
+.hkb{background:var(--surface);border:1px solid var(--line);border-radius:10px;padding:9px 10px;display:flex;flex-direction:column}
+.hkb b{font-family:var(--display);font-size:1.15rem;font-variant-numeric:tabular-nums}
+.hkb span{font-size:.75rem;color:var(--muted)}
+.ht{width:100%;border-collapse:collapse;font-size:.82rem;font-variant-numeric:tabular-nums;background:var(--surface)}
+.ht th{text-align:left;font-size:.68rem;text-transform:uppercase;color:var(--muted);border-bottom:1px solid var(--line);padding:5px 4px}
+.ht td{padding:6px 4px;border-bottom:1px solid var(--line);cursor:pointer}
+.ht .n{text-align:right;white-space:nowrap}
+.hrow{display:flex;justify-content:space-between;gap:10px;font-size:.86rem;padding:6px 0;border-bottom:1px solid var(--line)}
+.hrow b{white-space:nowrap} .hrow b.rojo{color:var(--danger)}
+.ped-name.toca{cursor:pointer;text-decoration:underline;text-decoration-color:var(--line);text-underline-offset:3px}
+.rapido{background:var(--bg);border-radius:10px;padding:10px 12px;display:flex;flex-direction:column;gap:4px}
+.rr{display:flex;justify-content:space-between;font-size:.95rem}
+.rr.tot{border-top:1px solid var(--line);padding-top:6px;font-weight:700}
+.inf{background:#fff;color:#1F1A15;-webkit-print-color-adjust:exact;print-color-adjust:exact}
+.inf-cuerpo{padding:8mm 10mm}
+.inf .hkb{background:#F3E6D0;border-color:#E3D3B4} .inf .hkb span{color:#5A4326}
+.inf .ht{background:#fff} .inf .ht th{background:#F3E6D0;color:#5A4326}
+.inf .hrow{border-color:#EFE4D2}
 #impresion{display:none}
 @media print{
   body{background:#fff}
@@ -162,6 +189,7 @@ button.prodnum[aria-expanded="true"]::after{content:" ˄"}
   #impresion .remito{border-radius:0;height:140mm;page-break-inside:avoid}
   #impresion.solo .remito{height:auto}
   #impresion .corte{border:0;border-top:1px dashed #999;margin:0}
+  #impresion.informe .r-cab img{width:110px}
   @page{size:A4;margin:5mm}
 }
 </style>
@@ -235,8 +263,17 @@ button.prodnum[aria-expanded="true"]::after{content:" ˄"}
     <div class="mes" id="cobMes" hidden></div>
     <h2 id="tRec" hidden>Para recordarles que pidan</h2>
     <div class="list" id="rec"></div>
-    <h2 id="tEntr" hidden>Últimos entregados</h2>
+    <div class="bar" id="tEntr" hidden><h2>Últimos entregados</h2><button class="ghost" id="verTodos" type="button">Ver todos y resumen ›</button></div>
     <div class="list" id="entr"></div>
+    <details class="card" id="deudaForm" hidden>
+      <summary>Cargar deuda anterior de un comercio</summary>
+      <div class="field"><label for="dNombre">Comercio</label><input type="text" id="dNombre" list="dLista" maxlength="60" placeholder="Empezá a escribir y elegilo"><datalist id="dLista"></datalist></div>
+      <div class="field"><label for="dFecha">Fecha de la deuda</label><input type="date" id="dFecha"></div>
+      <div class="field"><label for="dMonto">Monto que debe ($)</label><input type="text" id="dMonto" inputmode="numeric" placeholder="Ej.: 85.000"></div>
+      <div class="field"><label for="dNota">Nota (opcional)</label><input type="text" id="dNota" maxlength="120" placeholder="Ej.: pedidos de septiembre"></div>
+      <button class="primary" id="dGuardar" type="button">Guardar deuda</button>
+      <div class="msg" id="dMsg" role="status"></div>
+    </details>
     <details class="card" id="stockForm">
       <summary>Cargar compra de yerba o ajuste de stock</summary>
       <div class="field"><label for="skg">Kilos</label><input type="text" id="skg" inputmode="decimal" placeholder="Ej.: 500 (compra) o -12 (ajuste)"></div>
@@ -269,6 +306,21 @@ button.prodnum[aria-expanded="true"]::after{content:" ˄"}
     </div>
   </div>
 </div>
+<div class="capa" id="capaHist" hidden>
+  <div class="capa-in hist">
+    <div class="bar"><h2>Entregas y resumen</h2><button class="ghost" id="hCerrar" type="button">Cerrar</button></div>
+    <div class="locs">
+      <button type="button" id="hp-mes">Este mes</button><button type="button" id="hp-pasado">Mes pasado</button><button type="button" id="hp-30">Últimos 30 días</button><button type="button" id="hp-todo">Todo</button>
+    </div>
+    <div class="fechas"><label>Desde<input type="date" id="hDesde"></label><label>Hasta<input type="date" id="hHasta"></label></div>
+    <select id="hCom"></select>
+    <div id="hVista"></div>
+    <div class="r-bot">
+      <button class="primary" id="hPdf" type="button">PDF con membrete Harkana</button>
+      <a class="primary" id="hWa" target="_blank" rel="noopener" style="background:#1f8f4e">Mandar resumen por WhatsApp</a>
+    </div>
+  </div>
+</div>
 <div id="impresion"></div>
 
 <script>
@@ -284,7 +336,7 @@ button.prodnum[aria-expanded="true"]::after{content:" ˄"}
   var plata=function(n){n=Math.round(n||0);return (n<0?"-$":"$")+Math.abs(n).toLocaleString("es-AR");};
   var rol="", filtroLoc="", ultimo=null, borrarId="", editarId="";
   /* Agrupa "rio cuarto", "Río Cuarto" y "RIO CUARTO" como una sola localidad. */
-  var LOCS={"alejandro roca":"Alejandro Roca","rio cuarto":"Río Cuarto","reduccion":"Reducción","villa mercedes":"Villa Mercedes","garin":"Garín","las higueras":"Las Higueras"};
+  var LOCS={"alejandro roca":"Alejandro Roca","alejandro rooca":"Alejandro Roca","alejandro roka":"Alejandro Roca","rio cuarto":"Río Cuarto","reduccion":"Reducción","villa mercedes":"Villa Mercedes","garin":"Garín","las higueras":"Las Higueras"};
   var locDe=function(p){
     var s=(p.localidad||"").trim().toLowerCase().normalize("NFD").replace(/[\u0300-\u036f]/g,"").replace(/\s+/g," ");
     if(!s) return "Sin localidad";
@@ -482,13 +534,121 @@ button.prodnum[aria-expanded="true"]::after{content:" ˄"}
     api({accion:"remitoEnviado",id:id,via:via}).then(function(d){ if(d&&d.ok){ pintar(d); $("rCmsg").textContent="✓ Quedó anotado que el remito se mandó."; $("rCmsg").className="msg ok"; } }).catch(function(){});
   }
   function detPagos(p){ return (p.pagos||[]).map(function(x){return x.medio+" "+plata(x.monto)+" el "+x.fecha.slice(0,5);}).join(" + "); }
+  /* ===== Resumen rápido de un pedido entregado (al tocar el nombre) ===== */
+  var abiertoId="";
+  function resumenRapido(p){
+    var b=el("div","rapido");
+    PRES.forEach(function(x){ if(p[x[0]]>0){ var r=el("div","rr"); r.appendChild(el("span",null,x[1])); r.appendChild(el("b",null,String(p[x[0]]))); b.appendChild(r); } });
+    if(p.deudaVieja) b.appendChild(el("div","rr",p.nota||"Deuda anterior"));
+    var t=el("div","rr tot"); t.appendChild(el("span",null,p.deudaVieja?"Monto":"Total · "+num(p.kg)+" kg")); t.appendChild(el("b",null,plata(p.total))); b.appendChild(t);
+    var info=[]; if(p.fecha) info.push("pidió "+p.fecha.slice(0,5)); if(p.entregado) info.push("entregado "+p.entregado.slice(0,5)); if(p.remito) info.push("remito N° "+p.remito);
+    b.appendChild(el("div","meta",info.join(" · ")));
+    return b;
+  }
+  /* ===== Historial de entregados con filtros y resumen ===== */
+  var HIST=null, hDesde="", hHasta="", hCom="", hPreset="mes";
+  function ymd(d){ return d.getFullYear()+"-"+String(d.getMonth()+1).padStart(2,"0")+"-"+String(d.getDate()).padStart(2,"0"); }
+  function preset(k){
+    var h=new Date(), a=new Date(h.getFullYear(),h.getMonth(),1);
+    hPreset=k;
+    if(k==="mes"){ hDesde=ymd(a); hHasta=ymd(h); }
+    else if(k==="pasado"){ var b=new Date(h.getFullYear(),h.getMonth()-1,1), c=new Date(h.getFullYear(),h.getMonth(),0); hDesde=ymd(b); hHasta=ymd(c); }
+    else if(k==="30"){ var d=new Date(h); d.setDate(d.getDate()-29); hDesde=ymd(d); hHasta=ymd(h); }
+    else { hDesde=""; hHasta=""; }
+    $("hDesde").value=hDesde; $("hHasta").value=hHasta;
+  }
+  function fechaTxt(s){ return s?s.slice(8,10)+"/"+s.slice(5,7)+"/"+s.slice(0,4):""; }
+  function filtrados(){
+    return (HIST||[]).filter(function(p){
+      if(hDesde&&p.dia<hDesde) return false; if(hHasta&&p.dia>hHasta) return false;
+      if(hCom&&p.comercio!==hCom) return false; return true;
+    });
+  }
+  function calcular(lista){
+    var R={pedidos:0,kg:0,plata:0,cobrado:0,debe:0,q:{q250:0,q500:0,q1:0,q3:0},com:{},loc:{},viejas:0};
+    lista.forEach(function(p){
+      if(p.deudaVieja){ R.viejas+=p.saldo||0; return; }
+      R.pedidos++; R.kg+=p.kg; R.plata+=p.total;
+      if(p.cobro==="debe") { R.debe+=p.saldo; R.cobrado+=p.pagado||0; } else if(p.cobro!=="no se cobra") R.cobrado+=p.total;
+      PRES.forEach(function(x){ R.q[x[0]]+=p[x[0]]||0; });
+      var c=R.com[p.comercio]=R.com[p.comercio]||{nombre:p.comercio,pedidos:0,kg:0,plata:0,q:{q250:0,q500:0,q1:0,q3:0}};
+      c.pedidos++; c.kg+=p.kg; c.plata+=p.total; PRES.forEach(function(x){ c.q[x[0]]+=p[x[0]]||0; });
+      var l=locDe(p); var L=R.loc[l]=R.loc[l]||{kg:0,plata:0}; L.kg+=p.kg; L.plata+=p.total;
+    });
+    R.comList=Object.keys(R.com).map(function(k){return R.com[k];}).sort(function(a,b){return b.kg-a.kg;});
+    return R;
+  }
+  function tituloRango(){ return (hDesde||hHasta)?("del "+(fechaTxt(hDesde)||"inicio")+" al "+(fechaTxt(hHasta)||"hoy")):"desde el inicio"; }
+  function pintarHist(){
+    var lista=filtrados(), R=calcular(lista), V=$("hVista"); V.textContent="";
+    ["mes","pasado","30","todo"].forEach(function(k){ var b=$("hp-"+k); if(b) b.setAttribute("aria-pressed",String(hPreset===k)); });
+    var sel=$("hCom"), cur=sel.value; sel.textContent=""; var o0=document.createElement("option"); o0.value=""; o0.textContent="Todos los comercios"; sel.appendChild(o0);
+    var nombres={}; (HIST||[]).forEach(function(p){nombres[p.comercio]=1;}); Object.keys(nombres).sort().forEach(function(n){ var o=document.createElement("option"); o.value=n; o.textContent=n; sel.appendChild(o); }); sel.value=cur;
+    var k=el("div","hk");
+    [["Pedidos",String(R.pedidos)],["Kilos",num(R.kg)],["Vendido",plata(R.plata)],["Cobrado",plata(R.cobrado)],["Debe",plata(R.debe)]].forEach(function(x){ var b=el("div","hkb"); b.appendChild(el("b",null,x[1])); b.appendChild(el("span",null,x[0])); k.appendChild(b); });
+    V.appendChild(k);
+    var q=el("div","hk q"); PRES.forEach(function(x){ var b=el("div","hkb"); b.appendChild(el("b",null,String(R.q[x[0]]))); b.appendChild(el("span",null,"paq. "+x[1])); q.appendChild(b); }); V.appendChild(q);
+    if(R.pedidos) V.appendChild(el("div","meta","Promedio por pedido: "+num(Math.round(R.kg/R.pedidos*10)/10)+" kg · "+plata(R.plata/R.pedidos)));
+    if(R.comList.length>1||!hCom){
+      V.appendChild(el("h3",null,"Por comercio"));
+      var t=document.createElement("table"); t.className="ht"; var h=document.createElement("tr");
+      ["Comercio","Ped.","¼","½","1kg","3kg","Kg","$"].forEach(function(x,i){h.appendChild(el("th",i?"n":null,x));}); t.appendChild(h);
+      R.comList.forEach(function(c){ var tr=document.createElement("tr"); tr.appendChild(el("td",null,c.nombre)); [c.pedidos,c.q.q250,c.q.q500,c.q.q1,c.q.q3].forEach(function(v){tr.appendChild(el("td","n",v?String(v):"–"));}); tr.appendChild(el("td","n",num(c.kg))); tr.appendChild(el("td","n",plata(c.plata))); tr.onclick=function(){ $("hCom").value=c.nombre; hCom=c.nombre; pintarHist(); }; t.appendChild(tr); });
+      V.appendChild(t);
+      V.appendChild(el("h3",null,"Por localidad"));
+      var lt=el("div","meta",Object.keys(R.loc).sort(function(a,b){return R.loc[b].kg-R.loc[a].kg;}).map(function(n){return n+": "+num(R.loc[n].kg)+" kg · "+plata(R.loc[n].plata);}).join("  ·  ")); V.appendChild(lt);
+    }
+    V.appendChild(el("h3",null,"Pedidos ("+lista.length+")"));
+    lista.forEach(function(p){
+      var r=el("div","hrow"); r.appendChild(el("span",null,fechaTxt(p.dia).slice(0,5)+" · "+p.comercio+(p.deudaVieja?" · deuda anterior":" · "+detalle(p))));
+      r.appendChild(el("b",p.cobro==="debe"?"rojo":null,plata(p.total)+(p.cobro==="debe"?" (debe)":""))); V.appendChild(r);
+    });
+    if(!lista.length) V.appendChild(el("div","empty","No hay entregas en esas fechas."));
+    if(lista.some(function(p){return p.cobro==="anterior";})) V.appendChild(el("div","meta","* Los pedidos entregados antes de empezar con los cobros tienen el monto calculado con la lista de precios de hoy (es aproximado)."));
+    if(R.viejas) V.appendChild(el("div","meta","Deudas anteriores cargadas a mano (no suman en kilos ni ventas): "+plata(R.viejas)+" pendiente."));
+    var txt="🧉 *Harkana · Resumen de entregas*\n"+tituloRango()+(hCom?"\n"+hCom:"")+"\n\nPedidos: "+R.pedidos+" · "+num(R.kg)+" kg\nVendido: "+plata(R.plata)+"\nCobrado: "+plata(R.cobrado)+" · Debe: "+plata(R.debe)+
+      "\n\nPaquetes: "+PRES.map(function(x){return R.q[x[0]]+" × "+x[1];}).join(" · ")+
+      (R.comList.length>1?"\n\n*Por comercio*\n"+R.comList.map(function(c){return "• "+c.nombre+": "+num(c.kg)+" kg · "+plata(c.plata);}).join("\n"):"");
+    $("hWa").href="https://wa.me/?text="+encodeURIComponent(txt);
+    var I=$("impresion"); I.textContent=""; I.className="informe";
+    var hoja=el("div","inf"); hoja.appendChild(el("div","r-banda"));
+    var cu=el("div","inf-cuerpo"), cab=el("div","r-cab"), iz=el("div"), im=document.createElement("img"); im.src=OVAL; iz.appendChild(im); iz.appendChild(el("div","yo","YERBA ORGÁNICA")); cab.appendChild(iz);
+    var dr=el("div","r-num"); dr.appendChild(el("div","tit","RESUMEN DE ENTREGAS")); dr.appendChild(el("b",null,hCom||"Todos los comercios")); dr.appendChild(el("span",null,tituloRango())); cab.appendChild(dr); cu.appendChild(cab);
+    var cl=V.cloneNode(true); cu.appendChild(cl);
+    cu.appendChild(el("div","r-pie","Harkana · Alejandro Roca, Córdoba · www.harkana.com.ar · generado el "+new Date().toLocaleDateString("es-AR")));
+    hoja.appendChild(cu); I.appendChild(hoja);
+  }
+  function abrirHist(){
+    $("capaHist").hidden=false; $("hVista").textContent="Cargando…"; if(!hDesde&&!hHasta&&hPreset==="mes") preset("mes");
+    api({accion:"historial"}).then(function(d){ if(!d||!d.ok) throw new Error(); HIST=d.entregados; pintarHist(); })
+      .catch(function(){ $("hVista").textContent="No se pudo cargar. Probá de nuevo."; });
+  }
+  $("verTodos").onclick=abrirHist;
+  $("hCerrar").onclick=function(){ $("capaHist").hidden=true; $("impresion").className=""; };
+  ["mes","pasado","30","todo"].forEach(function(k){ $("hp-"+k).onclick=function(){ preset(k); pintarHist(); }; });
+  $("hDesde").onchange=function(){ hDesde=$("hDesde").value; hPreset=""; pintarHist(); };
+  $("hHasta").onchange=function(){ hHasta=$("hHasta").value; hPreset=""; pintarHist(); };
+  $("hCom").onchange=function(){ hCom=$("hCom").value; pintarHist(); };
+  $("hPdf").onclick=function(){ pintarHist(); window.print(); };
+  /* ===== Deuda anterior (solo dueño) ===== */
+  $("dGuardar").onclick=function(){
+    var nom=$("dNombre").value.trim(), c=(ultimo&&ultimo.comercios||[]).filter(function(x){return x.nombre.toLowerCase()===nom.toLowerCase();})[0];
+    var m=Math.round(parseFloat($("dMonto").value.replace(/[$\s.]/g,"").replace(",","."))||0);
+    $("dMsg").className="msg"; if(!nom){$("dMsg").textContent="Escribí el comercio.";return;} if(!(m>0)){$("dMsg").textContent="Escribí el monto.";return;}
+    var b=$("dGuardar"); b.disabled=true; $("dMsg").textContent="Guardando…";
+    api({accion:"deudaVieja",codigo:c?c.codigo:"",nombre:nom,monto:m,nota:$("dNota").value,fecha:$("dFecha").value}).then(function(d){
+      if(!d||!d.ok) throw new Error(); $("dNombre").value=""; $("dFecha").value=""; $("dMonto").value=""; $("dNota").value=""; $("dMsg").textContent="✓ Cargada. Ya aparece en \"Entregado sin cobrar\"."; $("dMsg").className="msg ok"; pintar(d);
+    }).catch(function(){ $("dMsg").textContent="No se pudo guardar. Probá de nuevo."; }).then(function(){ b.disabled=false; });
+  };
   function pintar(d){
     $("kg").textContent=num(d.totales.kg);
     var S=$("sizes"); S.textContent="";
     PRES.forEach(function(x){var b=el("div","size");b.appendChild(el("b",null,String(d.totales[x[0]])));b.appendChild(el("span",null,"de "+x[1]));S.appendChild(b);});
     if(d.rol) rol=d.rol;
     var admin=rol==="admin";
-    $("stockForm").hidden=!admin; $("ajForm").hidden=!admin;
+    $("stockForm").hidden=!admin; $("deudaForm").hidden=!admin;
+    var DL=$("dLista"); DL.textContent=""; var vistos={};
+    (d.comercios||[]).map(function(x){return x.nombre;}).concat((d.entregados||[]).map(function(x){return x.comercio;})).forEach(function(n){ if(vistos[n]) return; vistos[n]=1; var o=document.createElement("option"); o.value=n; DL.appendChild(o); }); $("ajForm").hidden=!admin;
     var pr=d.produccion;
     $("prodBox").hidden=!pr;
     if(pr){
@@ -614,7 +774,7 @@ button.prodnum[aria-expanded="true"]::after{content:" ˄"}
       var c=el("div","ped"), top=el("div","ped-top");
       top.appendChild(el("div","ped-name",g.comercio)); top.appendChild(el("div","ped-kg",plata(g.total))); c.appendChild(top);
       g.pedidos.forEach(function(x){
-        var r=el("div","drow"); r.appendChild(el("span",null,"Entregado "+String(x.entregado).slice(0,5)+(x.remito?" · remito N° "+x.remito:"")+" · total "+plata(x.total)+(x.pagado?" · pagó "+plata(x.pagado):"")+" · debe "+plata(x.saldo)));
+        var r=el("div","drow"); r.appendChild(el("span",null,(x.vieja?(x.nota||"Deuda anterior")+" · del ":"Entregado ")+String(x.entregado).slice(0,5)+(x.remito?" · remito N° "+x.remito:"")+" · total "+plata(x.total)+(x.pagado?" · pagó "+plata(x.pagado):"")+" · debe "+plata(x.saldo)));
         if(cobrandoId!=="d"+x.id){
           var bc=el("button","ghost","Registrar pago"); bc.type="button"; bc.onclick=function(){cobrandoId="d"+x.id; parcialId=""; pintar(ultimo);};
           r.appendChild(bc);
@@ -642,7 +802,10 @@ button.prodnum[aria-expanded="true"]::after{content:" ˄"}
     var E=$("entr"); E.textContent=""; $("tEntr").hidden=!d.entregados.length;
     d.entregados.forEach(function(p){
       var c=el("div","ped done"), top=el("div","ped-top");
-      top.appendChild(el("div","ped-name",p.comercio)); top.appendChild(el("div","ped-kg",num(p.kg)+" kg")); c.appendChild(top);
+      var nm=el("div","ped-name toca",p.comercio+(abiertoId===p.id?" ˄":" ›")); nm.setAttribute("role","button"); nm.tabIndex=0;
+      nm.onclick=function(){ abiertoId=abiertoId===p.id?"":p.id; pintar(ultimo); };
+      top.appendChild(nm); top.appendChild(el("div","ped-kg",p.deudaVieja?plata(p.total):num(p.kg)+" kg")); c.appendChild(top);
+      if(abiertoId===p.id) c.appendChild(resumenRapido(p));
       c.appendChild(el("div","meta",detalle(p)+" · entregado "+p.entregado));
       if(p.cobro==="cobrado") c.appendChild(el("div","estado-cobro ok","✓ Cobrado "+plata(p.total)+(p.pagos&&p.pagos.length?" · "+detPagos(p):(p.cobradoEl?" · "+p.cobradoEl.slice(0,5):""))));
       else if(p.cobro==="no se cobra") c.appendChild(el("div","estado-cobro","Sin cargo (no se cobra)"));
