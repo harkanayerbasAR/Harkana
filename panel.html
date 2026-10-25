@@ -509,6 +509,59 @@ button.prodnum[aria-expanded="true"]::after{content:" ˄"}
     .then(function(){ caja.remove(); b.disabled=false; b.textContent="Mandar remito por WhatsApp"; });
   };
   var cobrandoId="", parcialId="", verDeben=false;
+  /* Entrega parcial: qué pedido está abierto y cuánto se lleva de cada presentación. */
+  var entParcialId="", parcialQ=null;
+  function leerParcial(p,ins){
+    var q={id:p.id}, kg=0, kgR=0, tot=0, algo=false;
+    var KG={q250:.25,q500:.5,q1:1,q3:3};
+    PRES.forEach(function(x){
+      var pidio=p[x[0]]||0, n=ins[x[0]]?Math.max(0,Math.min(pidio,parseInt(ins[x[0]].value)||0)):0;
+      q[x[0]]=n; kg+=n*KG[x[0]]; kgR+=(pidio-n)*KG[x[0]]; if(n) algo=true;
+      tot+=n*((p.unit&&p.unit[x[0]])||0);
+    });
+    q.kg=kg; q.kgResto=kgR; q.total=tot; q.algo=algo; return q;
+  }
+  function cajaParcial(p){
+    var box=el("div","cobrar"), ins={};
+    box.appendChild(el("div","lbl2","Entrega parcial: poné cuánto le llevás ahora. Lo que falta queda como pedido pendiente."));
+    var ed=el("div","edit");
+    PRES.forEach(function(x){
+      if(!p[x[0]]) return;
+      var lb=el("label",null,x[1]+" (de "+p[x[0]]+")"), i=document.createElement("input");
+      i.type="number"; i.min="0"; i.max=String(p[x[0]]); i.inputMode="numeric";
+      i.value=String(parcialQ&&parcialQ.id===p.id?parcialQ[x[0]]:p[x[0]]);
+      i.onfocus=function(){i.select();}; i.oninput=mostrar;
+      ins[x[0]]=i; lb.appendChild(i); ed.appendChild(lb);
+    });
+    box.appendChild(ed);
+    var res=el("div","lbl2",""); box.appendChild(res);
+    var f2=el("div","fila"), bc=el("button","primary","Entregado y cobrado"), bd=el("button","ghost","Cobro después"); bc.type=bd.type="button";
+    f2.appendChild(bc); f2.appendChild(bd); box.appendChild(f2);
+    var x=el("button","ghost","Cancelar"); x.type="button"; box.appendChild(x);
+    function mostrar(){
+      var q=leerParcial(p,ins);
+      if(!q.algo){ res.textContent="Poné al menos una cantidad."; bc.disabled=bd.disabled=true; return; }
+      bc.disabled=bd.disabled=false;
+      res.textContent="Llevás "+num(q.kg)+" kg · "+plata(q.total)+(q.kgResto>0?" · quedan "+num(q.kgResto)+" kg pendientes":" · es el pedido completo");
+    }
+    bc.onclick=function(){ parcialQ=leerParcial(p,ins); if(!parcialQ.algo) return; cobrandoId="p"+p.id; pintar(ultimo); };
+    bd.onclick=function(){ var q=leerParcial(p,ins); if(!q.algo) return; enviarParcial(p,q,false,0,"",bd); };
+    x.onclick=function(){ entParcialId=""; parcialQ=null; pintar(ultimo); };
+    mostrar();
+    return box;
+  }
+  function enviarParcial(p,q,cobrado,monto,medio,boton){
+    var cu={accion:"parcial",id:p.id,cobrado:!!cobrado,monto:monto,medio:medio};
+    PRES.forEach(function(x){cu[x[0]]=q[x[0]];});
+    entParcialId=""; cobrandoId=""; parcialQ=null;
+    boton.disabled=true; boton.textContent="Guardando…";
+    api(cu).then(function(d){
+      if(!d||!d.ok) throw new Error(); pintar(d);
+      var a=$("aviso");
+      a.textContent="Entrega parcial a "+p.comercio+": se entregaron "+num(q.kg)+" kg"+(q.kgResto>0?" y quedó un pedido pendiente con "+num(q.kgResto)+" kg.":".");
+      a.hidden=false; a.scrollIntoView({block:"nearest",behavior:"smooth"});
+    }).catch(function(){ boton.disabled=false; boton.textContent="No se pudo, tocá de nuevo"; });
+  }
   /* Caja de cobro: Efectivo / Transferencia por el total, o "Pagó una parte" con monto. alListo(monto, medio) hace el pedido. */
   function cajaCobro(id,saldo,alListo,titulo){
     var c=el("div","cobrar");
@@ -730,13 +783,20 @@ button.prodnum[aria-expanded="true"]::after{content:" ˄"}
       if(p.remito) c.appendChild(estadoEnvio(p));
       if(cobrandoId===p.id){
         c.appendChild(cajaCobro(p.id,p.total,function(m,medio,bt){ cobrandoId=""; parcialId=""; cambiar(p.id,"entregado",bt,p,true,m,medio); },"Entregado. Total"));
+      } else if(cobrandoId==="p"+p.id&&parcialQ&&parcialQ.id===p.id){
+        var pq=parcialQ;
+        c.appendChild(cajaCobro("p"+p.id,pq.total,function(m,medio,bt){ enviarParcial(p,pq,true,m,medio,bt); },"Entrega parcial de "+num(pq.kg)+" kg. Total"));
+      } else if(entParcialId===p.id){
+        c.appendChild(cajaParcial(p));
       } else {
         var dos=el("div","dos");
         var b=el("button","primary","Entregado y cobrado"); b.type="button";
-        b.onclick=function(){cobrandoId=p.id; parcialId=""; pintar(ultimo);};
+        b.onclick=function(){cobrandoId=p.id; parcialId=""; entParcialId=""; pintar(ultimo);};
         var b2=el("button","ghost","Entregado, cobro después"); b2.type="button";
         b2.onclick=function(){cambiar(p.id,"entregado",b2,p,false);};
-        dos.appendChild(b); dos.appendChild(b2); c.appendChild(dos);
+        var b3=el("button","ghost","Entrega parcial"); b3.type="button";
+        b3.onclick=function(){entParcialId=p.id; parcialQ=null; cobrandoId=""; editarId=""; borrarId=""; pintar(ultimo);};
+        dos.appendChild(b); dos.appendChild(b2); dos.appendChild(b3); c.appendChild(dos);
       }
       if(admin){
         if(editarId===p.id){
