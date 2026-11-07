@@ -101,7 +101,7 @@ button:focus-visible,input:focus-visible,textarea:focus-visible,a:focus-visible{
   var API="https://script.google.com/macros/s/AKfycbxsephoJR9xpN11_GrSo15Esxfweiw-aocfFsQXGKjnmzY7LLUZIUtTSXNuac5fCTJiqA/exec";          // dirección que te da Google al implementar el script
   var WHATSAPP="5493585099308";         // número que recibe pedidos si falla el envío
   // Comercios con más de una sucursal: código → sucursales del desplegable
-  var SUCURSALES={"BLS7D4":["Sucursal Duffy","Sucursal Alberdi"]};
+  var SUCURSALES={"BLS7D4":[["Sucursal Duffy","BLS7D4"],["Sucursal Alberdi","BLS7A2"]]};
   /* =========================== */
 
   var PRES=[{k:"q250",n:"1/4 kg",d:"250 g",kg:.25},{k:"q500",n:"1/2 kg",d:"500 g",kg:.5},{k:"q1",n:"1 kg",d:"paquete de kilo",kg:1},{k:"q3",n:"3 kg",d:"bolsa de 3 kg",kg:3}];
@@ -128,14 +128,14 @@ button:focus-visible,input:focus-visible,textarea:focus-visible,a:focus-visible{
   var codigo=(new URLSearchParams(location.search).get("c")||"").trim().toUpperCase();
   var sucs=SUCURSALES[codigo]||null;
   if(sucs){ var sel=$("sucursal"); var o0=document.createElement("option"); o0.value=""; o0.textContent="Elegí la sucursal"; sel.appendChild(o0);
-    sucs.forEach(function(n){var o=document.createElement("option");o.value=n;o.textContent=n;sel.appendChild(o);});
+    sucs.forEach(function(n){var o=document.createElement("option");o.value=n[1];o.textContent=n[0];sel.appendChild(o);});
     $("campoSucursal").hidden=false; }
   var nombreFijo="";
   function pedirDatos(){ $("datos").hidden=false; $("comercio").value=leer("hk_comercio"); $("localidad").value=leer("hk_localidad"); $("telefono").value=leer("hk_telefono"); }
   if(codigo&&listo){
     fetch(API+"?cod="+encodeURIComponent(codigo)).then(function(r){return r.json();}).then(function(d){
       if(d&&d.ok){
-        nombreFijo=d.nombre;guardar("hk_codigo",codigo);$("titulo").textContent="Hola, "+d.nombre;
+        nombreFijo=d.nombre;guardar("hk_codigo",codigo);$("titulo").textContent="Hola, "+(sucs?String(d.nombre).split(" – ")[0]:d.nombre);
         var u=d.ultimo, det=u?PRES.filter(function(x){return u[x.k]>0;}).map(function(x){return u[x.k]+" × "+x.n;}).join(" · "):"";
         if(det){
           var rb=$("repetir"); rb.textContent=""; rb.appendChild(el("b",null,"Repetir mi último pedido")); rb.appendChild(document.createTextNode(det+". Después podés cambiar las cantidades."));
@@ -151,10 +151,10 @@ button:focus-visible,input:focus-visible,textarea:focus-visible,a:focus-visible{
     var q={},kg=0;
     PRES.forEach(function(x){q[x.k]=Math.max(0,Math.min(999,parseInt($("in-"+x.k).value)||0));kg+=q[x.k]*x.kg;});
     var com=nombreFijo||$("comercio").value.trim();
-    return {q:q,kg:kg,com:com,loc:$("localidad").value.trim(),tel:$("telefono").value.trim(),nota:(sucs&&$("sucursal").value?$("sucursal").value+($("nota").value.trim()?" · "+$("nota").value.trim():""):$("nota").value.trim()),suc:(sucs?$("sucursal").value:"")};
+    return {q:q,kg:kg,com:com,loc:$("localidad").value.trim(),tel:$("telefono").value.trim(),nota:$("nota").value.trim(),suc:(sucs?$("sucursal").value:""),sucn:(sucs&&$("sucursal").value?$("sucursal").selectedOptions[0].textContent:"")};
   }
   function texto(s){
-    var l=["*Pedido Harkana*","Comercio: "+s.com]; if(s.loc)l.push("Localidad: "+s.loc);
+    var l=["*Pedido Harkana*","Comercio: "+s.com]; if(s.sucn)l.push(s.sucn); if(s.loc)l.push("Localidad: "+s.loc);
     PRES.forEach(function(x){if(s.q[x.k]>0)l.push(x.n+": "+s.q[x.k]);});
     l.push("Total: "+fmtKg(s.kg)); if(s.nota)l.push("Nota: "+s.nota); return l.join("\n");
   }
@@ -174,7 +174,7 @@ button:focus-visible,input:focus-visible,textarea:focus-visible,a:focus-visible{
     if(!nombreFijo&&!s.tel){$("msg").textContent="Dejanos un teléfono para confirmarte el pedido.";return;}
     if(!listo){porWhatsApp(s,"Enviá tu pedido por WhatsApp:");return;}
     $("enviar").disabled=true; $("msg").textContent=""; $("enviar").textContent="Enviando…";
-    var cuerpo={accion:"pedido",codigo:codigo,comercio:s.com,localidad:s.loc,telefono:s.tel,nota:s.nota};
+    var cuerpo={accion:"pedido",codigo:(s.suc||codigo),comercio:(s.sucn?String(s.com).split(" – ")[0]+" – "+s.sucn:s.com),localidad:s.loc,telefono:s.tel,nota:s.nota};
     PRES.forEach(function(x){cuerpo[x.k]=s.q[x.k];});
     fetch(API,{method:"POST",body:JSON.stringify(cuerpo)}).then(function(r){return r.json();}).then(function(d){
       if(!d||!d.ok) throw new Error("rechazado");
