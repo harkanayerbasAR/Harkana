@@ -77,6 +77,7 @@ button:focus-visible,input:focus-visible,textarea:focus-visible,a:focus-visible{
     <button class="rep" id="repetir" type="button" hidden></button>
     <div class="field"><span class="lbl">¿Cuántos paquetes querés?</span><div id="qty"></div></div>
     <div class="total"><span>Total</span><b id="totalKg">0 kg</b></div>
+    <div class="field" id="campoSucursal" hidden style="margin-bottom:14px"><label for="sucursal">¿Para qué sucursal es el pedido?</label><select id="sucursal" style="font:500 1rem var(--body);color:var(--ink);background:rgba(255,255,255,.4);border:1.5px solid var(--ink);border-radius:2px;padding:12px;width:100%"></select></div>
     <div class="field"><label for="nota">Aclaración (opcional)</label><textarea id="nota" rows="1" maxlength="200" placeholder="Ej.: entregar por la mañana"></textarea></div>
     <div class="band"><button class="primary" id="enviar" type="button">Enviar pedido</button></div>
     <div class="foot">
@@ -99,6 +100,8 @@ button:focus-visible,input:focus-visible,textarea:focus-visible,a:focus-visible{
   /* ====== CONFIGURACIÓN ====== */
   var API="https://script.google.com/macros/s/AKfycbxsephoJR9xpN11_GrSo15Esxfweiw-aocfFsQXGKjnmzY7LLUZIUtTSXNuac5fCTJiqA/exec";          // dirección que te da Google al implementar el script
   var WHATSAPP="5493585099308";         // número que recibe pedidos si falla el envío
+  // Comercios con más de una sucursal: código → sucursales del desplegable
+  var SUCURSALES={"BLS7D4":["Sucursal Duffy","Sucursal Alberdi"]};
   /* =========================== */
 
   var PRES=[{k:"q250",n:"1/4 kg",d:"250 g",kg:.25},{k:"q500",n:"1/2 kg",d:"500 g",kg:.5},{k:"q1",n:"1 kg",d:"paquete de kilo",kg:1},{k:"q3",n:"3 kg",d:"bolsa de 3 kg",kg:3}];
@@ -123,6 +126,10 @@ button:focus-visible,input:focus-visible,textarea:focus-visible,a:focus-visible{
 
   /* --- quién es: código del link propio, o datos a mano --- */
   var codigo=(new URLSearchParams(location.search).get("c")||"").trim().toUpperCase();
+  var sucs=SUCURSALES[codigo]||null;
+  if(sucs){ var sel=$("sucursal"); var o0=document.createElement("option"); o0.value=""; o0.textContent="Elegí la sucursal"; sel.appendChild(o0);
+    sucs.forEach(function(n){var o=document.createElement("option");o.value=n;o.textContent=n;sel.appendChild(o);});
+    $("campoSucursal").hidden=false; }
   var nombreFijo="";
   function pedirDatos(){ $("datos").hidden=false; $("comercio").value=leer("hk_comercio"); $("localidad").value=leer("hk_localidad"); $("telefono").value=leer("hk_telefono"); }
   if(codigo&&listo){
@@ -144,7 +151,7 @@ button:focus-visible,input:focus-visible,textarea:focus-visible,a:focus-visible{
     var q={},kg=0;
     PRES.forEach(function(x){q[x.k]=Math.max(0,Math.min(999,parseInt($("in-"+x.k).value)||0));kg+=q[x.k]*x.kg;});
     var com=nombreFijo||$("comercio").value.trim();
-    return {q:q,kg:kg,com:com,loc:$("localidad").value.trim(),tel:$("telefono").value.trim(),nota:$("nota").value.trim()};
+    return {q:q,kg:kg,com:com,loc:$("localidad").value.trim(),tel:$("telefono").value.trim(),nota:(sucs&&$("sucursal").value?$("sucursal").value+($("nota").value.trim()?" · "+$("nota").value.trim():""):$("nota").value.trim()),suc:(sucs?$("sucursal").value:"")};
   }
   function texto(s){
     var l=["*Pedido Harkana*","Comercio: "+s.com]; if(s.loc)l.push("Localidad: "+s.loc);
@@ -163,6 +170,7 @@ button:focus-visible,input:focus-visible,textarea:focus-visible,a:focus-visible{
     var s=estado(); $("wa").hidden=true;
     if(!s.com){$("msg").textContent="Escribí el nombre de tu comercio.";return;}
     if(s.kg<=0){$("msg").textContent="Sumá al menos un paquete.";return;}
+    if(sucs&&!s.suc){$("msg").textContent="Elegí para qué sucursal es el pedido.";$("sucursal").focus();return;}
     if(!nombreFijo&&!s.tel){$("msg").textContent="Dejanos un teléfono para confirmarte el pedido.";return;}
     if(!listo){porWhatsApp(s,"Enviá tu pedido por WhatsApp:");return;}
     $("enviar").disabled=true; $("msg").textContent=""; $("enviar").textContent="Enviando…";
