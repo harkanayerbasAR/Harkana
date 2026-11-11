@@ -130,6 +130,8 @@ button:focus-visible,input:focus-visible,textarea:focus-visible,a:focus-visible{
   var codigo="", nombreFijo="";
   /* Si viene de la web (harkana.com.ar/pedir?o=web&q500=2), se marca como compra web y se cargan las cantidades elegidas. */
   var qs=new URLSearchParams(location.search), WEB=(qs.get("o")||"")==="web";
+  /* De dónde viene el cliente: ?o=redes (cualquier red), o ?o=ig, ?o=tt, ?o=fb, ?o=wa */
+  var ORIG={redes:"redes sociales",ig:"Instagram",tt:"TikTok",fb:"Facebook",wa:"WhatsApp"}[(qs.get("o")||"").toLowerCase()]||"";
   PRES.forEach(function(x){var n=parseInt(qs.get(x.k),10);if(n>0)$("in-"+x.k).value=Math.min(999,n);});
   $("datos").hidden=false; $("comercio").value=leer("hk_p_nombre"); $("localidad").value=leer("hk_p_localidad"); $("telefono").value=leer("hk_p_telefono");
 
@@ -162,11 +164,11 @@ button:focus-visible,input:focus-visible,textarea:focus-visible,a:focus-visible{
     if(dg.length<10){$("msg").textContent="Revisá el WhatsApp: tiene que ir con característica, ej. 358 4123456.";$("telefono").focus();return;}
     if(!listo){porWhatsApp(s,"Enviá tu pedido por WhatsApp:");return;}
     $("enviar").disabled=true; $("msg").textContent=""; $("enviar").textContent="Enviando…";
-    var cuerpo={accion:"pedido",codigo:codigo,comercio:s.com+(WEB?" (web)":" (particular)"),localidad:s.loc,telefono:s.tel,nota:(WEB?"Compra web. ":"")+s.nota};
+    var cuerpo={accion:"pedido",codigo:codigo,comercio:s.com+(WEB?" (web)":" (particular)"),localidad:s.loc,telefono:s.tel,nota:(WEB?"Compra web. ":"")+(ORIG?"Desde "+ORIG+". ":"")+s.nota};
     PRES.forEach(function(x){cuerpo[x.k]=s.q[x.k];});
     fetch(API,{method:"POST",body:JSON.stringify(cuerpo)}).then(function(r){return r.json();}).then(function(d){
       if(!d||!d.ok) throw new Error("rechazado");
-      try{ gtag("event","pedido_enviado",{origen:WEB?"web":"directo",kg:d.kg,value:PRES.reduce(function(t,x){return t+s.q[x.k]*x.p;},0),currency:"ARS"}); }catch(e){}
+      try{ gtag("event","pedido_enviado",{origen:WEB?"web":(ORIG?ORIG.toLowerCase():"directo"),kg:d.kg,value:PRES.reduce(function(t,x){return t+s.q[x.k]*x.p;},0),currency:"ARS"}); }catch(e){}
       guardar("hk_p_nombre",s.com);guardar("hk_p_localidad",s.loc);guardar("hk_p_telefono",s.tel);
       $("resumen").textContent="Gracias, "+s.com+". Ya nos llegó tu pedido de "+fmtKg(d.kg)+". Te escribimos para coordinar el pago y la entrega.";
       $("form").hidden=true; $("listo").hidden=false; window.scrollTo(0,0);
