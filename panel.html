@@ -71,6 +71,7 @@ button.prodnum[aria-expanded="true"]::after{content:" ˄"}
 .locs b{font-variant-numeric:tabular-nums}
 .tools{display:flex;flex-wrap:wrap;gap:8px}
 .tools .del{color:var(--danger)}
+.tools .canje{font-size:12px;padding:6px 10px;min-height:0;opacity:.8}
 .edit{display:grid;grid-template-columns:repeat(4,1fr);gap:8px}
 .edit label{font-size:.72rem;display:flex;flex-direction:column;gap:4px;text-transform:none;letter-spacing:0}
 .edit input{font:700 1rem var(--body);text-align:center;color:var(--ink);background:var(--bg);border:1px solid var(--line);border-radius:8px;padding:9px 2px;width:100%;min-width:0}
@@ -334,7 +335,7 @@ button.prodnum[aria-expanded="true"]::after{content:" ˄"}
   var el=function(t,c,x){var e=document.createElement(t);if(c)e.className=c;if(x!=null)e.textContent=x;return e;};
   var num=function(n){return (Math.round(n*100)/100).toLocaleString("es-AR");};
   var plata=function(n){n=Math.round(n||0);return (n<0?"-$":"$")+Math.abs(n).toLocaleString("es-AR");};
-  var rol="", filtroLoc="", ultimo=null, borrarId="", editarId="";
+  var rol="", filtroLoc="", ultimo=null, borrarId="", editarId="", canjeId="";
   /* Agrupa "rio cuarto", "Río Cuarto" y "RIO CUARTO" como una sola localidad. */
   var LOCS={"alejandro roca":"Alejandro Roca","alejandro rooca":"Alejandro Roca","alejandro roka":"Alejandro Roca","rio cuarto":"Río Cuarto","reduccion":"Reducción","villa mercedes":"Villa Mercedes","garin":"Garín","las higueras":"Las Higueras"};
   var locDe=function(p){
@@ -812,7 +813,10 @@ button.prodnum[aria-expanded="true"]::after{content:" ˄"}
           var t=el("div","tools"), e1=el("button","ghost","Corregir cantidades o precio"), d1=el("button","ghost del",borrarId===p.id?"Sí, borrar este pedido":"Borrar"); e1.type=d1.type="button";
           e1.onclick=function(){editarId=p.id; borrarId=""; pintar(ultimo);};
           d1.onclick=function(){ if(borrarId!==p.id){borrarId=p.id; editarId=""; pintar(ultimo); return;} borrarId=""; accion({accion:"borrar",id:p.id},d1); };
-          t.appendChild(e1); t.appendChild(d1);
+          var cj=el("button","ghost canje",canjeId===p.id?"Sí, es canje ($0)":"🤝 Canje"); cj.type="button";
+          cj.onclick=function(){ if(canjeId!==p.id){canjeId=p.id; borrarId=""; editarId=""; pintar(ultimo); return;} canjeId=""; canje(p,cj); };
+          t.appendChild(e1); t.appendChild(d1); t.appendChild(cj);
+          if(canjeId===p.id){var n2=el("button","ghost canje","No"); n2.type="button"; n2.onclick=function(){canjeId=""; pintar(ultimo);}; t.appendChild(n2);}
           if(borrarId===p.id){var n1=el("button","ghost","No borrar"); n1.type="button"; n1.onclick=function(){borrarId=""; pintar(ultimo);}; t.appendChild(n1);}
           c.appendChild(t);
         }
@@ -933,6 +937,20 @@ button.prodnum[aria-expanded="true"]::after{content:" ˄"}
     }).catch(function(){ $("smsg").textContent="No se pudo guardar. Probá de nuevo."; })
       .then(function(){ $("sguardar").disabled=false; });
   };
+  /* Canje / colaboración: deja el pedido en $0 y lo marca entregado (sin deuda, sin cobro). */
+  function canje(p,boton){
+    boton.disabled=true; boton.textContent="Guardando…";
+    var cu={accion:"editar",id:p.id,total:"0"}; PRES.forEach(function(x){cu[x[0]]=p[x[0]]||0;});
+    api(cu).then(function(d){
+      if(!d||!d.ok) throw new Error();
+      var q=(d.pendientes||[]).filter(function(x){return x.id===p.id;})[0];
+      if(q&&q.total>0){ pintar(d); var a=$("aviso"); a.textContent="No se pudo poner el total en $0. Avisale a Claude."; a.hidden=false; return; }
+      return api({accion:"estado",id:p.id,estado:"entregado",cobrado:false}).then(function(d2){
+        if(!d2||!d2.ok) throw new Error(); pintar(d2);
+        var a=$("aviso"); a.textContent="Canje entregado a "+p.comercio+" ("+num(p.kg)+" kg, $0)."; a.hidden=false;
+      });
+    }).catch(function(){ boton.disabled=false; boton.textContent="No se pudo, tocá de nuevo"; });
+  }
   function accion(cuerpo,boton){
     boton.disabled=true; boton.textContent="Guardando…";
     api(cuerpo).then(function(d){ if(!d||!d.ok) throw new Error(); pintar(d); })
