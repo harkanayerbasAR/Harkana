@@ -57,6 +57,7 @@ button:focus-visible,input:focus-visible,textarea:focus-visible,a:focus-visible{
 </style>
 <script async src="https://www.googletagmanager.com/gtag/js?id=G-1C6MCCSFYM"></script>
 <script>window.dataLayer=window.dataLayer||[];function gtag(){dataLayer.push(arguments);}gtag('js',new Date());gtag('config','G-1C6MCCSFYM');</script>
+<script>!function(f,b,e,v,n,t,s){if(f.fbq)return;n=f.fbq=function(){n.callMethod?n.callMethod.apply(n,arguments):n.queue.push(arguments)};if(!f._fbq)f._fbq=n;n.push=n;n.loaded=!0;n.version='2.0';n.queue=[];t=b.createElement(e);t.async=!0;t.src=v;s=b.getElementsByTagName(e)[0];s.parentNode.insertBefore(t,s)}(window,document,'script','https://connect.facebook.net/en_US/fbevents.js');fbq('init','932342069675366');fbq('track','PageView');</script>
 </head>
 <body>
 <div class="wrap">
@@ -168,6 +169,7 @@ button:focus-visible,input:focus-visible,textarea:focus-visible,a:focus-visible{
     PRES.forEach(function(x){cuerpo[x.k]=s.q[x.k];});
     fetch(API,{method:"POST",body:JSON.stringify(cuerpo)}).then(function(r){return r.json();}).then(function(d){
       if(!d||!d.ok) throw new Error("rechazado");
+      try{ fbq("track","Purchase",{value:PRES.reduce(function(t,x){return t+s.q[x.k]*x.p;},0),currency:"ARS"}); }catch(e){}
       try{ gtag("event","pedido_enviado",{origen:WEB?"web":(ORIG?ORIG.toLowerCase():"directo"),kg:d.kg,value:PRES.reduce(function(t,x){return t+s.q[x.k]*x.p;},0),currency:"ARS"}); }catch(e){}
       guardar("hk_p_nombre",s.com);guardar("hk_p_localidad",s.loc);guardar("hk_p_telefono",s.tel);
       $("resumen").textContent="Gracias, "+s.com+". Ya nos llegó tu pedido de "+fmtKg(d.kg)+". Te escribimos para coordinar el pago y la entrega.";

@@ -46,6 +46,7 @@ button:focus-visible,input:focus-visible,a:focus-visible{outline:3px solid var(-
 </style>
 <script async src="https://www.googletagmanager.com/gtag/js?id=G-1C6MCCSFYM"></script>
 <script>window.dataLayer=window.dataLayer||[];function gtag(){dataLayer.push(arguments);}gtag('js',new Date());gtag('config','G-1C6MCCSFYM');</script>
+<script>!function(f,b,e,v,n,t,s){if(f.fbq)return;n=f.fbq=function(){n.callMethod?n.callMethod.apply(n,arguments):n.queue.push(arguments)};if(!f._fbq)f._fbq=n;n.push=n;n.loaded=!0;n.version='2.0';n.queue=[];t=b.createElement(e);t.async=!0;t.src=v;s=b.getElementsByTagName(e)[0];s.parentNode.insertBefore(t,s)}(window,document,'script','https://connect.facebook.net/en_US/fbevents.js');fbq('init','932342069675366');fbq('track','PageView');</script>
 </head>
 <body>
 <div class="wrap">
@@ -128,6 +129,7 @@ button:focus-visible,input:focus-visible,a:focus-visible{outline:3px solid var(-
     var txt=$("enviar").textContent; $("enviar").disabled=true; $("msg").textContent=""; $("enviar").textContent="Enviando…";
     enviar(cuerpo).then(function(d){
       if(!d||!d.ok){ var e=new Error("rechazado"); e.rechazado=true; throw e; }
+      try{ fbq("track",REV?"SubmitApplication":"Lead"); }catch(e){}
       try{ gtag("event",REV?"quiero_revender":"pidio_muestra",{origen:ORIGEN}); }catch(e){}
       mostrar(n,d,false);
     }).catch(function(e){
