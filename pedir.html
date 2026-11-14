@@ -132,7 +132,7 @@ button:focus-visible,input:focus-visible,textarea:focus-visible,a:focus-visible{
   /* Si viene de la web (harkana.com.ar/pedir?o=web&q500=2), se marca como compra web y se cargan las cantidades elegidas. */
   var qs=new URLSearchParams(location.search), WEB=(qs.get("o")||"")==="web";
   /* De dónde viene el cliente: ?o=redes (cualquier red), o ?o=ig, ?o=tt, ?o=fb, ?o=wa */
-  var ORIG={redes:"redes sociales",ig:"Instagram",tt:"TikTok",fb:"Facebook",wa:"WhatsApp"}[(qs.get("o")||"").toLowerCase()]||"";
+  var ORIG={rio4:"anuncio Río Cuarto",redes:"redes sociales",ig:"Instagram",tt:"TikTok",fb:"Facebook",wa:"WhatsApp"}[(qs.get("o")||"").toLowerCase()]||"";
   PRES.forEach(function(x){var n=parseInt(qs.get(x.k),10);if(n>0)$("in-"+x.k).value=Math.min(999,n);});
   $("datos").hidden=false; $("comercio").value=leer("hk_p_nombre"); $("localidad").value=leer("hk_p_localidad"); $("telefono").value=leer("hk_p_telefono");
 
