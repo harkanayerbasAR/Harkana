@@ -117,6 +117,9 @@ button.prodnum[aria-expanded="true"]::after{content:" ˄"}
 /* Remito */
 .capa{position:fixed;inset:0;background:rgba(0,0,0,.72);z-index:20;overflow:auto;padding:16px}
 #capaRemito{z-index:30}
+.ped-det{display:flex;justify-content:space-between;align-items:center;gap:8px;flex-wrap:wrap}
+.codbar{background:#FFE9A8;color:#6B4200;border:1px solid #E3B341;font:700 .74rem var(--body);padding:3px 10px;border-radius:20px;white-space:nowrap}
+.codbar.duda{background:#F3EDE2;color:#7A6A55;border-color:#CDBFA8}
 .hrow{align-items:center}.hrow b{margin-left:auto}
 .hrow .hrem{margin-left:10px;padding:4px 10px;font-size:.8rem;white-space:nowrap}
 .capa-in{max-width:560px;margin:0 auto;display:flex;flex-direction:column;gap:12px}
@@ -456,6 +459,15 @@ button.prodnum[aria-expanded="true"]::after{content:" ˄"}
     $("rCmsg").className="msg"+(pa&&pa.envio?" ok":"");
     var k=celWa(p.telefono); $("rWa").href="https://wa.me/"+(k?"549"+k:"")+"?text="+encodeURIComponent(msj);
   }
+  /* Comercios que necesitan el sticker de código de barras (se reconoce por el nombre, sin importar mayúsculas ni tildes). */
+  var COD_SI=["salvador","amari","renacer","leo sisi","kwik","kiwi","milton","nadia vargas","alemi","nacho","bluestore","blue store"];
+  var COD_DUDA=["super mari","minisuper mari","eula","mariela arce","el ingles","ingles"];
+  function codBarras(nombre){
+    var n=String(nombre||"").toLowerCase().normalize("NFD").replace(/[\u0300-\u036f]/g,"").replace(/\s+/g," ");
+    if(COD_SI.some(function(k){return n.indexOf(k)>=0;})) return "si";
+    if(COD_DUDA.some(function(k){return n.indexOf(k)>=0;})) return "duda";
+    return "";
+  }
   function verRemito(p,boton){
     var txt=boton.textContent; boton.disabled=true; boton.textContent="Armando remito…";
     api({accion:"remito",id:p.id}).then(function(d){
@@ -750,7 +762,7 @@ button.prodnum[aria-expanded="true"]::after{content:" ˄"}
       var tk=lista.reduce(function(t,p){return t+p.kg;},0), tot={};
       PRES.forEach(function(x){tot[x[0]]=lista.reduce(function(t,p){return t+(p[x[0]]||0);},0);});
       var txt="🧉 Reparto Harkana"+(filtroLoc?" · "+filtroLoc:"")+"\n"+lista.length+" pedido"+(lista.length>1?"s":"")+" · "+num(tk)+" kg\nPreparar: "+PRES.filter(function(x){return tot[x[0]]>0;}).map(function(x){return tot[x[0]]+" × "+x[1];}).join(" · ")+"\n";
-      lista.forEach(function(p){ txt+="\n• "+p.comercio+(filtroLoc?"":" ("+locDe(p)+")")+": "+detalle(p)+(p.telefono?" · tel "+p.telefono:"")+(p.nota?" · "+p.nota:""); });
+      lista.forEach(function(p){ var _cb=codBarras(p.comercio); txt+="\n• "+p.comercio+(filtroLoc?"":" ("+locDe(p)+")")+": "+detalle(p)+(_cb==="si"?" · 🏷️ cód. barras":_cb==="duda"?" · 🏷️ cód. barras (en duda)":"")+(p.telefono?" · tel "+p.telefono:"")+(p.nota?" · "+p.nota:""); });
       Rp.href="https://wa.me/?text="+encodeURIComponent(txt);
       Rp.textContent="📋 Pasar lista de reparto por WhatsApp"+(filtroLoc?" ("+filtroLoc+")":"");
     }
@@ -758,7 +770,9 @@ button.prodnum[aria-expanded="true"]::after{content:" ˄"}
     lista.forEach(function(p){
       var c=el("div","ped"), top=el("div","ped-top");
       top.appendChild(el("div","ped-name",p.comercio)); top.appendChild(el("div","ped-kg",num(p.kg)+" kg")); c.appendChild(top);
-      c.appendChild(el("div",null,detalle(p)));
+      var cb=codBarras(p.comercio), dr=el("div","ped-det"); dr.appendChild(el("div",null,detalle(p)));
+      if(cb) dr.appendChild(el("span","codbar"+(cb==="duda"?" duda":""),cb==="duda"?"⚠️ Código de barras: EN DUDA":"⚠️ Código de barras"));
+      c.appendChild(dr);
       c.appendChild(lineaPlata(p));
       var mt=el("div","meta","Pidió el "+p.fecha+(p.localidad?" · "+p.localidad:""));
       var kTel=celWa(p.telefono);
