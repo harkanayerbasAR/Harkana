@@ -116,6 +116,9 @@ button.prodnum[aria-expanded="true"]::after{content:" ˄"}
 .drow span{font-size:.9rem}
 /* Remito */
 .capa{position:fixed;inset:0;background:rgba(0,0,0,.72);z-index:20;overflow:auto;padding:16px}
+#capaRemito{z-index:30}
+.hrow{align-items:center}.hrow b{margin-left:auto}
+.hrow .hrem{margin-left:10px;padding:4px 10px;font-size:.8rem;white-space:nowrap}
 .capa-in{max-width:560px;margin:0 auto;display:flex;flex-direction:column;gap:12px}
 .remito{background:#fff;color:#1F1A15;border-radius:10px;font-family:var(--body);overflow:hidden;-webkit-print-color-adjust:exact;print-color-adjust:exact}
 .r-banda{height:10px;background:#D2A76E}
@@ -655,7 +658,9 @@ button.prodnum[aria-expanded="true"]::after{content:" ˄"}
     V.appendChild(el("h3",null,"Pedidos ("+lista.length+")"));
     lista.forEach(function(p){
       var r=el("div","hrow"); r.appendChild(el("span",null,fechaTxt(p.dia).slice(0,5)+" · "+p.comercio+(p.deudaVieja?" · deuda anterior":" · "+detalle(p))));
-      r.appendChild(el("b",p.cobro==="debe"?"rojo":null,plata(p.total)+(p.cobro==="debe"?" (debe)":""))); V.appendChild(r);
+      r.appendChild(el("b",p.cobro==="debe"?"rojo":null,plata(p.total)+(p.cobro==="debe"?" (debe)":"")));
+      if(!p.deudaVieja&&String(p.id).indexOf("F-")!==0){ var rb=el("button","ghost hrem",p.remito?"📄 N° "+p.remito:"📄 Remito"); rb.type="button"; rb.onclick=function(){verRemito(p,rb);}; r.appendChild(rb); }
+      V.appendChild(r);
     });
     if(!lista.length) V.appendChild(el("div","empty","No hay entregas en esas fechas."));
     if(lista.some(function(p){return p.cobro==="anterior";})) V.appendChild(el("div","meta","* Los pedidos entregados antes de empezar con los cobros tienen el monto calculado con la lista de precios de hoy (es aproximado)."));
