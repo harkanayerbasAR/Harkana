@@ -118,6 +118,10 @@ button.prodnum[aria-expanded="true"]::after{content:" ˄"}
 .capa{position:fixed;inset:0;background:rgba(0,0,0,.72);z-index:20;overflow:auto;padding:16px}
 #capaRemito{z-index:30}
 .ped-det{display:flex;justify-content:space-between;align-items:center;gap:8px;flex-wrap:wrap}
+.tiene-cb{position:relative;overflow:visible}
+.cbtab{position:absolute;right:-40px;top:14px;writing-mode:vertical-rl;transform:rotate(180deg);background:#FFE9A8;color:#6B4200;border:1px solid #E3B341;font:700 .78rem var(--body);letter-spacing:.03em;padding:12px 5px;border-radius:14px;white-space:nowrap}
+.cbtab.duda{background:#F3EDE2;color:#7A6A55;border-color:#CDBFA8}
+@media (max-width:760px){.tiene-cb{padding-right:46px!important}.cbtab{right:8px;top:64px}}
 .codbar{background:#FFE9A8;color:#6B4200;border:1px solid #E3B341;font:700 .74rem var(--body);padding:3px 10px;border-radius:20px;white-space:nowrap}
 .codbar.duda{background:#F3EDE2;color:#7A6A55;border-color:#CDBFA8}
 .hrow{align-items:center}.hrow b{margin-left:auto}
@@ -460,8 +464,8 @@ button.prodnum[aria-expanded="true"]::after{content:" ˄"}
     var k=celWa(p.telefono); $("rWa").href="https://wa.me/"+(k?"549"+k:"")+"?text="+encodeURIComponent(msj);
   }
   /* Comercios que necesitan el sticker de código de barras (se reconoce por el nombre, sin importar mayúsculas ni tildes). */
-  var COD_SI=["salvador","amari","renacer","leo sisi","kwik","kiwi","milton","nadia vargas","alemi","nacho","bluestore","blue store"];
-  var COD_DUDA=["super mari","minisuper mari","eula","mariela arce","el ingles","ingles"];
+  var COD_SI=["salvador","ingles","pichon","amari","renacer","leo sisi","kwik","kiwi","milton","nadia vargas","alemi","nacho","bluestore","blue store"];
+  var COD_DUDA=["super mari","minisuper mari","eula","mariela arce"];
   function codBarras(nombre){
     var n=String(nombre||"").toLowerCase().normalize("NFD").replace(/[\u0300-\u036f]/g,"").replace(/\s+/g," ");
     if(COD_SI.some(function(k){return n.indexOf(k)>=0;})) return "si";
@@ -771,7 +775,7 @@ button.prodnum[aria-expanded="true"]::after{content:" ˄"}
       var c=el("div","ped"), top=el("div","ped-top");
       top.appendChild(el("div","ped-name",p.comercio)); top.appendChild(el("div","ped-kg",num(p.kg)+" kg")); c.appendChild(top);
       var cb=codBarras(p.comercio), dr=el("div","ped-det"); dr.appendChild(el("div",null,detalle(p)));
-      if(cb) dr.appendChild(el("span","codbar"+(cb==="duda"?" duda":""),cb==="duda"?"⚠️ Código de barras: EN DUDA":"⚠️ Código de barras"));
+      if(cb){ c.classList.add("tiene-cb"); c.appendChild(el("span","cbtab"+(cb==="duda"?" duda":""),cb==="duda"?"⚠️ Código de barras ¿?":"⚠️ Código de barras")); }
       c.appendChild(dr);
       c.appendChild(lineaPlata(p));
       var mt=el("div","meta","Pidió el "+p.fecha+(p.localidad?" · "+p.localidad:""));
