@@ -118,6 +118,8 @@ button.prodnum[aria-expanded="true"]::after{content:" ˄"}
 .capa{position:fixed;inset:0;background:rgba(0,0,0,.72);z-index:20;overflow:auto;padding:16px}
 #capaRemito{z-index:30}
 .ped-det{display:flex;justify-content:space-between;align-items:center;gap:8px;flex-wrap:wrap}
+.gana .prepj{color:#8a8578;font-weight:400;font-size:.85em;text-decoration:underline}
+.gana.gj{color:#7A6A55}
 .tiene-cb{position:relative;overflow:visible}
 .cbtab{position:absolute;right:-40px;top:14px;writing-mode:vertical-rl;transform:rotate(180deg);background:#FFE9A8;color:#6B4200;border:1px solid #E3B341;font:700 .78rem var(--body);letter-spacing:.03em;padding:12px 5px;border-radius:14px;white-space:nowrap}
 .cbtab.duda{background:#F3EDE2;color:#7A6A55;border-color:#CDBFA8}
@@ -784,7 +786,11 @@ button.prodnum[aria-expanded="true"]::after{content:" ˄"}
       else if(p.telefono) mt.appendChild(document.createTextNode(" · "+p.telefono));
       c.appendChild(mt);
       if(p.nota) c.appendChild(el("div","meta","Nota: "+p.nota));
-      if(p.pago) c.appendChild(el("div","gana","Al entregar suma "+plata(p.pago)+" de producción"));
+      if(p.pago||p.joaquin){
+        var gn=el("div","gana"+(p.joaquin?" gj":""),p.joaquin?"Preparó Joaquín · no suma producción":"Al entregar suma "+plata(p.pago)+" de producción");
+        if(rol==="admin"){ var pj=el("a","prepj",p.joaquin?"deshacer":"preparó Joaquín"); pj.href="#"; pj.onclick=function(e){e.preventDefault(); pj.textContent="…"; api({accion:"joaquin",id:p.id}).then(function(d){ if(!d||!d.ok) throw 0; pintar(d); }).catch(function(){ pj.textContent="no se pudo"; }); }; gn.appendChild(document.createTextNode(" · ")); gn.appendChild(pj); }
+        c.appendChild(gn);
+      }
       var esWeb=/\(web\)\s*$/.test(p.comercio);
       if(esWeb){
         /* Compra hecha desde la web: hay que escribirle para coordinar pago y envío. */
@@ -898,7 +904,8 @@ button.prodnum[aria-expanded="true"]::after{content:" ˄"}
       else if(p.cobro==="no se cobra") c.appendChild(el("div","estado-cobro","Sin cargo (no se cobra)"));
       else if(p.cobro==="debe") c.appendChild(el("div","estado-cobro debe",p.pagado?"Pagó "+detPagos(p)+" · debe "+plata(p.saldo):"Debe "+plata(p.total)));
       if(p.remito) c.appendChild(estadoEnvio(p));
-      if(p.pago) c.appendChild(el("div","gana","Sumó "+plata(p.pago)+" de producción"));
+      if(p.joaquin) c.appendChild(el("div","gana gj","Preparó Joaquín · no sumó producción"));
+      else if(p.pago) c.appendChild(el("div","gana","Sumó "+plata(p.pago)+" de producción"));
       var t=el("div","tools");
       if(p.cobro==="debe"&&cobrandoId!=="e"+p.id){ var bc=el("button","ghost","Registrar pago"); bc.type="button"; bc.onclick=function(){cobrandoId="e"+p.id; parcialId=""; pintar(ultimo);}; t.appendChild(bc); }
       if(p.cobro==="cobrado"||p.cobro==="no se cobra"){ var bd=el("button","ghost","Deshacer cobro"); bd.type="button"; bd.onclick=function(){accion({accion:"cobro",id:p.id,cobro:""},bd);}; t.appendChild(bd); }
