@@ -118,7 +118,7 @@ button:focus-visible,input:focus-visible,textarea:focus-visible,a:focus-visible{
   var guardar=function(k,v){try{localStorage.setItem(k,v);}catch(e){}};
   var leer=function(k){try{return localStorage.getItem(k)||"";}catch(e){return "";}};
   var listo=API.indexOf("http")===0;
-  if(BARRIO){ try{ var lb=document.querySelector("label[for=localidad]"); lb.textContent="Lote o casa en el barrio"; $("localidad").placeholder="Ej.: Lote 45"; }catch(e){} }
+  if(BARRIO){ try{ var lb=document.querySelector("label[for=localidad]"); lb.textContent="Lote o casa en el barrio"; $("localidad").placeholder="Ej.: Lote 45"; $("nota").closest(".field").style.display="none"; }catch(e){} }
   if(BARRIO){ setTimeout(function(){ try{ var bn=el("div"); var h=el("div",null,"¡Hola, "+BARRIO.n+"! 🏡"); h.style.cssText="font-size:1.35rem;font-weight:700;margin-bottom:4px"; bn.appendChild(h); bn.appendChild(el("div",null,"Beneficio vecinos: "+Math.round(BARRIO.d*100)+"% OFF ya aplicado · entrega semanal sin cargo en la guardia")); bn.style.cssText="background:#1C3424;color:#FFF8EC;padding:10px 14px;border-radius:10px;margin:10px 0;font-size:.95rem;text-align:center"; var tg=$("totalSub"); tg.textContent="Entrega sin cargo en la guardia del barrio"; var c=document.querySelector(".qrow"); if(c&&c.parentNode)c.parentNode.insertBefore(bn,c); }catch(e){} },0); }
 
   PRES.forEach(function(x){
