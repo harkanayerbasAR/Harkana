@@ -118,6 +118,7 @@ button:focus-visible,input:focus-visible,textarea:focus-visible,a:focus-visible{
   var guardar=function(k,v){try{localStorage.setItem(k,v);}catch(e){}};
   var leer=function(k){try{return localStorage.getItem(k)||"";}catch(e){return "";}};
   var listo=API.indexOf("http")===0;
+  if(BARRIO){ try{ var lb=document.querySelector("label[for=localidad]"); lb.textContent="Lote o casa en el barrio"; $("localidad").placeholder="Ej.: Lote 45"; }catch(e){} }
   if(BARRIO){ setTimeout(function(){ try{ var bn=el("div"); var h=el("div",null,"¡Hola, "+BARRIO.n+"! 🏡"); h.style.cssText="font-size:1.35rem;font-weight:700;margin-bottom:4px"; bn.appendChild(h); bn.appendChild(el("div",null,"Beneficio vecinos: "+Math.round(BARRIO.d*100)+"% OFF ya aplicado · entrega semanal sin cargo en la guardia")); bn.style.cssText="background:#1C3424;color:#FFF8EC;padding:10px 14px;border-radius:10px;margin:10px 0;font-size:.95rem;text-align:center"; var tg=$("totalSub"); tg.textContent="Entrega sin cargo en la guardia del barrio"; var c=document.querySelector(".qrow"); if(c&&c.parentNode)c.parentNode.insertBefore(bn,c); }catch(e){} },0); }
 
   PRES.forEach(function(x){
@@ -141,13 +142,13 @@ button:focus-visible,input:focus-visible,textarea:focus-visible,a:focus-visible{
   var _o=(qs.get("o")||"").toLowerCase().replace(/[^a-z0-9_-]/g,"").slice(0,24);
   var ORIG={rio4:"anuncio Río Cuarto",redes:"redes sociales",ig:"Instagram",tt:"TikTok",fb:"Facebook",wa:"WhatsApp",totoral:"Turismo Totoral",grassi:"Beneficios Grassi"}[_o]||(_o&&_o!=="web"?_o:"");
   PRES.forEach(function(x){var n=parseInt(qs.get(x.k),10);if(n>0)$("in-"+x.k).value=Math.min(999,n);});
-  $("datos").hidden=false; $("comercio").value=leer("hk_p_nombre"); $("localidad").value=leer("hk_p_localidad"); $("telefono").value=leer("hk_p_telefono");
+  $("datos").hidden=false; $("comercio").value=leer("hk_p_nombre"); if(!BARRIO)$("localidad").value=leer("hk_p_localidad"); $("telefono").value=leer("hk_p_telefono");
 
   function estado(){
     var q={},kg=0;
     PRES.forEach(function(x){q[x.k]=Math.max(0,Math.min(999,parseInt($("in-"+x.k).value)||0));kg+=q[x.k]*x.kg;});
     var com=nombreFijo||$("comercio").value.trim();
-    return {q:q,kg:kg,com:com,loc:$("localidad").value.trim(),tel:$("telefono").value.trim(),nota:$("nota").value.trim()};
+    return {q:q,kg:kg,com:com,loc:(BARRIO&&$("localidad").value.trim()?BARRIO.n+" · Lote/casa "+$("localidad").value.trim():$("localidad").value.trim()),tel:$("telefono").value.trim(),nota:$("nota").value.trim()};
   }
   function texto(s){
     var l=["*Pedido Harkana*","Cliente: "+s.com]; if(s.loc)l.push("Localidad: "+s.loc);
@@ -166,7 +167,7 @@ button:focus-visible,input:focus-visible,textarea:focus-visible,a:focus-visible{
     var s=estado(); $("wa").hidden=true;
     if(!s.com){$("msg").textContent="Escribí tu nombre y apellido.";return;}
     if(s.kg<=0){$("msg").textContent="Sumá al menos un paquete.";return;}
-    if(!s.loc){$("msg").textContent="Escribí tu localidad, así sabemos cómo enviártelo.";$("localidad").focus();return;}
+    if(!s.loc){$("msg").textContent=BARRIO?"Escribí tu lote o casa, así sabemos a quién entregárselo.":"Escribí tu localidad, así sabemos cómo enviártelo.";$("localidad").focus();return;}
     if(!s.tel){$("msg").textContent="Dejanos tu WhatsApp para coordinar la entrega.";$("telefono").focus();return;}
     var dg=s.tel.replace(/\D/g,"").replace(/^0+/,"");
     if(dg.length<10){$("msg").textContent="Revisá el WhatsApp: tiene que ir con característica, ej. 358 4123456.";$("telefono").focus();return;}
@@ -178,7 +179,7 @@ button:focus-visible,input:focus-visible,textarea:focus-visible,a:focus-visible{
       if(!d||!d.ok) throw new Error("rechazado");
       try{ fbq("track","Purchase",{value:PRES.reduce(function(t,x){return t+s.q[x.k]*x.p;},0),currency:"ARS"}); }catch(e){}
       try{ gtag("event","pedido_enviado",{origen:WEB?"web":(ORIG?ORIG.toLowerCase():"directo"),kg:d.kg,value:PRES.reduce(function(t,x){return t+s.q[x.k]*x.p;},0),currency:"ARS"}); }catch(e){}
-      guardar("hk_p_nombre",s.com);guardar("hk_p_localidad",s.loc);guardar("hk_p_telefono",s.tel);
+      guardar("hk_p_nombre",s.com);if(!BARRIO)guardar("hk_p_localidad",s.loc);guardar("hk_p_telefono",s.tel);
       $("resumen").textContent="Gracias, "+s.com+". Ya nos llegó tu pedido de "+fmtKg(d.kg)+". Te escribimos para coordinar el pago y la entrega.";
       $("form").hidden=true; $("listo").hidden=false; window.scrollTo(0,0);
     }).catch(function(){
