@@ -107,6 +107,10 @@ button:focus-visible,input:focus-visible,textarea:focus-visible,a:focus-visible{
 
   var PRES=[{k:"q250",n:"1/4 kg",d:"250 g",kg:.25,p:3900},{k:"q500",n:"1/2 kg",d:"500 g",kg:.5,p:5500},{k:"q1",n:"1 kg",d:"1 kilo",kg:1,p:8000},{k:"q3",n:"3 kg",d:"3 kilos",kg:3,p:23000}];
   /* Precios al público (los mismos de la web). El envío se coordina aparte y lo paga quien compra. */
+  /* Beneficio para barrios con convenio: ?o=<barrio> aplica el descuento y avisa la entrega sin cargo */
+  var BARRIOS={lostilos:{n:"Barrio Los Tilos",d:.10}};
+  var BARRIO=BARRIOS[(new URLSearchParams(location.search).get("o")||"").toLowerCase()]||null;
+  if(BARRIO){ PRES.forEach(function(x){ x.po=x.p; x.p=Math.round(x.p*(1-BARRIO.d)/50)*50; }); }
   var plata=function(n){return "$"+Math.round(n).toLocaleString("es-AR");};
   var $=function(id){return document.getElementById(id);};
   var el=function(t,c,x){var e=document.createElement(t);if(c)e.className=c;if(x!=null)e.textContent=x;return e;};
@@ -114,9 +118,10 @@ button:focus-visible,input:focus-visible,textarea:focus-visible,a:focus-visible{
   var guardar=function(k,v){try{localStorage.setItem(k,v);}catch(e){}};
   var leer=function(k){try{return localStorage.getItem(k)||"";}catch(e){return "";}};
   var listo=API.indexOf("http")===0;
+  if(BARRIO){ setTimeout(function(){ try{ var bn=el("div"); var h=el("div",null,"¡Hola, "+BARRIO.n+"! 🏡"); h.style.cssText="font-size:1.35rem;font-weight:700;margin-bottom:4px"; bn.appendChild(h); bn.appendChild(el("div",null,"Beneficio vecinos: "+Math.round(BARRIO.d*100)+"% OFF ya aplicado · entrega semanal sin cargo en la guardia")); bn.style.cssText="background:#1C3424;color:#FFF8EC;padding:10px 14px;border-radius:10px;margin:10px 0;font-size:.95rem;text-align:center"; var tg=$("totalSub"); tg.textContent="Entrega sin cargo en la guardia del barrio"; var c=document.querySelector(".qrow"); if(c&&c.parentNode)c.parentNode.insertBefore(bn,c); }catch(e){} },0); }
 
   PRES.forEach(function(x){
-    var row=el("div","qrow"), nm=el("span","qname",x.n); nm.appendChild(el("small",null,x.d+" · "+plata(x.p))); if(x.k==="q500")nm.appendChild(el("span","tag","⭐ La más elegida")); row.appendChild(nm);
+    var row=el("div","qrow"), nm=el("span","qname",x.n); var sm=el("small",null,x.d+" · "); if(x.po){ var tc=el("s",null,plata(x.po)); tc.style.opacity=".6"; sm.appendChild(tc); sm.appendChild(document.createTextNode(" ")); var nb=el("b",null,plata(x.p)); nb.style.cssText="color:#1C3424;font-size:1.05em"; sm.appendChild(nb); } else sm.appendChild(document.createTextNode(plata(x.p))); nm.appendChild(sm); if(x.k==="q500")nm.appendChild(el("span","tag","⭐ La más elegida")); row.appendChild(nm);
     var st=el("div","step");
     var m=el("button",null,"−"); m.type="button"; m.setAttribute("aria-label","Restar "+x.n);
     var i=document.createElement("input"); i.type="number"; i.min="0"; i.max="999"; i.inputMode="numeric"; i.value="0"; i.id="in-"+x.k; i.setAttribute("aria-label","Paquetes de "+x.n);
